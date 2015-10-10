@@ -6,7 +6,4 @@
     <solid
         android:color="@color/WHITE"/>
 
-    <size
-        android:width="@dimen/intro_dot_size"
-        android:height="@dimen/intro_dot_size"/>
 </shape>

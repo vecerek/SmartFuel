@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 /**
  * Created by Gabriel Lehocky on 15/10/10.
  */
-public class TabAdapter extends FragmentStatePagerAdapter {
+public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     int mNumOfTabs;
     IntroFragment t1;
@@ -16,7 +16,7 @@ public class TabAdapter extends FragmentStatePagerAdapter {
     IntroFragment t3;
     LoginFragment tLogin;
 
-    public TabAdapter(FragmentManager fm, int NumOfTabs) {
+    public FragmentAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
 
