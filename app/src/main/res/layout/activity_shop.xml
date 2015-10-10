@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="sk.codekitchen.smartfuel.ShopActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:background="@mipmap/bg"
+    android:id="@+id/shop_layout"
+    android:weightSum="1">
+
+    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="@string/title_shop"
+        android:textColor="@color/WHITE"
+        android:textSize="@dimen/title_size"
+        android:textIsSelectable="false"
+        android:layout_weight="0.1"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/shop_categories"
+        android:weightSum="1"
+        android:layout_weight="0.05"
+        >
+
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/shop_product"
+            android:layout_weight="0.33"
+            android:id="@+id/shop_product"
+            android:gravity="center"
+            android:background="@drawable/border_bottom"
+            android:clickable="true"
+            android:textColor="@color/GRAY"
+            />
+
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/shop_promo"
+            android:layout_weight="0.34"
+            android:id="@+id/shop_promo"
+            android:gravity="center"
+            android:background="@drawable/border_bottom_selected_good"
+            android:clickable="true"
+            android:textColor="@color/MAIN"
+            />
+
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearance"
+            android:text="@string/shop_contest"
+            android:layout_weight="0.33"
+            android:id="@+id/shop_contest"
+            android:gravity="center"
+            android:background="@drawable/border_bottom"
+            android:clickable="true"
+            android:textColor="@color/GRAY"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:id="@+id/shop_list_view"
+        android:layout_weight="0.75"/>
+
+    <include
+        layout="@layout/menu_icons"
+        android:id="@+id/menu_icons"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"/>
+
+</LinearLayout>
+

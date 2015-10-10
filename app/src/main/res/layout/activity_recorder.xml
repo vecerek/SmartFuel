@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="sk.codekitchen.smartfuel.RecorderActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:background="@mipmap/bg"
+    android:id="@+id/settings_layout"
+    android:weightSum="1">
+
+    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:textSize="@dimen/title_size"
+        android:text="@string/title_rec"
+        android:id="@+id/title"
+        android:textColor="@color/WHITE"
+        android:textIsSelectable="false"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        />
+
+    <LinearLayout
+        android:id="@+id/switch_meter"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:background="@drawable/round_border_box"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_weight="0.1"
+        android:padding="3dp">
+
+        <LinearLayout
+            android:id="@+id/btn_percent"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:weightSum="1"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:layout_marginLeft="2dp"
+            android:background="@drawable/round_highlight_box_left"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/icon_percent"
+                android:src="@mipmap/percentage"
+                android:layout_marginRight="10dp"
+                android:alpha="1"/>
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/txt_percent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/rec_percent"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/WHITE"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_speed"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:weightSum="1"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/round_transparent"
+            android:gravity="center"
+            android:layout_marginRight="2dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/icon_speed"
+                android:src="@mipmap/speed"
+                android:layout_marginRight="10dp"
+                android:alpha="0.2"/>
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:id="@+id/txt_speed"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/rec_speed"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/GRAY"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/progressArea"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.55">
+
+        <ProgressBar
+            android:id="@+id/progressBarBck"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="false"
+            android:max="134"
+            android:progress="101"
+            android:progressDrawable="@drawable/progressbar_arch_background"
+            />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/progressbar_arch_grad_good"
+            />
+
+        <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/rec_turn_gps_on"
+            android:textColor="@color/WHITE"
+            android:focusableInTouchMode="false"
+            android:id="@+id/progress_no_gps"
+            android:clickable="true"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+        <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/rec_no_gps_signal"
+            android:textColor="@color/WHITE"
+            android:focusableInTouchMode="false"
+            android:id="@+id/progress_no_signal"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:id="@+id/progress_central_data">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="0"
+                    android:id="@+id/progress_value"
+                    android:textColor="@color/WHITE"
+                    android:textSize="@dimen/progress_value"
+                    android:focusableInTouchMode="false"/>
+
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/rec_percent_symbol"
+                    android:id="@+id/progress_symbol"
+                    android:gravity="bottom"
+                    android:textSize="@dimen/progress_sign"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/MAIN"
+                    android:paddingLeft="2dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/rec_comment_1"
+                    android:id="@+id/progress_comment"
+                    android:textColor="@color/GRAY"
+                    android:paddingRight="5dp"/>
+
+                <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="@string/rec_comment_2"
+                    android:id="@+id/progress_comment_bold"
+                    android:textColor="@color/GRAY"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="bottom"
+            android:layout_marginBottom="15dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/max_permitted_sign"
+                android:visibility="gone">
+
+                <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                    android:layout_width="@dimen/sign_size"
+                    android:layout_height="@dimen/sign_size"
+                    android:textSize="@dimen/sign_text"
+                    android:text="90"
+                    android:id="@+id/max_permitted_speed"
+                    android:background="@drawable/circle_limit_sign"
+                    android:textColor="@color/BLACK"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:gravity="center"
+        android:layout_weight="0.15">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.50"
+            android:gravity="center"
+            android:background="@drawable/border_top_right">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="1567"
+                android:id="@+id/actual_points"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/WHITE"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/rec_point_acutal"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.50"
+            android:gravity="center"
+            android:background="@drawable/border_top">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="3256"
+                android:id="@+id/overall_points"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/WHITE"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/rec_point_overall"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/menu_icons"
+        android:id="@+id/menu_icons"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"/>
+
+</LinearLayout>

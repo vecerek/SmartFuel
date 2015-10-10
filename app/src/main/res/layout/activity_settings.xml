@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="sk.codekitchen.smartfuel.SettingsActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:background="@mipmap/bg"
+    android:id="@+id/settings_layout"
+    android:weightSum="1">
+
+    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="@string/title_set"
+        android:textColor="@color/WHITE"
+        android:textSize="@dimen/title_size"
+        android:textIsSelectable="false"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        />
+
+    <include
+        layout="@layout/menu_icons"
+        android:id="@+id/menu_icons"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"/>
+
+</LinearLayout>

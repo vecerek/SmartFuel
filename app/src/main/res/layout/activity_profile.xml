@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="sk.codekitchen.smartfuel.ProfileActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="0dp"
+    android:orientation="vertical"
+    android:background="@mipmap/bg"
+    android:id="@+id/profile_layout"
+    android:weightSum="1">
+
+    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:text="@string/title_acc"
+        android:textColor="@color/WHITE"
+        android:textSize="@dimen/title_size"
+        android:textIsSelectable="false"
+        android:layout_weight="0.1"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:layout_weight="0.38"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:weightSum="1"
+            android:gravity="center">
+
+            <sk.codekitchen.smartfuel.ui.GUI.RoundedImageView
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:src="@mipmap/defaultuser"
+                android:layout_weight="0.32"/>
+
+        </LinearLayout>
+
+        <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            android:layout_weight="0.15"
+            android:layout_height="0dp"
+            android:layout_width="fill_parent"
+            android:id="@+id/user_name"
+            android:text="Peter Novak"
+            android:gravity="center"
+            android:textColor="@color/MAIN"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.15"
+            android:gravity="center"
+            android:layout_marginBottom="10dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/pin"
+                android:layout_marginRight="10dp"/>
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Kralovany, Zilinsky Kraj"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:gravity="center"
+        android:layout_weight="0.14">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:background="@drawable/border_top_right">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="8653"
+                android:id="@+id/profile_km"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/WHITE"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/stat_dst"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.34"
+            android:gravity="center"
+            android:background="@drawable/border_top">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="3479"
+                android:id="@+id/profile_points"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/MAIN"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/points"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.33"
+            android:gravity="center"
+            android:background="@drawable/border_top_left">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="62%"
+                android:id="@+id/profile_success"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/WHITE"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/stat_success"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:gravity="center"
+        android:layout_weight="0.14">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@drawable/border_top_right">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="8 dni"
+                android:id="@+id/profile_until_expiration"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/RED"/>
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/profile_until_expiration"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@drawable/border_top">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="15"
+                android:id="@+id/profile_refueling_count"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/WHITE"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/profile_transaction_cnt"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:gravity="center"
+        android:layout_weight="0.14">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@drawable/border_top_right">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="42 dni"
+                android:id="@+id/profile_point_streak"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/MAIN"/>
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/profile_streak"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@drawable/border_top">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="21.09.2015 12:42"
+                android:id="@+id/profile_last_sync_time"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/WHITE"
+                />
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/profile_last_sync"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/menu_icons"
+        android:id="@+id/menu_icons"
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"/>
+
+</LinearLayout>
+
