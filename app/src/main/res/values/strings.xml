@@ -1,3 +1,68 @@
 <resources>
     <string name="app_name">SmartFuel</string>
+
+    <string name="title_rec">MERANIE</string>
+    <string name="title_stat">ŠTATISTIKA</string>
+    <string name="title_shop">OBCHOD</string>
+    <string name="title_acc">PROFIL</string>
+    <string name="title_set">NASTAVENIE</string>
+
+    <string name="rec_point_acutal">AKTUÁLNE BODY</string>
+    <string name="rec_point_overall">CELKOVÉ BODY</string>
+    <string name="rec_percent"> Percentá</string>
+    <string name="rec_speed">Rýchlosť</string>
+    <string name="rec_percent_symbol">%</string>
+    <string name="rec_kmph">km/h</string>
+    <string name="rec_comment_1">k získaniu</string>
+    <string name="rec_comment_2">1 bodu</string>
+    <string name="rec_turn_gps_on">Zapnúť GPS</string>
+    <string name="rec_no_gps_signal">Čakám na signál</string>
+
+    <string name="stat_week">TÝŽDEŇ</string>
+    <string name="stat_month">MESIAC</string>
+    <string name="stat_year">ROK</string>
+    <string name="stat_pos">Kladné km</string>
+    <string name="stat_neg">Záporné km</string>
+    <string name="stat_dst">KM</string>
+    <string name="points">BODOV</string>
+    <string name="stat_success">ÚSPEŠNOSŤ</string>
+
+    <string name="shop_product">PRODUKTY</string>
+    <string name="shop_promo">AKCIE</string>
+    <string name="shop_contest">SÚŤAŽE</string>
+
+    <string name="profile_oil">OLEJ</string>
+    <string name="profile_service">SERVIS</string>
+    <string name="profile_tyres">GUMY</string>
+    <string name="profile_days">dní</string>
+    <string name="profile_until_expiration">do expirácie bodov</string>
+    <string name="profile_last_sync">Posledná synchronyzácia</string>
+    <string name="profile_transaction_cnt">Počet tankováni</string>
+    <string name="profile_streak">bez expirácie bodov</string>
+
+    <string-array name="days_short">
+        <item>PO</item>
+        <item>UT</item>
+        <item>ST</item>
+        <item>ŠT</item>
+        <item>PI</item>
+        <item>SO</item>
+        <item>NE</item>
+    </string-array>
+
+    <string-array name="month_short">
+        <item>JAN</item>
+        <item>FEB</item>
+        <item>MAR</item>
+        <item>APR</item>
+        <item>MAJ</item>
+        <item>JUN</item>
+        <item>JUL</item>
+        <item>AUG</item>
+        <item>SEP</item>
+        <item>OKT</item>
+        <item>NOV</item>
+        <item>DEC</item>
+    </string-array>
+
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+        android:fromDegrees="134"
+        android:toDegrees="134"
+        android:id="@android:id/progress">
+
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+              android:innerRadius="@dimen/progressbar_inner_diameter_bck"
+              android:shape="ring"
+              android:thickness="@dimen/progressbar_weight_bck"
+              android:useLevel="true">
+
+              <solid android:color="@color/DARK"/>
+
+       </shape>
+</rotate>

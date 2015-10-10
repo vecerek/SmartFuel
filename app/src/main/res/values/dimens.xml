@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="progressbar_inner_diameter">110dp</dimen>
+    <dimen name="progressbar_inner_diameter_bck">108dp</dimen>
+    <dimen name="progressbar_weight">6dp</dimen>
+    <dimen name="progressbar_weight_bck">10dp</dimen>
+    <dimen name="title_size">25dp</dimen>
+
+    <dimen name="sign_size">65dp</dimen>
+    <dimen name="sign_border">8dp</dimen>
+    <dimen name="sign_text">24dp</dimen>
+
+    <dimen name="progress_value">75dp</dimen>
+    <dimen name="progress_sign">55dp</dimen>
+</resources>
