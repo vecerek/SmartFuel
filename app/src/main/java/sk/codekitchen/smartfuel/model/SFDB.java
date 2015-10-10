@@ -4,6 +4,7 @@ import sk.codekitchen.smartfuel.exception.TableNotFoundException;
 import sk.codekitchen.smartfuel.exception.UnknownDataOriginException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.ServerAPI;
+import sk.codekitchen.smartfuel.util.Prefs;
 import sk.codekitchen.smartfuel.util.cJSONArray;
 import sk.codekitchen.smartfuel.util.cJSONObject;
 
@@ -93,11 +94,11 @@ public class SFDB extends SQLiteOpenHelper {
 
 		preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-		userID = preferences.getInt("userID", -1);
+		userID = preferences.getInt(Prefs.USER_ID, -1);
 		if(userID == -1)
 			throw new UnknownUserException("Unknown user");
 
-		String tmpLastUpdate = preferences.getString("lastUpdate", null);
+		String tmpLastUpdate = preferences.getString(Prefs.LAST_UPDATE, null);
 		lastUpdate = tmpLastUpdate == null ? null : dateFormat.parse(tmpLastUpdate);
 
 		db = this.getWritableDatabase();
@@ -272,9 +273,9 @@ public class SFDB extends SQLiteOpenHelper {
 	protected JSONObject downloadDatabase(String lastUpdate) throws IOException {
 		try {
 			Map<String, String> params = new HashMap<>();
-			params.put("user_id", Integer.toString(userID));
+			params.put(Prefs.USER_ID, Integer.toString(userID));
 			if(lastUpdate != null) {
-				params.put("last_update", lastUpdate);
+				params.put(Prefs.LAST_UPDATE, lastUpdate);
 			}
 
 			return (new ServerAPI("download_db").sendRequest(params));
@@ -424,7 +425,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 */
 	protected void setLastUpdateTime() {
 		lastUpdate = new Date(); //milliseconds since Unix epoch, UTC
-		preferences.edit().putString("lastUpdate", dateFormat.format(lastUpdate)).apply();
+		preferences.edit().putString(Prefs.LAST_UPDATE, dateFormat.format(lastUpdate)).apply();
 	}
 
 	public void sync()
@@ -454,7 +455,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 			if (editedData != null) {
 				Map<String, String> params = new HashMap<>();
-				params.put("user_id", Integer.toString(userID));
+				params.put(Prefs.USER_ID, Integer.toString(userID));
 				params.put("data", editedData.toString());
 				if (test) params.put("test", String.valueOf(true));
 
