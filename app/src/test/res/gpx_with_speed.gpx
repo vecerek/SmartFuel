@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx creator="SmartFuel App - Company name" version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd http://www.garmin.com/xmlschemas/GpxExtensions/v3 http://www.garmin.com/xmlschemas/GpxExtensionsv3.xsd http://www.garmin.com/xmlschemas/TrackPointExtension/v1 http://www.garmin.com/xmlschemas/TrackPointExtensionv1.xsd">
+ <metadata>
+  <time>2015-08-21T07:24:02Z</time>
+ </metadata>
+ <trk>
+  <name>Road Activity 2015-10-08-21-05-43 - 2015-10-08-23-15-37</name>
+  <trkseg>
+   <trkpt lat="48.2054500" lon="18.6046360">
+    <ele>159.0</ele>
+    <time>2015-08-21T07:24:02Z</time>
+    <speed>48.9</speed>
+   </trkpt>
+   <trkpt lat="48.2054710" lon="18.6046150">
+    <ele>159.0</ele>
+    <time>2015-08-21T07:24:43Z</time>
+    <speed>49.8</speed>
+   </trkpt>
+   <trkpt lat="48.2054500" lon="18.6046110">
+    <ele>159.0</ele>
+    <time>2015-08-21T07:24:44Z</time>
+    <speed>51.3</speed>
+   </trkpt>
+   <trkpt lat="48.2053850" lon="18.6045970">
+    <ele>159.1</ele>
+    <time>2015-08-21T07:24:45Z</time>
+    <speed>91.3</speed>
+   </trkpt>
+   <trkpt lat="48.2053480" lon="18.6045290">
+    <ele>158.9</ele>
+    <time>2015-08-21T07:24:47Z</time>
+    <speed>75.1</speed>
+   </trkpt>
+  </trkseg>
+ </trk>
+</gpx>

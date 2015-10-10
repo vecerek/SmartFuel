@@ -19,6 +19,15 @@ android {
     }
 }
 
+task copyTestResDirectoryToClasses(type: Copy){
+    from "${projectDir}/src/test/res"
+    into "${buildDir}/intermediates/classes/test/debug/res"
+}
+
+afterEvaluate {
+    tasks.findByName("assembleDebug").dependsOn("copyTestResDirectoryToClasses");
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.0.1'
