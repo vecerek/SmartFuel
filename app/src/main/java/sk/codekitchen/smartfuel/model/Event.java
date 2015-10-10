@@ -10,7 +10,7 @@ import org.json.JSONObject;
  */
 public class Event {
 
-	public static class TABLE {
+	public static final class TABLE {
 		public static final String NAME = "events";
 
 		public static final String CREATE =
@@ -42,7 +42,7 @@ public class Event {
 			return cv;
 		}
 
-		public static class COLUMN {
+		public static final class COLUMN {
 			public static final String ID = "id";
 			public static final String TYPE = "type";
 			public static final String CREATED_AT = "created_at";
@@ -50,9 +50,9 @@ public class Event {
 		}
 	}
 
-	public static class CONTENT {
+	public static final class CONTENT {
 
-		public static class TABLE {
+		public static final class TABLE {
 			public static final String NAME = "events_content";
 
 			public static final String CREATE =
@@ -93,7 +93,7 @@ public class Event {
 				return cv;
 			}
 
-			public class COLUMN {
+			public static final class COLUMN {
 				public static final String ID = "id";
 				public static final String EVENT_ID = "event_id";
 				public static final String LANGUAGE = "lang_id";

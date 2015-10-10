@@ -101,7 +101,7 @@ public class User {
 		}
 	}
 
-	public static class TABLE {
+	public static final class TABLE {
 		public static final String NAME = "users";
 
 		public static final String CREATE =
@@ -155,7 +155,7 @@ public class User {
 			return cv;
 		}
 
-		public static class COLUMN {
+		public static final class COLUMN {
 			public static final String ID = "id";
 			public static final String NAME = "name";
 			public static final String SURNAME = "surname";
@@ -167,9 +167,9 @@ public class User {
 		}
 	}
 
-	public static class STATS {
+	public static final class STATS {
 
-		public static class VIEW {
+		public static final class VIEW {
 			public static final String NAME = "statistics";
 
 			/**
@@ -218,7 +218,7 @@ public class User {
 
 			public static final String DROP = "DROP VIEW IF EXISTS " + NAME;
 
-			public static class COLUMN {
+			public static final class COLUMN {
 				public static final String POINTS = SmartFuelActivity.TABLE.COLUMN.POINTS;
 				public static final String CORRECT_DISTANCE = SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE;
 				public static final String SPEEDING_DISTANCE = SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE;

@@ -233,7 +233,7 @@ public class SmartFuelActivity {
 		}
 	}
 
-	public static class TABLE {
+	public static final class TABLE {
 
 		public static final String NAME = "activities";
 
@@ -288,7 +288,7 @@ public class SmartFuelActivity {
 			return cv;
 		}
 
-		public static class COLUMN {
+		public static final class COLUMN {
 			public static final String ID = "id";
 			public static final String CORRECT_DISTANCE = "correct_dist";
 			public static final String SPEEDING_DISTANCE = "speeding_dist";
