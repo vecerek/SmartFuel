@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="15dp"
+    android:weightSum="1"
+    android:background="@drawable/border_bottom"
+    android:id="@+id/item_button">
+
+
+    <sk.codekitchen.smartfuel.GUI.RoundedImageView
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/item_pic"
+        android:layout_weight="0.25"/>
+
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:layout_weight="0.75"
+        android:gravity="center_vertical"
+        android:clickable="true">
+
+        <sk.codekitchen.smartfuel.GUI.SemiboldTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/WHITE"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/item_title"
+            />
+
+        <sk.codekitchen.smartfuel.GUI.LightTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/MAIN"
+            android:id="@+id/item_points"/>
+
+    </LinearLayout>
+
+</LinearLayout>

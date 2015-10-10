@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:weightSum="1"
+              android:background="@color/DARK">
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/menu_record"
+        android:layout_gravity="center_vertical|bottom"
+        android:src="@mipmap/speed"
+        android:layout_weight="0.2"
+        style="@android:style/Holo.ButtonBar"
+        android:alpha="0.4"/>
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/menu_stats"
+        android:layout_gravity="center_vertical|bottom"
+        android:src="@mipmap/graph"
+        android:layout_weight="0.2"
+        style="@android:style/Holo.ButtonBar"
+        android:alpha="0.4"/>
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/menu_shop"
+        android:layout_gravity="bottom|center_vertical"
+        android:layout_weight="0.2"
+        android:src="@mipmap/shop"
+        style="@android:style/Holo.ButtonBar"
+        android:alpha="0.4"/>
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/menu_user"
+        android:layout_gravity="center_vertical|bottom"
+        android:layout_weight="0.2"
+        android:src="@mipmap/profile"
+        style="@android:style/Holo.ButtonBar"
+        android:alpha="0.4"/>
+
+    <ImageButton
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/menu_settings"
+        android:layout_gravity="bottom|center_vertical"
+        android:layout_weight="0.2"
+        android:src="@mipmap/settings"
+        style="@android:style/Holo.ButtonBar"
+        android:alpha="0.4"/>
+</LinearLayout>
