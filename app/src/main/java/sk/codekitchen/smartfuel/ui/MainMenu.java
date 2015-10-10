@@ -54,11 +54,6 @@ public class MainMenu implements OnClickListener{
         }
     }
 
-    /**
-     *  TODO: !!!
-     *      CHECK if activity is already running, so It wont start a new activity
-     *      just go back to that one.
-     */
     @Override
     public void onClick(View v){
         // CHANGE ACTIVITY HERE
