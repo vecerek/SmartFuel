@@ -65,4 +65,19 @@
         <item>DEC</item>
     </string-array>
 
+    <string name="intro_1">Ride</string>
+    <string name="intro_1_comment">Ride along the world safely, since..</string>
+    <string name="intro_2">Points</string>
+    <string name="intro_2_comment">Earn points for driving safe.</string>
+    <string name="intro_3">Reward</string>
+    <string name="intro_3_comment">We reward you with cheaper refueling.</string>
+
+    <string name="login_start">Lets start</string>
+    <string name="login_comment">Login into your XXX account</string>
+    <string name="login_mail">E-mail</string>
+    <string name="login_pass">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="login_no_acc">Dont have an XXX account, yet?</string>
+    <string name="login_reg">Register for Free</string>
+
 </resources>

@@ -1,24 +1,60 @@
 package sk.codekitchen.smartfuel.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.AppCompatActivity;
 
 import sk.codekitchen.smartfuel.R;
+import sk.codekitchen.smartfuel.ui.GUI.TabAdapter;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
-    private boolean isLoggedIn = true;
+    private boolean isLoggedIn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = new Intent(this, RecorderActivity.class);
-        startActivity(intent);
+        if (!isLoggedIn){
+            showIntro();
+        }
+        else{
+            Intent intent = new Intent(this, RecorderActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        
+    }
 
-        finish();
+    private void showIntro(){
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("1"));
+        tabLayout.addTab(tabLayout.newTab().setText("2"));
+        tabLayout.addTab(tabLayout.newTab().setText("3"));
+        tabLayout.addTab(tabLayout.newTab().setText("Login"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final TabAdapter adapter = new TabAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
     }
 
     @Override

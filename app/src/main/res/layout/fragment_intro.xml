@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/fragment_bck"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@mipmap/bg"
+              android:gravity="bottom"
+              android:paddingBottom="@dimen/intro_bottom_padding">
+
+    <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+        android:id="@+id/intro_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/intro_1"
+        android:textColor="@color/MAIN"
+        android:textSize="@dimen/login_text"
+        android:gravity="center"/>
+
+    <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+        android:id="@+id/intro_comment"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/intro_1_comment"
+        android:textColor="@color/WHITE"
+        android:textSize="@dimen/title_size"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/intro_margins"
+        android:gravity="center"/>
+
+
+
+</LinearLayout>

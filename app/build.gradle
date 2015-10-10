@@ -34,6 +34,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:8.1.0'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.diogobernardino:williamchart:2.0.1'
+    compile 'com.android.support:design:23.0.1'
 
     //Unit testing dependency
     testCompile 'junit:junit:4.12'
