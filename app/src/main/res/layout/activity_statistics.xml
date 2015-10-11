@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="0dp"
     android:orientation="vertical"
-    android:background="@mipmap/bg"
+    android:background="@drawable/bck"
     android:id="@+id/stat_layout"
     android:weightSum="1"
     >
@@ -19,7 +19,7 @@
         android:textColor="@color/WHITE"
         android:textSize="@dimen/title_size"
         android:textIsSelectable="false"
-        android:layout_weight="0.1"
+        android:layout_weight="0.11"
         android:gravity="center"/>
 
     <LinearLayout
@@ -79,9 +79,9 @@
         android:id="@+id/stat_switch"
         android:weightSum="1"
         android:background="@drawable/round_border_box"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_weight="0.06"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_weight="0.07"
         android:padding="5dp"
         >
 
@@ -114,12 +114,13 @@
 
     </LinearLayout>
 
+
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.52"
-        android:paddingBottom="25dp"
+        android:layout_weight="0.5"
         android:paddingTop="25dp"
+        android:paddingBottom="25dp"
         android:gravity="center">
 
         <com.db.chart.view.LineChartView

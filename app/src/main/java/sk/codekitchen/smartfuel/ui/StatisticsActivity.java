@@ -45,7 +45,9 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private SemiboldTextView infoPoints;
     private SemiboldTextView infoSuccess;
 
+    private final static int CHART_VALUE_STEP = 5;
     private LineChartView lineChart;
+    private LineSet dataSet;
     private int selectedChartColumn = 0;
     private int lastInactiveColumn = 8;
 
@@ -81,7 +83,6 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         infoSuccess = (SemiboldTextView) findViewById(R.id.stat_success);
 
         // chart
-
         Paint linePaint = new Paint();
         linePaint.setColor(Colors.GRAY);
         linePaint.setAlpha(255);
@@ -91,7 +92,6 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         lineChart.setOnClickListener(this);
         lineChart.setOnEntryClickListener(this);
         lineChart.setTopSpacing(Tools.fromDpToPx(15))
-                .setBorderSpacing(Tools.fromDpToPx(5))
                 .setXLabels(AxisController.LabelPosition.OUTSIDE)
                 .setYLabels(AxisController.LabelPosition.INSIDE)
                 .setLabelsColor(Colors.GRAY)
@@ -109,7 +109,8 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private void addDataToChart(String[] labels, float[] values){
         lineChart.dismiss();
 
-        LineSet dataSet = new LineSet(labels, values);
+        dataSet = new LineSet(labels, values);
+        dataSet.setThickness(5f);
         if (posOrNeg) {
             dataSet.setColor(Colors.HIGHIGHT)
                     .setGradientFill(Colors.GRADIENT_HIGHLIGHT, null)
@@ -121,9 +122,41 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                     .setSmooth(true);
         }
 
+        float max = 0;
+        for (int i = 0; i < values.length; i++){
+            if (values[i] > max) max = values[i];
+        }
+
+        int m = (int) max + 1;
+
+        m = m + (CHART_VALUE_STEP - m%CHART_VALUE_STEP);
+
+        lineChart.setAxisBorderValues(0, m,(m)/CHART_VALUE_STEP);
         lineChart.removeAllViews();
         lineChart.addData(dataSet);
         lineChart.show();
+    }
+
+    private void updateGraphData(){
+        removeChartPoint();
+
+        String[] labels = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
+        float[] values = {2f, 1f, 4f, 10f, 6f, 5f, 3f, 7f, 8f};
+
+        switch (range){
+            case RANGE_WEEK:
+
+                break;
+            case RANGE_MONTH:
+
+                break;
+            case RANGE_YEAR:
+
+                break;
+
+        }
+        // show data in the chart
+        addDataToChart(labels, values);
     }
 
     @Override
@@ -163,6 +196,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
             removeChartPoint();
         }
         else {
+            dataSet.setDotsDrawable(Utils.getDrawable(this, R.drawable.chart_data));
 
         }
     }
@@ -270,28 +304,6 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
             }
         }
         updateGraphData();
-    }
-
-    private void updateGraphData(){
-        removeChartPoint();
-
-        String[] labels = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
-        float[] values = {2f, 1f, 4f, 10f, 6f, 5f, 3f, 7f, 8f};
-
-        switch (range){
-            case RANGE_WEEK:
-
-                break;
-            case RANGE_MONTH:
-
-                break;
-            case RANGE_YEAR:
-
-                break;
-
-        }
-        // show data in the chart
-        addDataToChart(labels, values);
     }
 
     @Override
