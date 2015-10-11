@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.Vector;
 
@@ -67,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	    isLoggedIn = preferences.getInt(Params.USER_ID, -1) != -1;
 
         if (isLoggedIn){
-			displaySplashScreen();
 			goToRecorderActivity();
         }
     }
@@ -167,12 +167,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 	private void goToRecorderActivity() {
+		displaySplashScreen();
 		(new SyncDatabaseTask()).execute((Void) null);
-		try {
-			Thread.sleep(SPLASH_TIME_OUT);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void attemptToLogin() {
@@ -309,6 +305,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 		@Override
 		protected void onPostExecute(Void param) {
+
+			try {
+				Thread.sleep(SPLASH_TIME_OUT);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
 
 			startActivity(intent);
