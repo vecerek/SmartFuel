@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/intro_margins"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/splash_logo"
         android:visibility="invisible"/>
 
     <sk.codekitchen.smartfuel.ui.GUI.LightTextView
