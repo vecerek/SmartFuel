@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="0dp"
     android:orientation="vertical"
-    android:background="@mipmap/bg"
+    android:background="@drawable/bck"
     android:id="@+id/shop_layout"
     android:weightSum="1">
 

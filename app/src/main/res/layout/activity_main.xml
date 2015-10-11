@@ -5,7 +5,7 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
                 tools:context=".MainActivity"
-                android:background="@mipmap/bck4">
+                android:background="@drawable/bck4">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:orientation="vertical"

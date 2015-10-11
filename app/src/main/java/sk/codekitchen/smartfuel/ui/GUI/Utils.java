@@ -28,6 +28,21 @@ public class Utils {
         }
     }
 
+    public static Drawable getDrawable(Activity a, int id){
+        Drawable d = null;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
+            // FROM API 21
+            d = a.getDrawable(id);
+        }
+        else {
+            // FROM API 16 TO 20
+            d = a.getResources().getDrawable(id);
+        }
+
+        return d;
+    }
+
     public static void setProgressBarProgress(Activity a, ProgressBar p, int d){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP){
             // FROM API 21

@@ -39,17 +39,17 @@ public class IntroFragment extends Fragment {
             case 0:
                 introTitle.setText(getString(R.string.intro_1));
                 introText.setText(getString(R.string.intro_1_comment));
-                Utils.setBackgroundOfView(getActivity(),bck, R.mipmap.bck1);
+                Utils.setBackgroundOfView(getActivity(),bck, R.drawable.bck1);
                 break;
             case 1:
                 introTitle.setText(getString(R.string.intro_2));
                 introText.setText(getString(R.string.intro_2_comment));
-                Utils.setBackgroundOfView(getActivity(), bck, R.mipmap.bck2);
+                Utils.setBackgroundOfView(getActivity(), bck, R.drawable.bck2);
                 break;
             case 2:
                 introTitle.setText(getString(R.string.intro_3));
                 introText.setText(getString(R.string.intro_3_comment));
-                Utils.setBackgroundOfView(getActivity(), bck, R.mipmap.bck3);
+                Utils.setBackgroundOfView(getActivity(), bck, R.drawable.bck3);
                 break;
             case 3:
                 bck.setVisibility(View.GONE);
