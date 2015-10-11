@@ -5,7 +5,7 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
                 tools:context=".MainActivity"
-                android:background="@mipmap/bg">
+                android:background="@mipmap/bck4">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
@@ -28,32 +28,32 @@
         android:gravity="bottom|center"
         android:layout_margin="@dimen/intro_margins">
 
-        <ImageView
+        <View
             android:id="@+id/intro_dot_0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot_white"
+            android:layout_width="@dimen/intro_dot_size"
+            android:layout_height="@dimen/intro_dot_size"
+            android:background="@drawable/dot_color"
             android:layout_margin="@dimen/intro_dot_margin"/>
 
-        <ImageView
+        <View
             android:id="@+id/intro_dot_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot_white"
+            android:layout_width="@dimen/intro_dot_size"
+            android:layout_height="@dimen/intro_dot_size"
+            android:background="@drawable/dot_white"
             android:layout_margin="@dimen/intro_dot_margin"/>
 
-        <ImageView
+        <View
             android:id="@+id/intro_dot_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot_white"
+            android:layout_width="@dimen/intro_dot_size"
+            android:layout_height="@dimen/intro_dot_size"
+            android:background="@drawable/dot_white"
             android:layout_margin="@dimen/intro_dot_margin"/>
 
-        <ImageView
+        <View
             android:id="@+id/intro_dot_3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot_white"
+            android:layout_width="@dimen/intro_dot_size"
+            android:layout_height="@dimen/intro_dot_size"
+            android:background="@drawable/dot_white"
             android:layout_margin="@dimen/intro_dot_margin"/>
 
     </LinearLayout>

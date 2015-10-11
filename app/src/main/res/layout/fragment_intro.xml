@@ -12,7 +12,7 @@
         android:id="@+id/intro_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/intro_1"
+        android:text=""
         android:textColor="@color/MAIN"
         android:textSize="@dimen/login_text"
         android:gravity="center"/>
@@ -21,7 +21,7 @@
         android:id="@+id/intro_comment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/intro_1_comment"
+        android:text=""
         android:textColor="@color/WHITE"
         android:textSize="@dimen/title_size"
         android:layout_gravity="center"
