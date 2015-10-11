@@ -6,27 +6,37 @@ import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import java.util.Vector;
 
 import sk.codekitchen.smartfuel.R;
+import sk.codekitchen.smartfuel.ui.GUI.EditLightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
+import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.Utils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public final static int LOGIN_TAB_ID = 3;
 
     private boolean isLoggedIn = false;
     protected MainActivity same = this;
     protected Vector<Integer> dots = new Vector<>();
 
+    private Button login;
+    private EditLightTextView mail;
+    private EditLightTextView pass;
+    private LightTextView forgotten;
+    private LightTextView register;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dots.add(R.id.intro_dot_0);
-        dots.add(R.id.intro_dot_1);
-        dots.add(R.id.intro_dot_2);
-        dots.add(R.id.intro_dot_3);
+
+        setView();
 
         if (!isLoggedIn){
             showIntro();
@@ -36,7 +46,22 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        
+    }
+
+    private void setView(){
+        dots.add(R.id.intro_dot_0);
+        dots.add(R.id.intro_dot_1);
+        dots.add(R.id.intro_dot_2);
+
+        login = (Button) findViewById(R.id.login_btn);
+        login.setOnClickListener(this);
+        mail = (EditLightTextView) findViewById(R.id.login_mail);
+        pass = (EditLightTextView) findViewById(R.id.login_pass);
+        register = (LightTextView) findViewById(R.id.login_register);
+        register.setOnClickListener(this);
+        forgotten = (LightTextView) findViewById(R.id.login_forgotten);
+        forgotten.setOnClickListener(this);
+
     }
 
     private void showIntro(){
@@ -63,8 +88,15 @@ public class MainActivity extends AppCompatActivity {
                     Utils.setBackgroundOfView(same, dot, R.drawable.dot_white);
                 }
 
-                dot = findViewById(dots.elementAt(tab.getPosition()));
-                Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
+                if (tab.getPosition() < LOGIN_TAB_ID){
+                    dot = findViewById(dots.elementAt(tab.getPosition()));
+                    Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
+                }
+                else{
+                    viewPager.setVisibility(View.GONE);
+                    LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
+                    dotLayout.setVisibility(View.GONE);
+                }
 
             }
 
@@ -85,5 +117,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.login_btn:
+                break;
+            case R.id.login_forgotten:
+                break;
+            case R.id.login_register:
+                break;
+        }
+    }
 }
 

@@ -52,6 +52,8 @@ public class IntroFragment extends Fragment {
                 introText.setText(getString(R.string.intro_3_comment));
                 Utils.setBackgroundOfView(getActivity(), bck, R.mipmap.bck3);
                 break;
+            case 3:
+                bck.setVisibility(View.GONE);
         }
         return view;
     }
