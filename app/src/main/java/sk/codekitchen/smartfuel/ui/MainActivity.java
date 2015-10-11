@@ -133,6 +133,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.login_btn:
+	            mAuthTask = new UserLoginTask(mail.getText().toString(), pass.getText().toString());
+	            mAuthTask.execute((Void) null);
+	            showProgress(true);
                 break;
             case R.id.login_forgotten:
                 break;
