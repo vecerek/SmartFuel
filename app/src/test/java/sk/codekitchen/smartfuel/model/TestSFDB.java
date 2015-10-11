@@ -7,6 +7,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
 
+import junit.framework.Assert;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -236,9 +238,8 @@ public class TestSFDB extends AndroidTestCase {
 
 		try {
 			sfdb.sync(true);
-			assertTrue(true);
 		} catch (Exception e) {
-			assertTrue("Error: Update has not been successful", false);
+			Assert.fail("Error: Update has not been successful");
 		}
 	}
 
