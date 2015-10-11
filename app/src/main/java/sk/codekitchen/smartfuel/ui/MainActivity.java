@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.model.User;
+import sk.codekitchen.smartfuel.ui.GUI.CustomViewPager;
 import sk.codekitchen.smartfuel.ui.GUI.EditLightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
 import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
@@ -46,21 +47,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LightTextView register;
 	private ProgressDialog mProgressView;
 
+	private CustomViewPager viewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         setView();
-	    SharedPreferences preferences = PreferenceManager
-			    .getDefaultSharedPreferences(getApplicationContext());
+	    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	    isLoggedIn = preferences.getInt(Params.USER_ID, -1) != -1;
 
-        if (!isLoggedIn){
-            showIntro();
-        }
-        else{
-            Intent intent = new Intent(this, RecorderActivity.class);
+        if (isLoggedIn){
+
+			showSplashScreen();
+
+			Intent intent = new Intent(this, RecorderActivity.class);
             startActivity(intent);
             finish();
         }
@@ -83,55 +85,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	    mProgressView = new ProgressDialog(this);
 	    mProgressView.setTitle(getString(R.string.login_progress_title));
 	    mProgressView.setMessage(getString(R.string.login_progress_msg));
+
+		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+		tabLayout.addTab(tabLayout.newTab().setText("1"));
+		tabLayout.addTab(tabLayout.newTab().setText("2"));
+		tabLayout.addTab(tabLayout.newTab().setText("3"));
+		tabLayout.addTab(tabLayout.newTab().setText("Login"));
+		tabLayout.addTab(tabLayout.newTab().setText("SplashScreen"));
+		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+		viewPager = (CustomViewPager) findViewById(R.id.pager);
+		final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+		viewPager.setAdapter(adapter);
+		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+			@Override
+			public void onTabSelected(TabLayout.Tab tab) {
+				viewPager.setCurrentItem(tab.getPosition());
+
+				View dot;
+
+				for (Integer d : dots) {
+					dot = findViewById(d);
+					Utils.setBackgroundOfView(same, dot, R.drawable.dot_white);
+				}
+
+				if (tab.getPosition() < LOGIN_TAB_ID) {
+					dot = findViewById(dots.elementAt(tab.getPosition()));
+					Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
+				} else {
+					viewPager.setVisibility(View.GONE);
+					LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
+					dotLayout.setVisibility(View.GONE);
+				}
+
+			}
+
+			@Override
+			public void onTabUnselected(TabLayout.Tab tab) {
+			}
+
+			@Override
+			public void onTabReselected(TabLayout.Tab tab) {
+			}
+		});
     }
 
-    private void showIntro(){
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("1"));
-        tabLayout.addTab(tabLayout.newTab().setText("2"));
-        tabLayout.addTab(tabLayout.newTab().setText("3"));
-        tabLayout.addTab(tabLayout.newTab().setText("Login"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-	        @Override
-	        public void onTabSelected(TabLayout.Tab tab) {
-		        viewPager.setCurrentItem(tab.getPosition());
-
-		        View dot;
-
-		        for (Integer d : dots) {
-			        dot = findViewById(d);
-			        Utils.setBackgroundOfView(same, dot, R.drawable.dot_white);
-		        }
-
-		        if (tab.getPosition() < LOGIN_TAB_ID) {
-			        dot = findViewById(dots.elementAt(tab.getPosition()));
-			        Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
-		        } else {
-			        viewPager.setVisibility(View.GONE);
-			        LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
-			        dotLayout.setVisibility(View.GONE);
-		        }
-
-	        }
-
-	        @Override
-	        public void onTabUnselected(TabLayout.Tab tab) {
-	        }
-
-	        @Override
-	        public void onTabReselected(TabLayout.Tab tab) {
-	        }
-        });
-    }
+	public void showSplashScreen(){
+		viewPager.setVisibility(View.VISIBLE);
+		viewPager.setPagingEnabled(false);
+	}
 
     @Override
-    protected void onResume() {
+	protected void onResume() {
         super.onResume();
 
 
