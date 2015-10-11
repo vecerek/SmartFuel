@@ -2,18 +2,20 @@ package sk.codekitchen.smartfuel.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +23,7 @@ import java.util.Map;
 
 import sk.codekitchen.smartfuel.exception.IncorrectPasswordException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
-import sk.codekitchen.smartfuel.util.Params;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.ServerAPI;
 
 /**
@@ -50,10 +52,12 @@ public class User {
 	protected boolean pictureLoaded = false;
 
 	protected SFDB sfdb;
+	protected Context ctx;
 
 	public User(Context ctx)
 			throws UnknownUserException, ParseException, JSONException {
 
+		this.ctx = ctx;
 		sfdb = new SFDB(ctx);
 		this.setUserInfo(ctx);
 	}
@@ -81,9 +85,9 @@ public class User {
 
 		//TODO: implement an image handling method
 		JSONObject profileData = sfdb.queryProfileData();
-		totalDistance = profileData.getInt(Params.PARAM_KEY.TOTAL_DISTANCE);
-		totalExpiredPoints = profileData.getInt(Params.PARAM_KEY.TOTAL_EXPIRED_POINTS);
-		totalSuccessRate = profileData.getInt(Params.PARAM_KEY.TOTAL_SUCCESS_RATE);
+		totalDistance = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_DISTANCE);
+		totalExpiredPoints = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_EXPIRED_POINTS);
+		totalSuccessRate = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_SUCCESS_RATE);
 		lastSync = new LastSyncTime(ctx);
 	}
 
@@ -100,51 +104,61 @@ public class User {
 
 		ServerAPI request = new ServerAPI("authenticate");
 		JSONObject result = request.sendRequest(postParams);
-		if (request.responseCode != Params.HTTP_RESPONSE.OK) {
+		if (request.responseCode != GLOBALS.HTTP_RESPONSE.OK) {
 			switch (request.responseCode) {
-				case Params.HTTP_RESPONSE.FORBIDDEN:
-					if (!result.has(Params.ERROR_MSG_KEY))
+				case GLOBALS.HTTP_RESPONSE.FORBIDDEN:
+					if (!result.has(GLOBALS.ERROR_MSG_KEY))
 						throw new IOException("Error message key not returned by the server");
-					String errorMsg = result.getString(Params.ERROR_MSG_KEY);
-					if (errorMsg.equals(Params.BAD_EMAIL))
-						throw new UnknownUserException(Params.BAD_EMAIL);
-					else if (errorMsg.equals(Params.BAD_PASS))
-						throw new IncorrectPasswordException(Params.BAD_PASS);
+					String errorMsg = result.getString(GLOBALS.ERROR_MSG_KEY);
+					if (errorMsg.equals(GLOBALS.BAD_EMAIL))
+						throw new UnknownUserException(GLOBALS.BAD_EMAIL);
+					else if (errorMsg.equals(GLOBALS.BAD_PASS))
+						throw new IncorrectPasswordException(GLOBALS.BAD_PASS);
 					break;
 				default:
 					throw new Exception("Unknown error occured.");
 			}
-		} else if (!result.has(Params.USER_ID)) {
+		} else if (!result.has(GLOBALS.USER_ID)) {
 			throw new IOException("Server has not responded with the user's ID");
 		}
 
-		return result.getInt(Params.USER_ID);
+		return result.getInt(GLOBALS.USER_ID);
 	}
 
-	private class LoadImageTask extends AsyncTask<String, String, Bitmap> {
-		// TODO: reimplement the way the application handles and retrieves user's profile picture
+	public static void saveProfilePicture(Context ctx, Bitmap picture) {
+		ContextWrapper cw = new ContextWrapper(ctx);
+		// path to /data/data/yourapp/app_data/imageDir
+		File directory = cw.getDir(GLOBALS.DIR.PROFILE_PIC, Context.MODE_PRIVATE);
+		// Create imageDir
+		File profilePicPath = new File(directory, GLOBALS.FILE.PROFILE_PIC);
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			//do something before execution
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(profilePicPath);
+			picture.compress(Bitmap.CompressFormat.PNG, 100, fos);
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Bitmap getProfilePic() {
+		try {
+			ContextWrapper cw = new ContextWrapper(ctx);
+			File directory = cw.getDir(GLOBALS.DIR.PROFILE_PIC, Context.MODE_PRIVATE);
+
+			File f=new File(directory.getAbsolutePath(), GLOBALS.FILE.PROFILE_PIC);
+			return BitmapFactory.decodeStream(new FileInputStream(f));
+			/* That's how to set an ImageView with Bitmap
+			ImageView img=(ImageView)findViewById(R.id.imgPicker);
+			img.setImageBitmap(b);
+			*/
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 
-		protected Bitmap doInBackground(String... args) {
-			try {
-				picture = BitmapFactory.decodeStream((InputStream) new URL(args[0]).getContent());
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-			return picture;
-		}
-
-		protected void onPostExecute(Bitmap picture) {
-			//do something here with the picture
-			pictureLoaded = true;
-		}
+		return null;
 	}
 
 	public class LastSyncTime {
@@ -153,7 +167,7 @@ public class User {
 
 		public LastSyncTime(Context ctx) {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-			String lastSync = prefs.getString(Params.LAST_UPDATE, "NEVER");
+			String lastSync = prefs.getString(GLOBALS.LAST_UPDATE, "NEVER");
 			try {
 				lastSyncDate = SFDB.DATE_FORMAT.parse(lastSync);
 			} catch (ParseException e) {

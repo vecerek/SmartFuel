@@ -1,12 +1,12 @@
 package sk.codekitchen.smartfuel.util;
 
 /**
- * Params class serves as a container forSharedPreferences keys.
+ * GLOBALS class serves as a container forSharedPreferences keys.
  *
  * @author Attila Večerek
  * @since 1.0
  */
-public final class Params {
+public final class GLOBALS {
 
 	public static final String USER_ID = "user_id";
 	public static final String LAST_UPDATE = "last_update";
@@ -18,6 +18,16 @@ public final class Params {
 		public static final String TOTAL_SUCCESS_RATE = "total_success_rate";
 		public static final String TOTAL_DISTANCE = "total_distance";
 		public static final String TOTAL_EXPIRED_POINTS = "total_expired_points";
+
+		public static final String PROFILE_PIC_URL = "profile_pic_url";
+	}
+
+	public static final class DIR {
+		public static final String PROFILE_PIC = "profile_pic";
+	}
+
+	public static final class FILE {
+		public static final String PROFILE_PIC = "profile.jpg";
 	}
 
 	public static final class HTTP_RESPONSE {

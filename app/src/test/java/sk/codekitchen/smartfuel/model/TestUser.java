@@ -4,7 +4,6 @@ import android.os.Build;
 import android.test.AndroidTestCase;
 
 import junit.framework.Assert;
-import junit.framework.TestResult;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +13,7 @@ import org.robolectric.annotation.Config;
 import sk.codekitchen.smartfuel.BuildConfig;
 import sk.codekitchen.smartfuel.exception.IncorrectPasswordException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
-import sk.codekitchen.smartfuel.util.Params;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
  * @author Attila Večerek
@@ -47,7 +46,7 @@ public class TestUser extends AndroidTestCase {
 			Assert.fail("Should have thrown UnknownUserException");
 		} catch (UnknownUserException e) {
 			assertEquals("Error: Exception message is not the expected one",
-					Params.BAD_EMAIL, e.getMessage());
+					GLOBALS.BAD_EMAIL, e.getMessage());
 		}
 	}
 
@@ -63,7 +62,7 @@ public class TestUser extends AndroidTestCase {
 			Assert.fail("Should have thrown IncorrectPasswordException");
 		} catch (IncorrectPasswordException e) {
 			assertEquals("Error: Exception message is not the expected one",
-					Params.BAD_PASS, e.getMessage());
+					GLOBALS.BAD_PASS, e.getMessage());
 		}
 	}
 }

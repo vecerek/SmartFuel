@@ -3,7 +3,7 @@ import sk.codekitchen.smartfuel.exception.DuplicateSavepointException;
 import sk.codekitchen.smartfuel.exception.TableNotFoundException;
 import sk.codekitchen.smartfuel.exception.UnknownDataOriginException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
-import sk.codekitchen.smartfuel.util.Params;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.ServerAPI;
 import sk.codekitchen.smartfuel.util.cJSONArray;
 import sk.codekitchen.smartfuel.util.cJSONObject;
@@ -16,11 +16,15 @@ import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -93,11 +97,11 @@ public class SFDB extends SQLiteOpenHelper {
 
 		preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-		userID = preferences.getInt(Params.USER_ID, -1);
+		userID = preferences.getInt(GLOBALS.USER_ID, -1);
 		if(userID == -1)
 			throw new UnknownUserException("Unknown user");
 
-		String tmpLastUpdate = preferences.getString(Params.LAST_UPDATE, null);
+		String tmpLastUpdate = preferences.getString(GLOBALS.LAST_UPDATE, null);
 		lastUpdate = tmpLastUpdate == null ? null : DATE_FORMAT.parse(tmpLastUpdate);
 
 		db = this.getWritableDatabase();
@@ -272,9 +276,9 @@ public class SFDB extends SQLiteOpenHelper {
 	protected JSONObject downloadDatabase(String lastUpdate) throws IOException {
 		try {
 			Map<String, String> params = new HashMap<>();
-			params.put(Params.USER_ID, Integer.toString(userID));
+			params.put(GLOBALS.USER_ID, Integer.toString(userID));
 			if(lastUpdate != null) {
-				params.put(Params.LAST_UPDATE, lastUpdate);
+				params.put(GLOBALS.LAST_UPDATE, lastUpdate);
 			}
 
 			return (new ServerAPI("download_db").sendRequest(params));
@@ -424,7 +428,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 */
 	protected void setLastUpdateTime() {
 		lastUpdate = new Date(); //milliseconds since Unix epoch, UTC
-		preferences.edit().putString(Params.LAST_UPDATE, DATE_FORMAT.format(lastUpdate)).apply();
+		preferences.edit().putString(GLOBALS.LAST_UPDATE, DATE_FORMAT.format(lastUpdate)).apply();
 	}
 
 	public void sync()
@@ -454,7 +458,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 			if (editedData != null) {
 				Map<String, String> params = new HashMap<>();
-				params.put(Params.USER_ID, Integer.toString(userID));
+				params.put(GLOBALS.USER_ID, Integer.toString(userID));
 				params.put("data", editedData.toString());
 				if (test) params.put("test", String.valueOf(true));
 
@@ -488,6 +492,13 @@ public class SFDB extends SQLiteOpenHelper {
 						throw e;
 					}
 					commit();
+
+					if (result.has(GLOBALS.PARAM_KEY.PROFILE_PIC_URL)) {
+						String url = result.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL);
+						Bitmap profilePicture = BitmapFactory.decodeStream(
+								(InputStream) new URL(url).getContent());
+						User.saveProfilePicture(ctx, profilePicture);
+					}
 				} else {
 					throw new IOException("Local database update failed");
 				}
@@ -586,9 +597,9 @@ public class SFDB extends SQLiteOpenHelper {
 	 * @since 1.0
 	 */
 	public JSONObject queryProfileData() {
-		final String succRate = Params.PARAM_KEY.TOTAL_SUCCESS_RATE;
-		final String totKm = Params.PARAM_KEY.TOTAL_DISTANCE;
-		final String totEx = Params.PARAM_KEY.TOTAL_EXPIRED_POINTS;
+		final String succRate = GLOBALS.PARAM_KEY.TOTAL_SUCCESS_RATE;
+		final String totKm = GLOBALS.PARAM_KEY.TOTAL_DISTANCE;
+		final String totEx = GLOBALS.PARAM_KEY.TOTAL_EXPIRED_POINTS;
 
 		Cursor cursor = db.rawQuery(
 		"SELECT ROUND(100 * (d.corr_dist / (d.corr_dist+d.speed_dist))) AS "+succRate+", " +

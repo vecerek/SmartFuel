@@ -23,7 +23,7 @@ import java.util.HashSet;
 import sk.codekitchen.smartfuel.BuildConfig;
 import sk.codekitchen.smartfuel.exception.DuplicateSavepointException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
-import sk.codekitchen.smartfuel.util.Params;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.ServerAPI;
 
 /**
@@ -51,8 +51,8 @@ public class TestSFDB extends AndroidTestCase {
 			throws DuplicateSavepointException, ParseException, UnknownUserException {
 		Context context = RuntimeEnvironment.application.getApplicationContext();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (prefs.getInt(Params.USER_ID, -1) != 1) {
-			prefs.edit().putInt(Params.USER_ID, 1).commit();
+		if (prefs.getInt(GLOBALS.USER_ID, -1) != 1) {
+			prefs.edit().putInt(GLOBALS.USER_ID, 1).commit();
 		}
 
 		if (sfdb == null) {
@@ -110,12 +110,12 @@ public class TestSFDB extends AndroidTestCase {
 
 	@Test
 	public void testSyncDB() throws Throwable {
-		String lastUpdate = prefs.getString(Params.LAST_UPDATE, "");
+		String lastUpdate = prefs.getString(GLOBALS.LAST_UPDATE, "");
 		sfdb.sync();
 
-		assertFalse("Error: Last update time has not changed", lastUpdate.equals(prefs.getString(Params.LAST_UPDATE, "")));
+		assertFalse("Error: Last update time has not changed", lastUpdate.equals(prefs.getString(GLOBALS.LAST_UPDATE, "")));
 
-		String userID = String.valueOf(prefs.getInt(Params.USER_ID, 1));
+		String userID = String.valueOf(prefs.getInt(GLOBALS.USER_ID, 1));
 		JSONObject localUserData = sfdb.queryUserData();
 		JSONObject serverUserData = new ServerAPI("test/user_data/" + userID).sendRequest();
 

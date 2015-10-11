@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.Vector;
 
@@ -28,7 +26,7 @@ import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
 import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.Utils;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
-import sk.codekitchen.smartfuel.util.Params;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setView();
 	    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	    isLoggedIn = preferences.getInt(Params.USER_ID, -1) != -1;
+	    isLoggedIn = preferences.getInt(GLOBALS.USER_ID, -1) != -1;
 
         if (isLoggedIn){
 			goToRecorderActivity();
@@ -260,16 +258,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			if (userID != null) {
 				SharedPreferences prefs = PreferenceManager
 						.getDefaultSharedPreferences(getApplicationContext());
-				prefs.edit().putInt(Params.USER_ID, userID).apply();
+				prefs.edit().putInt(GLOBALS.USER_ID, userID).apply();
 
 				goToRecorderActivity();
 			} else {
 				switch (error) {
-					case Params.BAD_EMAIL:
+					case GLOBALS.BAD_EMAIL:
 						mail.setError(getString(R.string.error_account_not_registered));
 						mail.requestFocus();
 						break;
-					case Params.BAD_PASS:
+					case GLOBALS.BAD_PASS:
 						pass.setError(getString(R.string.error_incorrect_password));
 						pass.requestFocus();
 						break;
