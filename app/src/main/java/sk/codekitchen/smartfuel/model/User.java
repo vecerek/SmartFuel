@@ -9,11 +9,17 @@ import android.os.AsyncTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
+import sk.codekitchen.smartfuel.exception.IncorrectPasswordException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
+import sk.codekitchen.smartfuel.util.Params;
+import sk.codekitchen.smartfuel.util.ServerAPI;
 
 /**
  * Retrieves and handles the user related data.
@@ -73,6 +79,36 @@ public class User {
 
 	public JSONObject getStats() throws JSONException {
 		return sfdb.queryStats();
+	}
+
+	public static int authenticate(String email, String password)
+			throws Exception {
+
+		Map<String, String> postParams = new HashMap<>();
+		postParams.put("email", email);
+		postParams.put("password", password);
+
+		ServerAPI request = new ServerAPI("authenticate");
+		JSONObject result = request.sendRequest(postParams);
+		if (request.responseCode != Params.HTTP_RESPONSE.OK) {
+			switch (request.responseCode) {
+				case Params.HTTP_RESPONSE.FORBIDDEN:
+					if (!result.has(Params.ERROR_MSG_KEY))
+						throw new IOException("Error message key not returned by the server");
+					String errorMsg = result.getString(Params.ERROR_MSG_KEY);
+					if (errorMsg.equals(Params.BAD_EMAIL))
+						throw new UnknownUserException(Params.BAD_EMAIL);
+					else if (errorMsg.equals(Params.BAD_PASS))
+						throw new IncorrectPasswordException(Params.BAD_PASS);
+					break;
+				default:
+					throw new Exception("Unknown error occured.");
+			}
+		} else if (!result.has(Params.USER_ID)) {
+			throw new IOException("Server has not responded with the user's ID");
+		}
+
+		return result.getInt(Params.USER_ID);
 	}
 
 	private class LoadImage extends AsyncTask<String, String, Bitmap> {

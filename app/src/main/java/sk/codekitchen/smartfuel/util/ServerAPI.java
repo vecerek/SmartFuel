@@ -29,6 +29,8 @@ public class ServerAPI {
 	private static final String USER_AGENT = "SmartFuel/1.0";
 	private static final String SERVER = "http://smartfuel.walkoflife.sk/";
 
+	public int responseCode;
+
 	private HttpURLConnection con;
 
 	public ServerAPI(String action) throws IOException {
@@ -70,7 +72,7 @@ public class ServerAPI {
 		wr.flush();
 		wr.close();
 
-		//int responseCode = con.getResponseCode();
+		responseCode = con.getResponseCode();
 
 		BufferedReader in = new BufferedReader(
 				new InputStreamReader(con.getInputStream()));
@@ -87,6 +89,9 @@ public class ServerAPI {
 		if (json instanceof JSONArray) {
 			return new JSONObject().put("data", json);
 		} else if (json instanceof JSONObject) {
+			if(((JSONObject) json).has("response_code")) {
+				responseCode = ((JSONObject) json).getInt("response_code");
+			}
 			return (JSONObject) json;
 		} else {
 			throw new IOException("Response is not a JSON");
