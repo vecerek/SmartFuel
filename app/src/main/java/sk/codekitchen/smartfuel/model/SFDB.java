@@ -63,9 +63,9 @@ public class SFDB extends SQLiteOpenHelper {
 	public static final String SAVEPOINT = "savepoint_";
 	public static final String ORIGIN_LOCAL = "local";
 	public static final String ORIGIN_SERVER = "server";
+	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	protected int userID;
-	protected DateFormat dateFormat;
 	protected Context ctx;
 
 	private Boolean transactionExists = false;
@@ -89,8 +89,7 @@ public class SFDB extends SQLiteOpenHelper {
 		ctx = context;
 		savepoints = new Vector<>(5, 10);
 		//Set date format to UTC
-		dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 
@@ -99,7 +98,7 @@ public class SFDB extends SQLiteOpenHelper {
 			throw new UnknownUserException("Unknown user");
 
 		String tmpLastUpdate = preferences.getString(Params.LAST_UPDATE, null);
-		lastUpdate = tmpLastUpdate == null ? null : dateFormat.parse(tmpLastUpdate);
+		lastUpdate = tmpLastUpdate == null ? null : DATE_FORMAT.parse(tmpLastUpdate);
 
 		db = this.getWritableDatabase();
 	}
@@ -425,7 +424,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 */
 	protected void setLastUpdateTime() {
 		lastUpdate = new Date(); //milliseconds since Unix epoch, UTC
-		preferences.edit().putString(Params.LAST_UPDATE, dateFormat.format(lastUpdate)).apply();
+		preferences.edit().putString(Params.LAST_UPDATE, DATE_FORMAT.format(lastUpdate)).apply();
 	}
 
 	public void sync()
@@ -470,7 +469,7 @@ public class SFDB extends SQLiteOpenHelper {
 			if (lastUpdate == null) {
 				result = downloadDatabase();
 			} else {
-				result = downloadDatabase(dateFormat.format(lastUpdate));
+				result = downloadDatabase(DATE_FORMAT.format(lastUpdate));
 			}
 
 			if (result.has("success")) {
@@ -575,6 +574,38 @@ public class SFDB extends SQLiteOpenHelper {
 				data = new cJSONObject(cursor);
 				cursor.close();
 			}
+		}
+
+		return data;
+	}
+
+	/**
+	 * Returns a JSONObject containing the user profile data
+	 *
+	 * @return success_rate, total_km, total_expired
+	 * @since 1.0
+	 */
+	public JSONObject queryProfileData() {
+		final String succRate = Params.PARAM_KEY.TOTAL_SUCCESS_RATE;
+		final String totKm = Params.PARAM_KEY.TOTAL_DISTANCE;
+		final String totEx = Params.PARAM_KEY.TOTAL_EXPIRED_POINTS;
+
+		Cursor cursor = db.rawQuery(
+		"SELECT ROUND(100 * (d.corr_dist / (d.corr_dist+d.speed_dist))) AS "+succRate+", " +
+				"ROUND(corr_dist+speed_dist) AS "+totKm+", " + totEx + " " +
+				"FROM (" +
+					"SELECT SUM(" + SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE + ") AS corr_dist, " +
+					"SUM(" + SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE + ") AS speed_dist, " +
+					"SUM("+SmartFuelActivity.TABLE.COLUMN.POINTS+"*"+SmartFuelActivity.TABLE.COLUMN.EXPIRED+") as " + totEx + " " +
+					"FROM " + SmartFuelActivity.TABLE.NAME + ") AS d", null
+		);
+
+		JSONObject data = null;
+		if (cursor != null) {
+			if (cursor.getCount() > 0) {
+				data = new cJSONObject(cursor);
+			}
+			cursor.close();
 		}
 
 		return data;

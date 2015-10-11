@@ -2,9 +2,11 @@ package sk.codekitchen.smartfuel.model;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,16 +34,17 @@ public class User {
 
 	public String name;
 	public String surname;
+	public String city;
+	public String region;
 	public String email;
 	public String chipId;
 	public int totalPoints;
 	public int currentPoints;
 
-	//public String city;
-	//public String region;
-	//public int totalDistance;
-	//public int totalPoints;
-	//public int successRate;
+	public int totalDistance;
+	public int totalExpiredPoints;
+	public int totalSuccessRate;
+	public LastSyncTime lastSync;
 
 	protected Bitmap picture;
 	protected boolean pictureLoaded = false;
@@ -51,7 +55,7 @@ public class User {
 			throws UnknownUserException, ParseException, JSONException {
 
 		sfdb = new SFDB(ctx);
-		this.setUserInfo();
+		this.setUserInfo(ctx);
 	}
 
 	public int id() { return sfdb.getUserID(); }
@@ -64,17 +68,23 @@ public class User {
 		return pictureLoaded ? picture : null;
 	}
 
-	protected void setUserInfo() throws JSONException {
+	protected void setUserInfo(Context ctx) throws JSONException {
 		JSONObject user = sfdb.queryUserData();
 		name = user.getString(TABLE.COLUMN.NAME);
 		surname = user.getString(TABLE.COLUMN.SURNAME);
+		city = user.getString(TABLE.COLUMN.CITY);
+		region = user.getString(TABLE.COLUMN.REGION);
 		email = user.getString(TABLE.COLUMN.EMAIL);
 		chipId = user.getString(TABLE.COLUMN.CHIP_ID);
 		totalPoints = user.getInt(TABLE.COLUMN.TOTAL_POINTS);
 		currentPoints = user.getInt(TABLE.COLUMN.CURRENT_POINTS);
 
-		// TODO: implement in the database a column for image url, street address and city
-		// TODO: implement a method for getting the overall success rate out of the road activities table
+		//TODO: implement an image handling method
+		JSONObject profileData = sfdb.queryProfileData();
+		totalDistance = profileData.getInt(Params.PARAM_KEY.TOTAL_DISTANCE);
+		totalExpiredPoints = profileData.getInt(Params.PARAM_KEY.TOTAL_EXPIRED_POINTS);
+		totalSuccessRate = profileData.getInt(Params.PARAM_KEY.TOTAL_SUCCESS_RATE);
+		lastSync = new LastSyncTime(ctx);
 	}
 
 	public JSONObject getStats() throws JSONException {
@@ -134,6 +144,28 @@ public class User {
 		protected void onPostExecute(Bitmap picture) {
 			//do something here with the picture
 			pictureLoaded = true;
+		}
+	}
+
+	public class LastSyncTime {
+
+		private Date lastSyncDate = null;
+
+		public LastSyncTime(Context ctx) {
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+			String lastSync = prefs.getString(Params.LAST_UPDATE, "NEVER");
+			try {
+				lastSyncDate = SFDB.DATE_FORMAT.parse(lastSync);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public int getTime() {
+			long diff = (new Date().getTime()) - lastSyncDate.getTime();
+			double diffHours = diff / (60 * 60 * 1000);
+
+			return (int) Math.round(diffHours);
 		}
 	}
 
