@@ -49,7 +49,7 @@
                 android:layout_height="fill_parent"
                 android:src="@mipmap/profile"
                 android:layout_weight="0.1"
-                android:alpha="0.5"/>
+                android:alpha="0.4"/>
 
             <sk.codekitchen.smartfuel.ui.GUI.EditLightTextView
                 android:id="@+id/login_mail"
@@ -87,9 +87,9 @@
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
-                android:src="@mipmap/edit"
+                android:src="@mipmap/lock"
                 android:layout_weight="0.1"
-                android:alpha="0.5"/>
+                android:alpha="0.4"/>
 
             <sk.codekitchen.smartfuel.ui.GUI.EditLightTextView
                 android:id="@+id/login_pass"

@@ -72,13 +72,13 @@
     <string name="intro_3">Reward</string>
     <string name="intro_3_comment">We reward you with cheaper refueling.</string>
 
-    <string name="login_start">Lets start</string>
+    <string name="login_start">Let\'s start</string>
     <string name="login_comment">Login into your XXX account</string>
     <string name="login_mail">E-mail</string>
     <string name="login_pass">Password</string>
     <string name="login_btn">Login</string>
     <string name="login_forget">Forgotten?</string>
-    <string name="login_no_acc">Dont have an XXX account, yet?</string>
+    <string name="login_no_acc">Don\'t have an XXX account, yet?</string>
     <string name="login_reg">Register for Free</string>
 
 </resources>
