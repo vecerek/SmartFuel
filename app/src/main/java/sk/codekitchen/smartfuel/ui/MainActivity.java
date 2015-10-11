@@ -1,6 +1,8 @@
 package sk.codekitchen.smartfuel.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
@@ -12,14 +14,21 @@ import android.widget.LinearLayout;
 import java.util.Vector;
 
 import sk.codekitchen.smartfuel.R;
+import sk.codekitchen.smartfuel.model.User;
 import sk.codekitchen.smartfuel.ui.GUI.EditLightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
 import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.Utils;
+import sk.codekitchen.smartfuel.util.Params;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public final static int LOGIN_TAB_ID = 3;
+
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private UserLoginTask mAuthTask = null;
 
     private boolean isLoggedIn = false;
     protected MainActivity same = this;
@@ -30,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditLightTextView pass;
     private LightTextView forgotten;
     private LightTextView register;
+	private ProgressDialog mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         forgotten = (LightTextView) findViewById(R.id.login_forgotten);
         forgotten.setOnClickListener(this);
 
+	    mProgressView = new ProgressDialog(this);
+	    mProgressView.setTitle(getString(R.string.login_progress_title));
+	    mProgressView.setMessage(getString(R.string.login_progress_msg));
     }
 
     private void showIntro(){
@@ -77,36 +90,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+	        @Override
+	        public void onTabSelected(TabLayout.Tab tab) {
+		        viewPager.setCurrentItem(tab.getPosition());
 
-                View dot;
+		        View dot;
 
-                for (Integer d : dots){
-                    dot = findViewById(d);
-                    Utils.setBackgroundOfView(same, dot, R.drawable.dot_white);
-                }
+		        for (Integer d : dots) {
+			        dot = findViewById(d);
+			        Utils.setBackgroundOfView(same, dot, R.drawable.dot_white);
+		        }
 
-                if (tab.getPosition() < LOGIN_TAB_ID){
-                    dot = findViewById(dots.elementAt(tab.getPosition()));
-                    Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
-                }
-                else{
-                    viewPager.setVisibility(View.GONE);
-                    LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
-                    dotLayout.setVisibility(View.GONE);
-                }
+		        if (tab.getPosition() < LOGIN_TAB_ID) {
+			        dot = findViewById(dots.elementAt(tab.getPosition()));
+			        Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
+		        } else {
+			        viewPager.setVisibility(View.GONE);
+			        LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
+			        dotLayout.setVisibility(View.GONE);
+		        }
 
-            }
+	        }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+	        @Override
+	        public void onTabUnselected(TabLayout.Tab tab) {
+	        }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+	        @Override
+	        public void onTabReselected(TabLayout.Tab tab) {
+	        }
         });
     }
 
@@ -128,5 +140,79 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	public void showProgress(final boolean show) {
+
+		// if progress is active, disable fields, otherwise enable them
+		mail.setEnabled(!show);
+		pass.setEnabled(!show);
+
+		if(show) mProgressView.show();
+		else mProgressView.dismiss();
+	}
+
+	/**
+	 * Represents an asynchronous login/registration task used to authenticate
+	 * the user.
+	 */
+	public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
+
+		private final String mEmail;
+		private final String mPassword;
+		private String error = null;
+
+		UserLoginTask(String email, String password) {
+			mEmail = email;
+			mPassword = password;
+		}
+
+		@Override
+		protected Integer doInBackground(Void... params) {
+			Integer userID = null;
+			try {
+				userID = User.authenticate(mEmail, mPassword);
+			} catch (Exception e) {
+				error = e.getMessage();
+			}
+
+			return userID;
+		}
+
+		@Override
+		protected void onPostExecute(final Integer userID) {
+			mAuthTask = null;
+			showProgress(false);
+
+			if (userID != null) {
+				getPreferences(MODE_PRIVATE).edit()
+						.putString(Params.USER_ID, String.valueOf(userID)).apply();
+				Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
+				startActivity(intent);
+				finish();
+			} else {
+				switch (error) {
+					case Params.BAD_EMAIL:
+						mail.setError(getString(R.string.account_not_registered));
+						mail.requestFocus();
+						break;
+					case Params.BAD_PASS:
+						pass.setError(getString(R.string.incorrect_password));
+						pass.requestFocus();
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			mAuthTask = null;
+			showProgress(false);
+		}
+	}
 }
 

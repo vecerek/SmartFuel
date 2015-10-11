@@ -41,32 +41,32 @@
     <string name="profile_streak">bez expirácie bodov</string>
 
     <string-array name="days_short">
-        <item>PO</item>
-        <item>UT</item>
-        <item>ST</item>
-        <item>ŠT</item>
-        <item>PI</item>
-        <item>SO</item>
-        <item>NE</item>
+        <item>Po</item>
+        <item>Ut</item>
+        <item>St</item>
+        <item>Št</item>
+        <item>Pi</item>
+        <item>So</item>
+        <item>Ne</item>
     </string-array>
 
     <string-array name="month_short">
-        <item>JAN</item>
-        <item>FEB</item>
-        <item>MAR</item>
-        <item>APR</item>
-        <item>MAJ</item>
-        <item>JUN</item>
-        <item>JUL</item>
-        <item>AUG</item>
-        <item>SEP</item>
-        <item>OKT</item>
-        <item>NOV</item>
-        <item>DEC</item>
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>Máj</item>
+        <item>Jún</item>
+        <item>Júl</item>
+        <item>Aug</item>
+        <item>Sep</item>
+        <item>Okt</item>
+        <item>Nov</item>
+        <item>Dec</item>
     </string-array>
 
-    <string name="intro_1">Ride</string>
-    <string name="intro_1_comment">Ride along the world safely, since..</string>
+    <string name="intro_1">Drive</string>
+    <string name="intro_1_comment">Drive along the world safely, since..</string>
     <string name="intro_2">Points</string>
     <string name="intro_2_comment">Earn points for driving safe.</string>
     <string name="intro_3">Reward</string>
@@ -80,5 +80,13 @@
     <string name="login_forget">Forgotten?</string>
     <string name="login_no_acc">Don\'t have an XXX account, yet?</string>
     <string name="login_reg">Register for Free</string>
+
+    <string name="login_progress_title">Login</string>
+    <string name="login_progress_msg">Attempting to login...</string>
+
+    <string name="account_not_registered">Account doesn\'t exist.</string>
+    <string name="incorrect_email">Not a valid email.</string>
+    <string name="incorrect_password">Incorrect password.</string>
+    <string name="unexpected_login_error">Something unexpected has happened. Please, try it later.</string>
 
 </resources>
