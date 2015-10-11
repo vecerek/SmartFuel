@@ -211,10 +211,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	}
 
 	/**
-	 * Represents an asynchronous login/registration task used to authenticate
+	 * Represents an asynchronous login task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Integer> {
+	private class UserLoginTask extends AsyncTask<Void, Void, Integer> {
 
 		private final String mEmail;
 		private final String mPassword;
@@ -272,5 +272,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			showProgress(false);
 		}
 	}
+
+
 }
 
