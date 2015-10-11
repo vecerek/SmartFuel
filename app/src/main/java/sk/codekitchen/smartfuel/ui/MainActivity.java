@@ -2,11 +2,14 @@ package sk.codekitchen.smartfuel.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -23,7 +26,9 @@ import sk.codekitchen.smartfuel.util.Params;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public final static int LOGIN_TAB_ID = 3;
+    public static final int LOGIN_TAB_ID = 3;
+	private static final int MIN_EMAIL_LEGTH = 5;
+	private static final int MIN_PASSWORD_LEGTH = 5;
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -47,6 +52,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         setView();
+	    SharedPreferences preferences = PreferenceManager
+			    .getDefaultSharedPreferences(getApplicationContext());
+	    isLoggedIn = preferences.getInt(Params.USER_ID, -1) != -1;
 
         if (!isLoggedIn){
             showIntro();
@@ -133,9 +141,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.login_btn:
-	            mAuthTask = new UserLoginTask(mail.getText().toString(), pass.getText().toString());
-	            mAuthTask.execute((Void) null);
-	            showProgress(true);
+	            attemptToLogin();
                 break;
             case R.id.login_forgotten:
                 break;
@@ -143,6 +149,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+	public void attemptToLogin() {
+		if (mAuthTask != null)
+			return;
+
+		String email = mail.getText().toString();
+		String password = pass.getText().toString();
+
+		View focusView = null;
+
+		// Check for a valid password, if the user entered one.
+		if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+			pass.setError(getString(R.string.error_invalid_password));
+			focusView = pass;
+		}
+
+		// Check for a valid email address.
+		if (TextUtils.isEmpty(email)) {
+			mail.setError(getString(R.string.error_field_required));
+			focusView = mail;
+		} else if (!isEmailValid(email)) {
+			mail.setError(getString(R.string.error_invalid_email));
+			focusView = mail;
+		}
+
+		if (focusView != null) {
+			focusView.requestFocus();
+		} else {
+			mAuthTask = new UserLoginTask(email, password);
+			mAuthTask.execute((Void) null);
+			showProgress(true);
+		}
+	}
+
+	private boolean isEmailValid(String email) {
+		return email.length() >= MIN_EMAIL_LEGTH;
+	}
+
+	private boolean isPasswordValid(String pass) {
+		return pass.length() >= MIN_PASSWORD_LEGTH;
+	}
 
 	/**
 	 * Shows the progress UI and hides the login form.
@@ -198,11 +245,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			} else {
 				switch (error) {
 					case Params.BAD_EMAIL:
-						mail.setError(getString(R.string.account_not_registered));
+						mail.setError(getString(R.string.error_account_not_registered));
 						mail.requestFocus();
 						break;
 					case Params.BAD_PASS:
-						pass.setError(getString(R.string.incorrect_password));
+						pass.setError(getString(R.string.error_incorrect_password));
 						pass.requestFocus();
 						break;
 					default:

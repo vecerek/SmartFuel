@@ -84,9 +84,11 @@
     <string name="login_progress_title">Login</string>
     <string name="login_progress_msg">Attempting to login...</string>
 
-    <string name="account_not_registered">Account doesn\'t exist.</string>
-    <string name="incorrect_email">Not a valid email.</string>
-    <string name="incorrect_password">Incorrect password.</string>
-    <string name="unexpected_login_error">Something unexpected has happened. Please, try it later.</string>
+    <string name="error_account_not_registered">Account doesn\'t exist.</string>
+    <string name="error_incorrect_password">Incorrect password.</string>
+    <string name="error_invalid_password">Invalid password.</string>
+    <string name="error_invalid_email">Not a valid email.</string>
+    <string name="error_field_required">Required field.</string>
+    <string name="error_unexpected">Something unexpected has happened. Please, try it later.</string>
 
 </resources>
