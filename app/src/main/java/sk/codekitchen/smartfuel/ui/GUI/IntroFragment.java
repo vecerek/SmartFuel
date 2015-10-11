@@ -54,11 +54,6 @@ public class IntroFragment extends Fragment {
             case 3:
                 bck.setVisibility(View.GONE);
                 break;
-            case 4:
-                introText.setVisibility(View.INVISIBLE);
-                introTitle.setVisibility(View.INVISIBLE);
-                ImageView img = (ImageView) view.findViewById(R.id.intro_logo);
-                img.setVisibility(View.VISIBLE);
         }
         return view;
     }

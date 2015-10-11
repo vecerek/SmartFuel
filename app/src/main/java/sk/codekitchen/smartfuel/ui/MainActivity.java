@@ -7,24 +7,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import org.xml.sax.SAXException;
-
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Vector;
 
-import javax.xml.parsers.ParserConfigurationException;
 
 import sk.codekitchen.smartfuel.R;
-import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.model.SFDB;
 import sk.codekitchen.smartfuel.model.User;
 import sk.codekitchen.smartfuel.ui.GUI.CustomViewPager;
@@ -37,7 +32,6 @@ import sk.codekitchen.smartfuel.util.Params;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final int LOGIN_TAB_ID = 3;
 	private static final int MIN_EMAIL_LEGTH = 5;
 	private static final int MIN_PASSWORD_LEGTH = 5;
 
@@ -56,11 +50,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LightTextView forgotten;
     private LightTextView register;
 	private ProgressDialog mProgressView;
+	private TabLayout tabLayout;
+	private LinearLayout loginScreen;
+	private ImageView splashScreen;
 
 	private CustomViewPager viewPager;
 
 	private static final int SPLASH_TIME_OUT = 2500;
-	private boolean isSplashTimedOut = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dots.add(R.id.intro_dot_1);
         dots.add(R.id.intro_dot_2);
 
+		splashScreen = (ImageView) findViewById(R.id.intro_logo);
+		loginScreen = (LinearLayout) findViewById(R.id.login_screen);
+
         login = (Button) findViewById(R.id.login_btn);
         login.setOnClickListener(this);
         mail = (EditLightTextView) findViewById(R.id.login_mail);
@@ -94,12 +93,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	    mProgressView.setTitle(getString(R.string.login_progress_title));
 	    mProgressView.setMessage(getString(R.string.login_progress_msg));
 
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+		tabLayout = (TabLayout) findViewById(R.id.tab_layout);
 		tabLayout.addTab(tabLayout.newTab().setText("1"));
 		tabLayout.addTab(tabLayout.newTab().setText("2"));
 		tabLayout.addTab(tabLayout.newTab().setText("3"));
 		tabLayout.addTab(tabLayout.newTab().setText("Login"));
-		tabLayout.addTab(tabLayout.newTab().setText("SplashScreen"));
 		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 		viewPager = (CustomViewPager) findViewById(R.id.pager);
@@ -118,13 +116,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 					Utils.setBackgroundOfView(same, dot, R.drawable.dot_white);
 				}
 
-				if (tab.getPosition() < LOGIN_TAB_ID) {
-					dot = findViewById(dots.elementAt(tab.getPosition()));
-					Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
-				} else {
-					viewPager.setVisibility(View.GONE);
-					LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
-					dotLayout.setVisibility(View.GONE);
+				switch (tab.getPosition()){
+					case 0:
+					case 1:
+					case 2:
+						dot = findViewById(dots.elementAt(tab.getPosition()));
+						Utils.setBackgroundOfView(same, dot, R.drawable.dot_color);
+						break;
+					case 3:
+						viewPager.setVisibility(View.GONE);
+						LinearLayout dotLayout = (LinearLayout) findViewById(R.id.intro_dots);
+						dotLayout.setVisibility(View.GONE);
+						break;
 				}
 
 			}
@@ -139,13 +142,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		});
     }
 
-	public void showSplashScreen(){
-		viewPager.setVisibility(View.VISIBLE);
-		viewPager.setPagingEnabled(false);
-	}
-
-	public void hideSplashScreen() {
-		viewPager.setVisibility(View.GONE);
+	public void displaySplashScreen(){
+		viewPager.setCurrentItem(3);
+		loginScreen.setVisibility(View.INVISIBLE);
+		splashScreen.setVisibility(View.VISIBLE);
 	}
 
     @Override
@@ -167,15 +167,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 	private void goToRecorderActivity() {
-		showSplashScreen();
+		displaySplashScreen();
 		(new SyncDatabaseTask()).execute((Void) null);
-
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				isSplashTimedOut = true;
-			}
-		}, SPLASH_TIME_OUT);
 	}
 
 	public void attemptToLogin() {
@@ -312,9 +305,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 		@Override
 		protected void onPostExecute(Void param) {
-			while (!isSplashTimedOut);
+
+			try {
+				Thread.sleep(SPLASH_TIME_OUT);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
-			MainActivity.this.hideSplashScreen();
 
 			startActivity(intent);
 			finish();
