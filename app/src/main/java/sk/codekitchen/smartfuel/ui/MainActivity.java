@@ -243,8 +243,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			showProgress(false);
 
 			if (userID != null) {
-				getPreferences(MODE_PRIVATE).edit()
-						.putString(Params.USER_ID, String.valueOf(userID)).apply();
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(getApplicationContext());
+				prefs.edit().putInt(Params.USER_ID, userID).apply();
+
 				Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
 				startActivity(intent);
 				finish();
