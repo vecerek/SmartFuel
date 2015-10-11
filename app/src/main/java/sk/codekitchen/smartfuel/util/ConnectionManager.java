@@ -14,6 +14,11 @@ import java.io.IOException;
 public class ConnectionManager {
 
 	private final static String serverIP = "8.8.8.8";
+	private final Context context;
+
+	public ConnectionManager(Context context) {
+		this.context = context;
+	}
 
 	/**
 	 * Get the network info
@@ -27,10 +32,9 @@ public class ConnectionManager {
 
 	/**
 	 * Check if there is any connectivity
-	 * @param context
 	 * @return
 	 */
-	public static boolean isConnected(Context context){
+	public boolean isConnected(){
 		NetworkInfo info = ConnectionManager.getNetworkInfo(context);
 		return (info != null && info.isConnected());
 	}
@@ -53,32 +57,29 @@ public class ConnectionManager {
 
 	/**
 	 * Check if there is any connectivity to a Wifi network
-	 * @param context
 	 * @return
 	 */
-	public static boolean isConnectedWifi(Context context){
+	public boolean isConnectedWifi(){
 		NetworkInfo info = ConnectionManager.getNetworkInfo(context);
 		return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
 	}
 
 	/**
 	 * Check if there is any connectivity to a mobile network
-	 * @param context
 	 * @return
 	 */
-	public static boolean isConnectedMobile(Context context){
+	public boolean isConnectedMobile(){
 		NetworkInfo info = ConnectionManager.getNetworkInfo(context);
 		return (info != null && info.isConnected() && info.getType() == ConnectivityManager.TYPE_MOBILE);
 	}
 
 	/**
 	 * Check if there is fast connectivity
-	 * @param context
 	 * @return
 	 */
-	public static boolean isConnectedFast(Context context){
+	public boolean isConnectionFast(){
 		NetworkInfo info = ConnectionManager.getNetworkInfo(context);
-		return (info != null && info.isConnected() && ConnectionManager.isConnectionFast(info.getType(),info.getSubtype()));
+		return (info != null && info.isConnected() && isConnectionFast(info.getType(),info.getSubtype()));
 	}
 
 	/**
@@ -87,10 +88,10 @@ public class ConnectionManager {
 	 * @param subType
 	 * @return
 	 */
-	public static boolean isConnectionFast(int type, int subType){
-		if(type==ConnectivityManager.TYPE_WIFI) {
+	private boolean isConnectionFast(int type, int subType){
+		if(type == ConnectivityManager.TYPE_WIFI) {
 			return true;
-		} else if(type==ConnectivityManager.TYPE_MOBILE) {
+		} else if(type == ConnectivityManager.TYPE_MOBILE) {
 			switch(subType) {
 				case TelephonyManager.NETWORK_TYPE_1xRTT:
 					return false; // ~ 50-100 kbps
