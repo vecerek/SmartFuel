@@ -15,7 +15,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     IntroFragment t2;
     IntroFragment t3;
     IntroFragment tLogin;
-    IntroFragment splash;
 
     public FragmentAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
@@ -29,8 +28,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
         t3.setContent(2);
         tLogin = new IntroFragment();
         tLogin.setContent(3);
-        splash = new IntroFragment();
-        splash.setContent(4);
 
     }
 
@@ -41,7 +38,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
             case 1: return t2;
             case 2: return t3;
             case 3: return tLogin;
-            case 4: return splash;
             default: return null;
         }
     }
