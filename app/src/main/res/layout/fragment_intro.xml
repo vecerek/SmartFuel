@@ -8,6 +8,14 @@
               android:gravity="bottom"
               android:paddingBottom="@dimen/intro_bottom_padding">
 
+    <ImageView
+        android:id="@+id/intro_logo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/intro_margins"
+        android:src="@mipmap/ic_launcher"
+        android:visibility="invisible"/>
+
     <sk.codekitchen.smartfuel.ui.GUI.LightTextView
         android:id="@+id/intro_title"
         android:layout_width="fill_parent"
@@ -27,7 +35,5 @@
         android:layout_gravity="center"
         android:layout_margin="@dimen/intro_margins"
         android:gravity="center"/>
-
-
 
 </LinearLayout>

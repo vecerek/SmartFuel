@@ -29,7 +29,6 @@ public class IntroFragment extends Fragment {
 
         LightTextView introTitle;
         LightTextView introText;
-        View dot = null;
         LinearLayout bck;
 
         introTitle = (LightTextView) view.findViewById(R.id.intro_title);
@@ -54,6 +53,12 @@ public class IntroFragment extends Fragment {
                 break;
             case 3:
                 bck.setVisibility(View.GONE);
+                break;
+            case 4:
+                introText.setVisibility(View.INVISIBLE);
+                introTitle.setVisibility(View.INVISIBLE);
+                ImageView img = (ImageView) view.findViewById(R.id.intro_logo);
+                img.setVisibility(View.VISIBLE);
         }
         return view;
     }
