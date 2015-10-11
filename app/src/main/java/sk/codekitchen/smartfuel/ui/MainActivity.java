@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
@@ -14,15 +15,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.Vector;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import sk.codekitchen.smartfuel.R;
+import sk.codekitchen.smartfuel.exception.UnknownUserException;
+import sk.codekitchen.smartfuel.model.SFDB;
 import sk.codekitchen.smartfuel.model.User;
 import sk.codekitchen.smartfuel.ui.GUI.CustomViewPager;
 import sk.codekitchen.smartfuel.ui.GUI.EditLightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
 import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
 import sk.codekitchen.smartfuel.ui.GUI.Utils;
+import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.Params;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -49,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 	private CustomViewPager viewPager;
 
+	private static final int SPLASH_TIME_OUT = 2500;
+	private boolean isSplashTimedOut = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	    isLoggedIn = preferences.getInt(Params.USER_ID, -1) != -1;
 
         if (isLoggedIn){
-
-			showSplashScreen();
-
-			Intent intent = new Intent(this, RecorderActivity.class);
-            startActivity(intent);
-            finish();
+			goToRecorderActivity();
         }
     }
 
@@ -136,11 +144,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		viewPager.setPagingEnabled(false);
 	}
 
+	public void hideSplashScreen() {
+		viewPager.setVisibility(View.GONE);
+	}
+
     @Override
 	protected void onResume() {
         super.onResume();
-
-
     }
 
     @Override
@@ -155,6 +165,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+	private void goToRecorderActivity() {
+		showSplashScreen();
+		(new SyncDatabaseTask()).execute((Void) null);
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				isSplashTimedOut = true;
+			}
+		}, SPLASH_TIME_OUT);
+	}
 
 	public void attemptToLogin() {
 		if (mAuthTask != null)
@@ -247,9 +269,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 						.getDefaultSharedPreferences(getApplicationContext());
 				prefs.edit().putInt(Params.USER_ID, userID).apply();
 
-				Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
-				startActivity(intent);
-				finish();
+				goToRecorderActivity();
 			} else {
 				switch (error) {
 					case Params.BAD_EMAIL:
@@ -273,6 +293,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
+	private class SyncDatabaseTask extends AsyncTask<Void, Void, Void> {
 
+		@Override
+		protected Void doInBackground(Void... params) {
+			try {
+				ConnectionManager con = new ConnectionManager(getApplicationContext());
+				if (con.isConnectionFast()) {
+					(new SFDB(getApplicationContext())).sync();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void param) {
+			while (!isSplashTimedOut);
+			Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
+			MainActivity.this.hideSplashScreen();
+
+			startActivity(intent);
+			finish();
+		}
+	}
 }
 
