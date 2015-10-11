@@ -77,6 +77,7 @@
     <string name="login_mail">E-mail</string>
     <string name="login_pass">Password</string>
     <string name="login_btn">Login</string>
+    <string name="login_forget">Forgotten?</string>
     <string name="login_no_acc">Dont have an XXX account, yet?</string>
     <string name="login_reg">Register for Free</string>
 

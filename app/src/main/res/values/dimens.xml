@@ -14,6 +14,7 @@
     <dimen name="intro_dot_size">8dp</dimen>
     <dimen name="intro_margins">25dp</dimen>
     <dimen name="intro_bottom_padding">75dp</dimen>
+    <dimen name="login_data_margin">10dp</dimen>
 
     <dimen name="sign_size">65dp</dimen>
     <dimen name="sign_border">8dp</dimen>
