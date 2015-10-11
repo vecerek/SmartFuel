@@ -111,7 +111,7 @@ public class User {
 		return result.getInt(Params.USER_ID);
 	}
 
-	private class LoadImage extends AsyncTask<String, String, Bitmap> {
+	private class LoadImageTask extends AsyncTask<String, String, Bitmap> {
 		// TODO: reimplement the way the application handles and retrieves user's profile picture
 
 		@Override
@@ -145,6 +145,8 @@ public class User {
 						COLUMN.ID + " INTEGER PRIMARY KEY," +
 						COLUMN.NAME + " TEXT," +
 						COLUMN.SURNAME + " TEXT," +
+						COLUMN.CITY + " TEXT," +
+						COLUMN.REGION + " TEXT," +
 						COLUMN.EMAIL + " TEXT," +
 						COLUMN.CHIP_ID + " TEXT," +
 						COLUMN.TOTAL_POINTS + " INTEGER," +
@@ -182,6 +184,8 @@ public class User {
 			//optional
 			if (data.has(COLUMN.NAME)) cv.put(COLUMN.NAME, data.getString(COLUMN.NAME));
 			if (data.has(COLUMN.SURNAME)) cv.put(COLUMN.SURNAME, data.getString(COLUMN.SURNAME));
+			if (data.has(COLUMN.CITY)) cv.put(COLUMN.CITY, data.getString(COLUMN.CITY));
+			if (data.has(COLUMN.REGION)) cv.put(COLUMN.REGION, data.getString(COLUMN.REGION));
 			if (data.has(COLUMN.EMAIL)) cv.put(COLUMN.EMAIL, data.getString(COLUMN.EMAIL));
 			if (data.has(COLUMN.CHIP_ID)) cv.put(COLUMN.CHIP_ID, data.getString(COLUMN.CHIP_ID));
 			if (data.has(COLUMN.TOTAL_POINTS)) cv.put(COLUMN.TOTAL_POINTS, data.getInt(COLUMN.TOTAL_POINTS));
@@ -195,6 +199,8 @@ public class User {
 			public static final String ID = "id";
 			public static final String NAME = "name";
 			public static final String SURNAME = "surname";
+			public static final String CITY = "city";
+			public static final String REGION = "region";
 			public static final String EMAIL = "email";
 			public static final String CHIP_ID = "chip_card_id";
 			public static final String TOTAL_POINTS = "total_points";

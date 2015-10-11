@@ -182,13 +182,13 @@ public class TestSFDB extends AndroidTestCase {
 		for (int i = 0; i < unsyncedActivities.length(); i++) {
 			tmp = unsyncedActivities.getJSONObject(i);
 			//Tests the default values set by the database
-			assertEquals("0", tmp.getString("expired"));
-			assertEquals("0", tmp.getString("spent"));
+			assertEquals("0", tmp.getString(SmartFuelActivity.TABLE.COLUMN.EXPIRED));
+			assertEquals("0", tmp.getString(SmartFuelActivity.TABLE.COLUMN.SPENT));
 
-			tmp.remove("id");
-			tmp.remove("created_at");
-			tmp.remove("expired");
-			tmp.remove("spent");
+			tmp.remove(SmartFuelActivity.TABLE.COLUMN.ID);
+			tmp.remove(SmartFuelActivity.TABLE.COLUMN.CREATED_AT);
+			tmp.remove(SmartFuelActivity.TABLE.COLUMN.EXPIRED);
+			tmp.remove(SmartFuelActivity.TABLE.COLUMN.SPENT);
 		}
 
 		assertTrue("Error: unsynced and inserted activities do not match",
@@ -278,6 +278,8 @@ public class TestSFDB extends AndroidTestCase {
 		userColumnHS.add(User.TABLE.COLUMN.ID);
 		userColumnHS.add(User.TABLE.COLUMN.NAME);
 		userColumnHS.add(User.TABLE.COLUMN.SURNAME);
+		userColumnHS.add(User.TABLE.COLUMN.CITY);
+		userColumnHS.add(User.TABLE.COLUMN.REGION);
 		userColumnHS.add(User.TABLE.COLUMN.EMAIL);
 		userColumnHS.add(User.TABLE.COLUMN.CHIP_ID);
 		userColumnHS.add(User.TABLE.COLUMN.CURRENT_POINTS);
