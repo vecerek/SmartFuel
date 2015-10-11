@@ -114,7 +114,7 @@ public class TestSFDB extends AndroidTestCase {
 		String lastUpdate = prefs.getString(Prefs.LAST_UPDATE, "");
 		sfdb.sync();
 
-		assertFalse("Error: Last update time has not changed", lastUpdate.equals(prefs.getString("lastUpdate", "")));
+		assertFalse("Error: Last update time has not changed", lastUpdate.equals(prefs.getString(Prefs.LAST_UPDATE, "")));
 
 		String userID = String.valueOf(prefs.getInt(Prefs.USER_ID, 1));
 		JSONObject localUserData = sfdb.queryUserData();
