@@ -48,8 +48,8 @@ public class User {
 	public int totalSuccessRate;
 	public LastSyncTime lastSync;
 
-	protected Bitmap picture;
-	protected boolean pictureLoaded = false;
+	public Bitmap picture;
+	public int refuelCount = 0;
 
 	protected SFDB sfdb;
 	protected Context ctx;
@@ -64,14 +64,6 @@ public class User {
 
 	public int id() { return sfdb.getUserID(); }
 
-	public boolean isPictureLoaded() {
-		return pictureLoaded;
-	}
-
-	public Bitmap getPicture() {
-		return pictureLoaded ? picture : null;
-	}
-
 	protected void setUserInfo(Context ctx) throws JSONException {
 		JSONObject user = sfdb.queryUserData();
 		name = user.getString(TABLE.COLUMN.NAME);
@@ -83,13 +75,18 @@ public class User {
 		totalPoints = user.getInt(TABLE.COLUMN.TOTAL_POINTS);
 		currentPoints = user.getInt(TABLE.COLUMN.CURRENT_POINTS);
 
-		//TODO: implement an image handling method
+		picture = getProfilePic();
+
 		JSONObject profileData = sfdb.queryProfileData();
 		totalDistance = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_DISTANCE);
 		totalExpiredPoints = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_EXPIRED_POINTS);
 		totalSuccessRate = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_SUCCESS_RATE);
 		lastSync = new LastSyncTime(ctx);
 	}
+
+	public String getFullname() { return name + " " + surname; }
+
+	public String getAddress() { return city + ", " + region; }
 
 	public JSONObject getStats() throws JSONException {
 		return sfdb.queryStats();
@@ -142,12 +139,12 @@ public class User {
 		}
 	}
 
-	public Bitmap getProfilePic() {
+	private Bitmap getProfilePic() {
 		try {
 			ContextWrapper cw = new ContextWrapper(ctx);
 			File directory = cw.getDir(GLOBALS.DIR.PROFILE_PIC, Context.MODE_PRIVATE);
 
-			File f=new File(directory.getAbsolutePath(), GLOBALS.FILE.PROFILE_PIC);
+			File f = new File(directory.getAbsolutePath(), GLOBALS.FILE.PROFILE_PIC);
 			return BitmapFactory.decodeStream(new FileInputStream(f));
 			/* That's how to set an ImageView with Bitmap
 			ImageView img=(ImageView)findViewById(R.id.imgPicker);

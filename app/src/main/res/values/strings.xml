@@ -23,9 +23,9 @@
     <string name="stat_year">ROK</string>
     <string name="stat_pos">Kladné km</string>
     <string name="stat_neg">Záporné km</string>
-    <string name="stat_dst">KM</string>
-    <string name="points">BODOV</string>
-    <string name="stat_success">ÚSPEŠNOSŤ</string>
+    <string name="profile_total_distance_text">KM</string>
+    <string name="profile_current_points_text">BODOV</string>
+    <string name="profile_success_rate_text">ÚSPEŠNOSŤ</string>
 
     <string name="shop_product">PRODUKTY</string>
     <string name="shop_promo">AKCIE</string>
@@ -35,10 +35,12 @@
     <string name="profile_service">SERVIS</string>
     <string name="profile_tyres">GUMY</string>
     <string name="profile_days">dní</string>
-    <string name="profile_until_expiration">do expirácie bodov</string>
-    <string name="profile_last_sync">Posledná synchronyzácia</string>
-    <string name="profile_transaction_cnt">Počet tankováni</string>
-    <string name="profile_streak">bez expirácie bodov</string>
+    <string name="profile_total_points_text">všetky body</string>
+    <string name="profile_last_sync_text">Posledná synchronyzácia</string>
+    <string name="profile_last_sync_hours">h</string>
+    <string name="profile_last_sync_days">d</string>
+    <string name="profile_refueling_count_text">Počet tankováni</string>
+    <string name="profile_expired_points_text">expirovaných bodov</string>
 
     <string-array name="days_short">
         <item>Po</item>
