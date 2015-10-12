@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
-import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 
@@ -37,7 +36,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private LightTextView rangeMonth;
     private LightTextView rangeYear;
 
-    private boolean posOrNeg = true; // true - positive | false - negative
+    private boolean isPositive = true; // true - positive | false - negative
     private LightTextView switchPos;
     private LightTextView switchNeg;
 
@@ -47,9 +46,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
     private final static int CHART_VALUE_STEP = 5;
     private LineChartView lineChart;
-    private LineSet dataSet;
+    private CustomLineSet dataSet;
     private int selectedChartColumn = 0;
     private int lastInactiveColumn = 8;
+
+    private String[] chartLabels;
+    private float[] chartValues;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,13 +84,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         infoPoints = (SemiboldTextView) findViewById(R.id.stat_points);
         infoSuccess = (SemiboldTextView) findViewById(R.id.stat_success);
 
-        // chart
+        //chart
         Paint linePaint = new Paint();
         linePaint.setColor(Colors.GRAY);
         linePaint.setAlpha(255);
 
-        lineChart = (LineChartView) findViewById(R.id.linechart);
-
+        lineChart = (LineChartView) findViewById(R.id.line_chart);
         lineChart.setOnClickListener(this);
         lineChart.setOnEntryClickListener(this);
         lineChart.setTopSpacing(Tools.fromDpToPx(15))
@@ -106,25 +107,30 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
     }
 
-    private void addDataToChart(String[] labels, float[] values){
+    private void addDataToChart(){
         lineChart.dismiss();
 
-        dataSet = new LineSet(labels, values);
+        dataSet = new CustomLineSet(chartLabels, chartValues);
         dataSet.setThickness(5f);
-        if (posOrNeg) {
-            dataSet.setColor(Colors.HIGHIGHT)
+
+        if (isPositive) {
+            if (selectedChartColumn != 0)
+                dataSet.setOneDot(selectedChartColumn, Colors.WHITE, 3f, Colors.MAIN, 10f);
+            dataSet.setColor(Colors.MAIN)
                     .setGradientFill(Colors.GRADIENT_HIGHLIGHT, null)
                     .setSmooth(true);
         }
         else {
+            if (selectedChartColumn != 0)
+                dataSet.setOneDot(selectedChartColumn, Colors.WHITE, 3f, Colors.RED, 10f);
             dataSet.setColor(Colors.RED)
                     .setGradientFill(Colors.GRADIENT_RED, null)
                     .setSmooth(true);
         }
 
         float max = 0;
-        for (int i = 0; i < values.length; i++){
-            if (values[i] > max) max = values[i];
+        for (int i = 0; i < chartValues.length; i++){
+            if (chartValues[i] > max) max = chartValues[i];
         }
 
         int m = (int) max + 1;
@@ -140,8 +146,11 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private void updateGraphData(){
         removeChartPoint();
 
-        String[] labels = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
-        float[] values = {2f, 1f, 4f, 10f, 6f, 5f, 3f, 7f, 8f};
+        String[] lab = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
+        float[] val = {2f, 1f, 4f, 10f, 6f, 5f, 3f, 7f, 8f};
+
+        chartLabels = lab;
+        chartValues = val;
 
         switch (range){
             case RANGE_WEEK:
@@ -156,7 +165,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
         }
         // show data in the chart
-        addDataToChart(labels, values);
+        addDataToChart();
     }
 
     @Override
@@ -177,12 +186,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 if (range != RANGE_YEAR) setRangeTo(RANGE_YEAR);
                 break;
             case R.id.btn_positive:
-                if (!posOrNeg) setPosOrNeg();
+                if (!isPositive) setPosOrNeg();
                 break;
             case R.id.btn_negative:
-                if (posOrNeg) setPosOrNeg();
+                if (isPositive) setPosOrNeg();
                 break;
-            case R.id.linechart:
+            case R.id.line_chart:
                 if (selectedChartColumn > 0) removeChartPoint();
                 break;
         }
@@ -196,7 +205,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
             removeChartPoint();
         }
         else {
-            dataSet.setDotsDrawable(Utils.getDrawable(this, R.drawable.chart_data));
+            addDataToChart();
 
         }
     }
@@ -208,9 +217,9 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private void setRangeTo(int setTo){
         switch (setTo){
             case RANGE_WEEK:
-                if (posOrNeg) {
+                if (isPositive) {
                     Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_good);
-                    rangeWeek.setTextColor(Colors.HIGHIGHT);
+                    rangeWeek.setTextColor(Colors.MAIN);
                 }
                 else {
                     Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_bad);
@@ -218,9 +227,9 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 }
                 break;
             case RANGE_MONTH:
-                if (posOrNeg){
+                if (isPositive){
                     Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_good);
-                    rangeMonth.setTextColor(Colors.HIGHIGHT);
+                    rangeMonth.setTextColor(Colors.MAIN);
                 }
                 else {
                     Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_bad);
@@ -228,9 +237,9 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 }
                 break;
             case RANGE_YEAR:
-                if (posOrNeg){
+                if (isPositive){
                     Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_good);
-                    rangeYear.setTextColor(Colors.HIGHIGHT);
+                    rangeYear.setTextColor(Colors.MAIN);
                 }
                 else {
                     Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_bad);
@@ -259,28 +268,28 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     }
 
     private void setPosOrNeg(){
-        posOrNeg = !posOrNeg;
+        isPositive = !isPositive;
 
         int c = switchNeg.getCurrentTextColor();
         switchNeg.setTextColor(switchPos.getCurrentTextColor());
         switchPos.setTextColor(c);
 
-        if (posOrNeg){ // positive
+        if (isPositive){ // positive
             Utils.setBackgroundOfView(this, switchPos, R.drawable.round_highlight_box_left);
             Utils.setBackgroundOfView(this, switchNeg, R.drawable.round_transparent);
 
             switch (range){
                 case RANGE_WEEK:
                     Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_good);
-                    rangeWeek.setTextColor(Colors.HIGHIGHT);
+                    rangeWeek.setTextColor(Colors.MAIN);
                     break;
                 case RANGE_MONTH:
                     Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_good);
-                    rangeMonth.setTextColor(Colors.HIGHIGHT);
+                    rangeMonth.setTextColor(Colors.MAIN);
                     break;
                 case RANGE_YEAR:
                     Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_good);
-                    rangeYear.setTextColor(Colors.HIGHIGHT);
+                    rangeYear.setTextColor(Colors.MAIN);
                     break;
             }
         }

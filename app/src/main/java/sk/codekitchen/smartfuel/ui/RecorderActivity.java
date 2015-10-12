@@ -203,7 +203,7 @@ public class RecorderActivity extends Activity implements View.OnClickListener {
             else {
                 Utils.setBackgroundOfView(this, btnPercent, R.drawable.round_highlight_box_left);
                 Utils.setProgressBarProgress(this, progressBar, R.drawable.progressbar_arch_grad_good);
-                progressSufix.setTextColor(Colors.HIGHIGHT);
+                progressSufix.setTextColor(Colors.MAIN);
                 progressValue.setTextColor(Colors.WHITE);
             }
         }

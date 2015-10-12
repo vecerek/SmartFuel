@@ -72,15 +72,15 @@ public class ShopActivity extends Activity implements View.OnClickListener {
         switch (newTab){
             case TAB_PRODUCT:
                 Utils.setBackgroundOfView(this, tabProduct, R.drawable.border_bottom_selected_good);
-                tabProduct.setTextColor(Colors.HIGHIGHT);
+                tabProduct.setTextColor(Colors.MAIN);
                 break;
             case TAB_PROMO:
                 Utils.setBackgroundOfView(this, tabPromo, R.drawable.border_bottom_selected_good);
-                tabPromo.setTextColor(Colors.HIGHIGHT);
+                tabPromo.setTextColor(Colors.MAIN);
                 break;
             case TAB_CONTEST:
                 Utils.setBackgroundOfView(this, tabContest, R.drawable.border_bottom_selected_good);
-                tabContest.setTextColor(Colors.HIGHIGHT);
+                tabContest.setTextColor(Colors.MAIN);
                 break;
         }
         switch (tab){
