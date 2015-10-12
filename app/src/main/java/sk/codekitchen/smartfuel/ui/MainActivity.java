@@ -20,11 +20,11 @@ import java.util.Vector;
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.model.SFDB;
 import sk.codekitchen.smartfuel.model.User;
-import sk.codekitchen.smartfuel.ui.GUI.CustomViewPager;
-import sk.codekitchen.smartfuel.ui.GUI.EditLightTextView;
-import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
-import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
-import sk.codekitchen.smartfuel.ui.GUI.Utils;
+import sk.codekitchen.smartfuel.ui.gui.CustomViewPager;
+import sk.codekitchen.smartfuel.ui.gui.EditLightTextView;
+import sk.codekitchen.smartfuel.ui.gui.FragmentAdapter;
+import sk.codekitchen.smartfuel.ui.gui.LightTextView;
+import sk.codekitchen.smartfuel.ui.gui.Utils;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 

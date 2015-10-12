@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
@@ -45,8 +46,10 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private final static int CHART_VALUE_STEP = 5;
     private CustomLineChartView lineChart;
     private CustomLineSet dataSet;
+    private LightTextView chartDot;
     private int selectedChartColumn = 0;
     private int lastInactiveColumn = 8;
+    private int chartMaxValue;
 
     private String[] chartLabels;
     private float[] chartValues;
@@ -103,6 +106,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 .setTopSpacing(10f)
                 .setAxisColor(Colors.GRAY);
 
+        chartDot = (LightTextView) findViewById(R.id.chart_dot);
     }
 
     private void addDataToChart(){
@@ -131,14 +135,29 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
             if (chartValues[i] > max) max = chartValues[i];
         }
 
-        int m = (int) max + 1;
+        chartMaxValue = (int) max + 1;
 
-        m = m + (CHART_VALUE_STEP - m%CHART_VALUE_STEP);
+        chartMaxValue = chartMaxValue + (CHART_VALUE_STEP - chartMaxValue %CHART_VALUE_STEP);
 
-        lineChart.setAxisBorderValues(0, m,(m)/CHART_VALUE_STEP);
+        lineChart.setAxisBorderValues(0, chartMaxValue,(chartMaxValue)/CHART_VALUE_STEP);
         lineChart.removeAllViews();
         lineChart.addData(dataSet);
         lineChart.show();
+    }
+
+    private void drawDataPoint(Rect rect){
+        chartDot.setText(String.valueOf(chartValues[selectedChartColumn]));
+        RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        int l = rect.centerX() - chartDot.getWidth()/2;
+        int r = rect.centerX() + chartDot.getWidth()/2;
+        param.setMargins(l,0,r,0);
+        chartDot.setLayoutParams(param);
+        chartDot.setVisibility(View.VISIBLE);
+    }
+
+    private void clearDataPoint(){
+        chartDot.setVisibility(View.GONE);
     }
 
     private void updateGraphData(){
@@ -168,7 +187,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
     @Override
     public void onClick(int i, int i1, Rect rect) {
-        addChartPoint(i1);
+        addChartPoint(i1, rect);
     }
 
     @Override
@@ -198,14 +217,16 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         }
     }
 
-    private void addChartPoint(int columnNumber){
+    private void addChartPoint(int columnNumber, Rect r){
         if (columnNumber == 0 || columnNumber == lastInactiveColumn){
             removeChartPoint();
+            clearDataPoint();
             addDataToChart();
         }
         else {
             selectedChartColumn = columnNumber;
             addDataToChart();
+            drawDataPoint(r);
         }
     }
 
