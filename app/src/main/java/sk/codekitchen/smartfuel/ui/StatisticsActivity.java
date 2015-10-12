@@ -6,14 +6,12 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
 import com.db.chart.view.AxisController;
-import com.db.chart.view.LineChartView;
 
-import sk.codekitchen.smartfuel.ui.GUI.*;
+import sk.codekitchen.smartfuel.ui.gui.*;
 import sk.codekitchen.smartfuel.R;
 
 /**
@@ -45,7 +43,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private SemiboldTextView infoSuccess;
 
     private final static int CHART_VALUE_STEP = 5;
-    private LineChartView lineChart;
+    private CustomLineChartView lineChart;
     private CustomLineSet dataSet;
     private int selectedChartColumn = 0;
     private int lastInactiveColumn = 8;
@@ -89,7 +87,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         linePaint.setColor(Colors.GRAY);
         linePaint.setAlpha(255);
 
-        lineChart = (LineChartView) findViewById(R.id.line_chart);
+        lineChart = (CustomLineChartView) findViewById(R.id.line_chart);
         lineChart.setOnClickListener(this);
         lineChart.setOnEntryClickListener(this);
         lineChart.setTopSpacing(Tools.fromDpToPx(15))
@@ -192,21 +190,22 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 if (isPositive) setPosOrNeg();
                 break;
             case R.id.line_chart:
-                if (selectedChartColumn > 0) removeChartPoint();
+                if (selectedChartColumn > 0) {
+                    removeChartPoint();
+                    addDataToChart();
+                }
                 break;
         }
     }
 
     private void addChartPoint(int columnNumber){
-        Toast.makeText(this, "Column " + columnNumber, Toast.LENGTH_LONG).show();
-        selectedChartColumn = columnNumber;
-
         if (columnNumber == 0 || columnNumber == lastInactiveColumn){
             removeChartPoint();
+            addDataToChart();
         }
         else {
+            selectedChartColumn = columnNumber;
             addDataToChart();
-
         }
     }
 
