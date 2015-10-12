@@ -1,8 +1,11 @@
 package sk.codekitchen.smartfuel.ui;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import sk.codekitchen.smartfuel.model.User;
@@ -61,18 +64,22 @@ public class ProfileActivity extends Activity implements View.OnClickListener{
 
 		private User user;
 		private String lastSyncTime;
+		int color = 0;
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			try {
-				user = new User(getApplicationContext());
+				Context ctx = getApplicationContext();
+				user = new User(ctx);
 				int tmp = user.lastSync.getTime();
 				if (tmp >= 24) {
 					lastSyncTime = String.valueOf(tmp/24) + " " +
 							getText(R.string.profile_last_sync_days).toString();
+					color = ContextCompat.getColor(ctx, R.color.RED);
 				} else {
 					lastSyncTime = String.valueOf(tmp) + " " +
 							getText(R.string.profile_last_sync_hours).toString();
+					color = ContextCompat.getColor(ctx, R.color.GREEN);
 				}
 
 			} catch (Exception e) {
@@ -96,6 +103,7 @@ public class ProfileActivity extends Activity implements View.OnClickListener{
 				expiredPoints.setText(user.totalExpiredPoints);
 				refuelCount.setText(user.refuelCount);
 				lastSync.setText(lastSyncTime);
+				lastSync.setTextColor(color);
 			}
 		}
 	}
