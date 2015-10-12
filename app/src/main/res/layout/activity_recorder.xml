@@ -11,7 +11,7 @@
     android:id="@+id/settings_layout"
     android:weightSum="1">
 
-    <sk.codekitchen.smartfuel.ui.gui.ExtraboldTextView
+    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:textSize="@dimen/title_size"
@@ -57,7 +57,7 @@
                 android:layout_marginRight="10dp"
                 android:alpha="1"/>
 
-            <sk.codekitchen.smartfuel.ui.gui.LightTextView
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:id="@+id/txt_percent"
@@ -91,7 +91,7 @@
                 android:layout_marginRight="10dp"
                 android:alpha="0.2"/>
 
-            <sk.codekitchen.smartfuel.ui.gui.LightTextView
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:id="@+id/txt_speed"
@@ -131,7 +131,7 @@
             android:progressDrawable="@drawable/progressbar_arch_grad_good"
             />
 
-        <sk.codekitchen.smartfuel.ui.gui.SemiboldTextView
+        <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -143,7 +143,7 @@
             android:gravity="center"
             android:visibility="gone"/>
 
-        <sk.codekitchen.smartfuel.ui.gui.SemiboldTextView
+        <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -167,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
-                <sk.codekitchen.smartfuel.ui.gui.LightTextView
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -177,7 +177,7 @@
                     android:textSize="@dimen/progress_value"
                     android:focusableInTouchMode="false"/>
 
-                <sk.codekitchen.smartfuel.ui.gui.LightTextView
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -197,7 +197,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center">
 
-                <sk.codekitchen.smartfuel.ui.gui.LightTextView
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -206,7 +206,7 @@
                     android:textColor="@color/GRAY"
                     android:paddingRight="5dp"/>
 
-                <sk.codekitchen.smartfuel.ui.gui.SemiboldTextView
+                <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
@@ -231,7 +231,7 @@
                 android:id="@+id/max_permitted_sign"
                 android:visibility="gone">
 
-                <sk.codekitchen.smartfuel.ui.gui.SemiboldTextView
+                <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
                     android:layout_width="@dimen/sign_size"
                     android:layout_height="@dimen/sign_size"
                     android:textSize="@dimen/sign_text"
@@ -264,7 +264,7 @@
             android:gravity="center"
             android:background="@drawable/border_top_right">
 
-            <sk.codekitchen.smartfuel.ui.gui.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -275,7 +275,7 @@
                 android:textColor="@color/WHITE"
                 />
 
-            <sk.codekitchen.smartfuel.ui.gui.LightTextView
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -295,7 +295,7 @@
             android:gravity="center"
             android:background="@drawable/border_top">
 
-            <sk.codekitchen.smartfuel.ui.gui.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -306,7 +306,7 @@
                 android:textColor="@color/WHITE"
                 />
 
-            <sk.codekitchen.smartfuel.ui.gui.LightTextView
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"

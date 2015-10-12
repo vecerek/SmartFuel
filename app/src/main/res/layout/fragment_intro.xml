@@ -8,7 +8,7 @@
               android:gravity="bottom"
               android:paddingBottom="@dimen/intro_bottom_padding">
 
-    <sk.codekitchen.smartfuel.ui.gui.LightTextView
+    <sk.codekitchen.smartfuel.ui.GUI.LightTextView
         android:id="@+id/intro_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         android:textSize="@dimen/login_text"
         android:gravity="center"/>
 
-    <sk.codekitchen.smartfuel.ui.gui.LightTextView
+    <sk.codekitchen.smartfuel.ui.GUI.LightTextView
         android:id="@+id/intro_comment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

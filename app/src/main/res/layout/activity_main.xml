@@ -22,7 +22,7 @@
                   android:paddingBottom="@dimen/intro_bottom_padding"
                   android:paddingTop="@dimen/intro_bottom_padding">
 
-        <sk.codekitchen.smartfuel.ui.gui.LightTextView
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
             android:id="@+id/login_title"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textSize="@dimen/login_text"
             android:gravity="center"/>
 
-        <sk.codekitchen.smartfuel.ui.gui.LightTextView
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
             android:id="@+id/intro_comment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                     android:layout_weight="0.1"
                     android:alpha="0.4"/>
 
-                <sk.codekitchen.smartfuel.ui.gui.EditLightTextView
+                <sk.codekitchen.smartfuel.ui.GUI.EditLightTextView
                     android:id="@+id/login_mail"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -107,7 +107,7 @@
                     android:layout_weight="0.1"
                     android:alpha="0.4"/>
 
-                <sk.codekitchen.smartfuel.ui.gui.EditLightTextView
+                <sk.codekitchen.smartfuel.ui.GUI.EditLightTextView
                     android:id="@+id/login_pass"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
@@ -120,7 +120,7 @@
                     android:hint="@string/login_pass"
                     android:layout_weight="0.65"/>
 
-                <sk.codekitchen.smartfuel.ui.gui.LightTextView
+                <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                     android:clickable="true"
                     android:id="@+id/login_forgotten"
                     android:layout_width="0dp"
@@ -143,7 +143,7 @@
                 android:background="@color/MAIN"
                 />
 
-            <sk.codekitchen.smartfuel.ui.gui.LightTextView
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/login_no_acc"
@@ -156,7 +156,7 @@
                 android:gravity="center"
                 />
 
-            <sk.codekitchen.smartfuel.ui.gui.LightTextView
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:clickable="true"
                 android:id="@+id/login_register"
                 android:layout_width="fill_parent"
@@ -182,7 +182,7 @@
         android:minHeight="0dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <sk.codekitchen.smartfuel.ui.gui.CustomViewPager
+    <sk.codekitchen.smartfuel.ui.GUI.CustomViewPager
         android:id="@+id/pager"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

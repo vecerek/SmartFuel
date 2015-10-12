@@ -11,7 +11,7 @@
     android:id="@+id/shop_layout"
     android:weightSum="1">
 
-    <sk.codekitchen.smartfuel.ui.gui.ExtraboldTextView
+    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:text="@string/title_shop"
@@ -30,7 +30,7 @@
         android:layout_weight="0.05"
         >
 
-        <sk.codekitchen.smartfuel.ui.gui.LightTextView
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearance"
@@ -43,7 +43,7 @@
             android:textColor="@color/GRAY"
             />
 
-        <sk.codekitchen.smartfuel.ui.gui.LightTextView
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearance"
@@ -56,7 +56,7 @@
             android:textColor="@color/MAIN"
             />
 
-        <sk.codekitchen.smartfuel.ui.gui.LightTextView
+        <sk.codekitchen.smartfuel.ui.GUI.LightTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearance"
