@@ -124,7 +124,7 @@
         android:gravity="center">
 
 
-        <sk.codekitchen.smartfuel.ui.gui.CustomLineChartView
+        <com.db.chart.view.LineChartView
             android:id="@+id/line_chart"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
@@ -133,10 +133,12 @@
             android:id="@+id/chart_dot"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
+            android:minWidth="25dp"
             android:visibility="gone"
             android:textColor="@color/GRAY"
             android:gravity="center"
             android:textSize="12dp"
+            android:padding="5dp"
             />
 
 

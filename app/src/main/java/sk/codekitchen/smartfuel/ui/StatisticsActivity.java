@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.db.chart.Tools;
 import com.db.chart.listener.OnEntryClickListener;
+import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
+import com.db.chart.view.LineChartView;
 
 import sk.codekitchen.smartfuel.ui.gui.*;
 import sk.codekitchen.smartfuel.R;
@@ -44,8 +45,8 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private SemiboldTextView infoSuccess;
 
     private final static int CHART_VALUE_STEP = 5;
-    private CustomLineChartView lineChart;
-    private CustomLineSet dataSet;
+    private LineChartView lineChart;
+    private LineSet dataSet;
     private LightTextView chartDot;
     private int selectedChartColumn = 0;
     private int lastInactiveColumn = 8;
@@ -90,11 +91,10 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         linePaint.setColor(Colors.GRAY);
         linePaint.setAlpha(255);
 
-        lineChart = (CustomLineChartView) findViewById(R.id.line_chart);
+        lineChart = (LineChartView) findViewById(R.id.line_chart);
         lineChart.setOnClickListener(this);
         lineChart.setOnEntryClickListener(this);
-        lineChart.setTopSpacing(Tools.fromDpToPx(15))
-                .setXLabels(AxisController.LabelPosition.OUTSIDE)
+        lineChart.setXLabels(AxisController.LabelPosition.OUTSIDE)
                 .setYLabels(AxisController.LabelPosition.INSIDE)
                 .setLabelsColor(Colors.GRAY)
                 .setFontSize(32)
@@ -112,19 +112,15 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     private void addDataToChart(){
         lineChart.dismiss();
 
-        dataSet = new CustomLineSet(chartLabels, chartValues);
+        dataSet = new LineSet(chartLabels, chartValues);
         dataSet.setThickness(5f);
 
         if (isPositive) {
-            if (selectedChartColumn != 0)
-                dataSet.setOneDot(selectedChartColumn, Colors.WHITE, 3f, Colors.MAIN, 10f);
             dataSet.setColor(Colors.MAIN)
                     .setGradientFill(Colors.GRADIENT_HIGHLIGHT, null)
                     .setSmooth(true);
         }
         else {
-            if (selectedChartColumn != 0)
-                dataSet.setOneDot(selectedChartColumn, Colors.WHITE, 3f, Colors.RED, 10f);
             dataSet.setColor(Colors.RED)
                     .setGradientFill(Colors.GRADIENT_RED, null)
                     .setSmooth(true);
@@ -146,13 +142,17 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     }
 
     private void drawDataPoint(Rect rect){
-        chartDot.setText(String.valueOf(chartValues[selectedChartColumn]));
+        chartDot.setText(String.valueOf((int) chartValues[selectedChartColumn]));
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         int l = rect.centerX() - chartDot.getWidth()/2;
-        int r = rect.centerX() + chartDot.getWidth()/2;
-        param.setMargins(l,0,r,0);
+        int t = rect.centerY() - chartDot.getHeight()/2;
+        param.setMargins(l, t, 0, 0);
         chartDot.setLayoutParams(param);
+        if(isPositive)
+            Utils.setBackgroundOfView(this, chartDot, R.drawable.chart_dot_good);
+        else
+            Utils.setBackgroundOfView(this, chartDot, R.drawable.chart_dot_bad);
         chartDot.setVisibility(View.VISIBLE);
     }
 
@@ -160,29 +160,27 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         chartDot.setVisibility(View.GONE);
     }
 
+    /**
+     * TODO:- call async task here to update data
+     *      - download data based on "range" and "isPositive"
+     */
     private void updateGraphData(){
-        removeChartPoint();
+        clearChart();
 
         String[] lab = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
-        float[] val = {2f, 1f, 4f, 10f, 6f, 5f, 3f, 7f, 8f};
+        float[] val = {0f, 0f, 0f, 32f, 20f, 53f, 38f, 12f, 11f};
 
         chartLabels = lab;
         chartValues = val;
 
-        switch (range){
-            case RANGE_WEEK:
-
-                break;
-            case RANGE_MONTH:
-
-                break;
-            case RANGE_YEAR:
-
-                break;
-
-        }
         // show data in the chart
         addDataToChart();
+
+    }
+
+    private void clearChart(){
+        selectedChartColumn = 0;
+        clearDataPoint();
     }
 
     @Override
@@ -203,14 +201,14 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 if (range != RANGE_YEAR) setRangeTo(RANGE_YEAR);
                 break;
             case R.id.btn_positive:
-                if (!isPositive) setPosOrNeg();
+                if (!isPositive) changeColorScheme();
                 break;
             case R.id.btn_negative:
-                if (isPositive) setPosOrNeg();
+                if (isPositive) changeColorScheme();
                 break;
             case R.id.line_chart:
-                if (selectedChartColumn > 0) {
-                    removeChartPoint();
+                if (selectedChartColumn > 0){
+                    clearChart();
                     addDataToChart();
                 }
                 break;
@@ -219,9 +217,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
     private void addChartPoint(int columnNumber, Rect r){
         if (columnNumber == 0 || columnNumber == lastInactiveColumn){
-            removeChartPoint();
-            clearDataPoint();
-            addDataToChart();
+            updateGraphData();
         }
         else {
             selectedChartColumn = columnNumber;
@@ -230,11 +226,9 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         }
     }
 
-    private void removeChartPoint(){
-        selectedChartColumn = 0;
-    }
 
     private void setRangeTo(int setTo){
+
         switch (setTo){
             case RANGE_WEEK:
                 if (isPositive) {
@@ -287,7 +281,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         updateGraphData();
     }
 
-    private void setPosOrNeg(){
+    private void changeColorScheme(){
         isPositive = !isPositive;
 
         int c = switchNeg.getCurrentTextColor();
@@ -332,6 +326,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                     break;
             }
         }
+
         updateGraphData();
     }
 
