@@ -51,7 +51,7 @@ public class ShopItemAdapter extends ArrayAdapter<ShopItem>{
 
         ShopItem item = data[pos];
         holder.titleView.setText(item.title);
-        holder.pointView.setText(String.valueOf(item.points) + " " + context.getString(R.string.points));
+        holder.pointView.setText(String.valueOf(item.points) + " " + context.getString(R.string.profile_current_points_text));
         holder.picView.setImageResource(item.icon);
 
         return row;

@@ -40,6 +40,7 @@
             <sk.codekitchen.smartfuel.ui.GUI.RoundedImageView
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
+                android:id="@+id/profile_picture"
                 android:src="@mipmap/defaultuser"
                 android:layout_weight="0.32"/>
 
@@ -49,8 +50,9 @@
             android:layout_weight="0.15"
             android:layout_height="0dp"
             android:layout_width="fill_parent"
-            android:id="@+id/user_name"
+            android:id="@+id/profile_full_name"
             android:text="Peter Novak"
+            android:inputType="textCapWords"
             android:gravity="center"
             android:textColor="@color/MAIN"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
@@ -71,7 +73,9 @@
             <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:text="Kralovany, Zilinsky Kraj"
+                android:id="@+id/profile_address"
+                android:text="kralovany, zilinsky kraj"
+                android:inputType="textCapWords"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
                 android:textAppearance="?android:attr/textAppearanceMedium"/>
@@ -103,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="8653"
-                android:id="@+id/profile_km"
+                android:id="@+id/profile_total_distance"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/WHITE"
@@ -113,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/stat_dst"
+                android:text="@string/profile_total_distance_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
@@ -134,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="3479"
-                android:id="@+id/profile_points"
+                android:id="@+id/profile_current_points"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/MAIN"
@@ -144,7 +148,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/points"
+                android:text="@string/profile_current_points_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
@@ -165,7 +169,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="62%"
-                android:id="@+id/profile_success"
+                android:id="@+id/profile_success_rate"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/WHITE"
@@ -175,7 +179,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/stat_success"
+                android:text="@string/profile_success_rate_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
@@ -205,17 +209,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="8 dni"
-                android:id="@+id/profile_until_expiration"
+                android:text="6321"
+                android:id="@+id/profile_total_points"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/RED"/>
+                android:textColor="@color/WHITE"/>
 
             <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/profile_until_expiration"
+                android:text="@string/profile_total_points_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
@@ -230,6 +234,46 @@
             android:layout_weight="0.5"
             android:gravity="center"
             android:background="@drawable/border_top">
+
+            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="518"
+                android:id="@+id/profile_expired_points"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/RED"/>
+
+            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/profile_expired_points_text"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/GRAY"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:weightSum="1"
+        android:gravity="center"
+        android:layout_weight="0.14">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:background="@drawable/border_top_right">
 
             <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
                 android:layout_width="wrap_content"
@@ -246,52 +290,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/profile_transaction_cnt"
+                android:text="@string/profile_refueling_count_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
                 android:layout_marginTop="5dp"/>
 
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:weightSum="1"
-        android:gravity="center"
-        android:layout_weight="0.14">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:background="@drawable/border_top_right">
-
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="42 dni"
-                android:id="@+id/profile_point_streak"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:textColor="@color/MAIN"/>
-
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/profile_streak"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:textColor="@color/GRAY"
-                android:layout_marginTop="5dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -307,18 +311,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="21.09.2015 12:42"
-                android:id="@+id/profile_last_sync_time"
+                android:text="pred 1 h"
+                android:id="@+id/profile_last_sync"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/WHITE"
+                android:textColor="@color/GREEN"
                 />
 
             <sk.codekitchen.smartfuel.ui.GUI.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/profile_last_sync"
+                android:text="@string/profile_last_sync_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"
