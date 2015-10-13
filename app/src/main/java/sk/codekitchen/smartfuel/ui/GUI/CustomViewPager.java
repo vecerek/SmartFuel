@@ -6,6 +6,8 @@ import android.view.MotionEvent;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * extends ViewPager with the possibility to disable swipe events
  */
 public class CustomViewPager extends android.support.v4.view.ViewPager{
 
@@ -34,6 +36,10 @@ public class CustomViewPager extends android.support.v4.view.ViewPager{
         return false;
     }
 
+    /**
+     * Sets Paging
+     * @param enabled
+     */
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
     }

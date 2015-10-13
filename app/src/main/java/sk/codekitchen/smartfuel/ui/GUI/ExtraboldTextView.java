@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Extends TextView by custom Extrabold font type
  */
 public class ExtraboldTextView extends TextView {
 

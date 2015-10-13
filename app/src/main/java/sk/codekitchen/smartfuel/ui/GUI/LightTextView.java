@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Extends TextView by custom Light font type
  */
 public class LightTextView extends TextView {
 

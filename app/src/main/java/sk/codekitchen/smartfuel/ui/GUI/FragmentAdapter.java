@@ -6,16 +6,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
- * Created by Gabriel Lehocky on 15/10/10.
+ * Created by Gabriel Lehock
+ *
+ * Adapter for fragments in .ui.MainAvtivity
  */
 public class FragmentAdapter extends FragmentStatePagerAdapter {
 
     int mNumOfTabs;
+    // intro screen 1
     IntroFragment t1;
+    // intro screen 2
     IntroFragment t2;
+    // intro screen 3
     IntroFragment t3;
+    // login and splashscrren
     IntroFragment tLogin;
 
+    /**
+     * Constructs object with 4 tabs
+     * @param fm
+     * @param NumOfTabs
+     */
     public FragmentAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;

@@ -11,11 +11,17 @@ import sk.codekitchen.smartfuel.R;
 
 /**
  * Created by Gabriel Lehocky on 15/10/10.
+ *
+ * Fragment that contains one intro screen
  */
 public class IntroFragment extends Fragment {
 
     private int id;
 
+    /**
+     * Sets id, that specifies which fragment to show.
+     * @param id must be from 0 to 3
+     */
     public void setContent(int id){
         this.id = id;
     }
@@ -33,6 +39,9 @@ public class IntroFragment extends Fragment {
         introText = (LightTextView) view.findViewById(R.id.intro_comment);
         bck = (LinearLayout) view.findViewById(R.id.fragment_bck);
 
+        /**
+         * Based on id fills the content of the intro screen
+         */
         switch (id){
             case 0:
                 introTitle.setText(getString(R.string.intro_1));

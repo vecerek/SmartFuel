@@ -18,40 +18,42 @@ import sk.codekitchen.smartfuel.R;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Activity that shows the users statistic data
  */
 public class StatisticsActivity extends Activity implements View.OnClickListener, OnEntryClickListener {
 
-    // Line Chart Usage Demo:
-    // https://github.com/diogobernardino/WilliamChart/blob/master/sample/src/com/db/williamchartdemo/LineFragment.java
-    // https://github.com/diogobernardino/WilliamChart/wiki/%282%29-Chart
-    // https://github.com/diogobernardino/WilliamChart/wiki/%283%29-Line-Chart
-
     private MainMenu menu;
 
+    // static data range values
     private final static int RANGE_WEEK = 1;
     private final static int RANGE_MONTH = 2;
     private final static int RANGE_YEAR = 3;
     private int range = RANGE_WEEK;
+
+    // range setup clickable texts
     private LightTextView rangeWeek;
     private LightTextView rangeMonth;
     private LightTextView rangeYear;
 
+    // swither between value types
     private boolean isPositive = true; // true - positive | false - negative
     private LightTextView switchPos;
     private LightTextView switchNeg;
 
+    // information text views
     private SemiboldTextView infoDistance;
     private SemiboldTextView infoPoints;
     private SemiboldTextView infoSuccess;
 
+    // line chart data
     private final static int CHART_VALUE_STEP = 5;
     private LineChartView lineChart;
     private LineSet dataSet;
     private LightTextView chartDot;
     private int selectedChartColumn = 0;
-    private int lastInactiveColumn = 8;
+    private int lastInactiveColumn = 8; // default is week view
     private int chartMaxValue;
-
     private String[] chartLabels;
     private float[] chartValues;
 
@@ -63,9 +65,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         menu = new MainMenu(this, MainMenu.STATISTICS_ID);
         setView();
 
-        updateGraphData();
+        updateChartData();
     }
 
+    /**
+     * Creates the default view of the activity and fills default values
+     */
     private void setView(){
         // range settings
         rangeWeek = (LightTextView) findViewById(R.id.stat_week);
@@ -109,7 +114,36 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         chartDot = (LightTextView) findViewById(R.id.chart_dot);
     }
 
-    private void addDataToChart(){
+    /**
+     * Updates data in the chart and puts them into
+     * arrays (chartLabels and chartValues) then calls
+     * updateChartView()
+     *
+     * TODO:- call async task here to update data
+            - download data based on "range" and "isPositive"
+            - if no internet show local saved values,
+              if is net, sync data and show loading spinner like at login
+     */
+    private void updateChartData(){
+        removeDataPoint();
+
+        /**
+         * Always leave firs and last column label empty with some value
+         */
+        String[] lab = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
+        float[] val = {0f, 0f, 0f, 32f, 20f, 53f, 38f, 12f, 11f};
+
+        chartLabels = lab;
+        chartValues = val;
+
+        // show data in the chart
+        updateChartView();
+    }
+
+    /**
+     * Fills chart view with the actual data
+     */
+    private void updateChartView(){
         lineChart.dismiss();
 
         dataSet = new LineSet(chartLabels, chartValues);
@@ -126,21 +160,27 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                     .setSmooth(true);
         }
 
+        // find maximal value in chart
         float max = 0;
         for (int i = 0; i < chartValues.length; i++){
             if (chartValues[i] > max) max = chartValues[i];
         }
 
+        // set maximal displayed value on axisY
         chartMaxValue = (int) max + 1;
-
         chartMaxValue = chartMaxValue + (CHART_VALUE_STEP - chartMaxValue %CHART_VALUE_STEP);
 
+        // displays new data in the chart view
         lineChart.setAxisBorderValues(0, chartMaxValue,(chartMaxValue)/CHART_VALUE_STEP);
         lineChart.removeAllViews();
         lineChart.addData(dataSet);
         lineChart.show();
     }
 
+    /**
+     * Adds the information dot to a value in the chart
+     * @param rect - the clicked area of the chart value
+     */
     private void drawDataPoint(Rect rect){
         chartDot.setText(String.valueOf((int) chartValues[selectedChartColumn]));
         RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -156,36 +196,33 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         chartDot.setVisibility(View.VISIBLE);
     }
 
-    private void clearDataPoint(){
+    /**
+     * Removes the information bubble of the chart data value
+     */
+    private void removeDataPoint(){
+        selectedChartColumn = 0;
         chartDot.setVisibility(View.GONE);
     }
 
     /**
-     * TODO:- call async task here to update data
-     *      - download data based on "range" and "isPositive"
+     * Handles click on a chart data
+     * @param columnNumber
+     * @param r
      */
-    private void updateGraphData(){
-        clearChart();
-
-        String[] lab = {"", "PO", "UT", "ST", "ST", "PI", "SO", "NE", ""};
-        float[] val = {0f, 0f, 0f, 32f, 20f, 53f, 38f, 12f, 11f};
-
-        chartLabels = lab;
-        chartValues = val;
-
-        // show data in the chart
-        addDataToChart();
-
-    }
-
-    private void clearChart(){
-        selectedChartColumn = 0;
-        clearDataPoint();
+    private void chartDataClicked(int columnNumber, Rect r){
+        if (columnNumber == 0 || columnNumber == lastInactiveColumn){
+            updateChartData();
+        }
+        else {
+            selectedChartColumn = columnNumber;
+            updateChartView();
+            drawDataPoint(r);
+        }
     }
 
     @Override
     public void onClick(int i, int i1, Rect rect) {
-        addChartPoint(i1, rect);
+        chartDataClicked(i1, rect);
     }
 
     @Override
@@ -208,25 +245,17 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                 break;
             case R.id.line_chart:
                 if (selectedChartColumn > 0){
-                    clearChart();
-                    addDataToChart();
+                    removeDataPoint();
+                    updateChartView();
                 }
                 break;
         }
     }
 
-    private void addChartPoint(int columnNumber, Rect r){
-        if (columnNumber == 0 || columnNumber == lastInactiveColumn){
-            updateGraphData();
-        }
-        else {
-            selectedChartColumn = columnNumber;
-            addDataToChart();
-            drawDataPoint(r);
-        }
-    }
-
-
+    /**
+     * Changes view based on the set range
+     * @param setTo
+     */
     private void setRangeTo(int setTo){
 
         switch (setTo){
@@ -278,9 +307,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
         range = setTo;
 
-        updateGraphData();
+        updateChartData();
     }
 
+    /**
+     * changes color scheme to the opposite
+     */
     private void changeColorScheme(){
         isPositive = !isPositive;
 
@@ -327,7 +359,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
             }
         }
 
-        updateGraphData();
+        updateChartData();
     }
 
     @Override

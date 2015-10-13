@@ -11,6 +11,8 @@ import sk.codekitchen.smartfuel.R;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Contains the buttons of the main menu
  */
 public class MainMenu implements OnClickListener{
 

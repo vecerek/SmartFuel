@@ -16,6 +16,8 @@ import android.widget.ImageView;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Extends ImageView, and makes images cropped to circular shape
  */
 public class RoundedImageView extends ImageView {
 
@@ -46,6 +48,12 @@ public class RoundedImageView extends ImageView {
         canvas.drawBitmap(roundBitmap, 0, 0, null);
     }
 
+    /**
+     * Cropps the input bitmap with the given radius to a circular shape
+     * @param bitmap
+     * @param radius
+     * @return
+     */
     public static Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int radius) {
         Bitmap finalBitmap;
         if (bitmap.getWidth() != radius || bitmap.getHeight() != radius)

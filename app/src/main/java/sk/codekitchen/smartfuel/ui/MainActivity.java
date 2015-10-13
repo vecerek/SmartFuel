@@ -28,20 +28,28 @@ import sk.codekitchen.smartfuel.ui.GUI.Utils;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 
+/**
+ * @author Gabriel Lehocky
+ *
+ * Main activity of the application that contains intro screens, login and splashscreen
+ * When the user is not logged in it shows the intro first,
+ *      then it ask the user to log in into the application.
+ * When the user is logged in, it shows the splashscreen, then opens .RecorderActivity
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 	private static final int MIN_EMAIL_LEGTH = 5;
 	private static final int MIN_PASSWORD_LEGTH = 5;
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
+
+    //Keep track of the login task to ensure we can cancel it if requested.
     private UserLoginTask mAuthTask = null;
 
     private boolean isLoggedIn = false;
     protected MainActivity same = this;
-    protected Vector<Integer> dots = new Vector<>();
 
+    // view elements
+    protected Vector<Integer> dots = new Vector<>();
     private Button login;
     private EditLightTextView mail;
     private EditLightTextView pass;
@@ -52,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	private LinearLayout loginScreen;
 	private ImageView splashScreen;
 
+    // pager for fragments
 	private CustomViewPager viewPager;
 
 	private static final int SPLASH_TIME_OUT = 2500;
@@ -70,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Sets the default view screen and fills views and fragments with initial data
+     */
     private void setView(){
         dots.add(R.id.intro_dot_0);
         dots.add(R.id.intro_dot_1);
@@ -140,6 +152,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		});
     }
 
+    /**
+     * Makes splashscreen visible
+     */
 	public void displaySplashScreen(){
 		viewPager.setCurrentItem(3);
 		loginScreen.setVisibility(View.INVISIBLE);
@@ -164,11 +179,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    // Loggs in the user syncs data, then opens .RecorderActivity
 	private void goToRecorderActivity() {
 		displaySplashScreen();
 		(new SyncDatabaseTask()).execute((Void) null);
 	}
 
+    // Based on the filled data, attempts to log in the user
 	public void attemptToLogin() {
 		if (mAuthTask != null)
 			return;
@@ -202,10 +219,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
+    /**
+     * Checks the validity of the email address
+     * @param email
+     * @return
+     */
 	private boolean isEmailValid(String email) {
 		return email.length() >= MIN_EMAIL_LEGTH;
 	}
 
+    /**
+     * Checks the validity of the password
+     * @param pass
+     * @return
+     */
 	private boolean isPasswordValid(String pass) {
 		return pass.length() >= MIN_PASSWORD_LEGTH;
 	}
@@ -284,6 +311,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		}
 	}
 
+    /**
+     * Attempts to sync the local data with the data in the DB
+     */
 	private class SyncDatabaseTask extends AsyncTask<Void, Void, Void> {
 
 		@Override

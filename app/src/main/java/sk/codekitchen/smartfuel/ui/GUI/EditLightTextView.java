@@ -7,6 +7,8 @@ import android.widget.EditText;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Extends EditText view by custom font type
  */
 public class EditLightTextView extends EditText{
 

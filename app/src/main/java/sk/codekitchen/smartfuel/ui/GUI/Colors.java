@@ -4,6 +4,9 @@ import android.graphics.Color;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Class that defines colors for the interfaces
+ *
  */
 public class Colors {
     public final static int[] GRADIENT_HIGHLIGHT = {Color.parseColor("#8834cfd1"), Color.parseColor("#0034cfd1")};

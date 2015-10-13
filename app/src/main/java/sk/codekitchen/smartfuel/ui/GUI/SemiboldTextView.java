@@ -7,6 +7,8 @@ import android.widget.TextView;
 
 /**
  * @author Gabriel Lehocky
+ *
+ * Extends TextView by custom Semibold font type
  */
 public class SemiboldTextView extends TextView {
 
