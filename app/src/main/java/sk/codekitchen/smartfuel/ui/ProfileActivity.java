@@ -92,15 +92,17 @@ public class ProfileActivity extends Activity implements View.OnClickListener{
 		@Override
 		protected void onPostExecute(Void param) {
 			if (user != null) {
-				profilePic.setImageBitmap(user.picture);
+				if (user.picture != null) {
+					profilePic.setImageBitmap(user.picture);
+				}
 				fullName.setText(user.getFullname().toLowerCase());
 				address.setText(user.getAddress().toLowerCase());
-				totalDistance.setText(user.totalDistance);
-				currentPoints.setText(user.currentPoints);
-				successRate.setText(user.totalSuccessRate);
-				totalPoints.setText(user.totalPoints);
-				expiredPoints.setText(user.totalExpiredPoints);
-				refuelCount.setText(user.refuelCount);
+				totalDistance.setText(String.valueOf(user.totalDistance));
+				currentPoints.setText(String.valueOf(user.currentPoints));
+				successRate.setText(String.valueOf(user.totalSuccessRate));
+				totalPoints.setText(String.valueOf(user.totalPoints));
+				expiredPoints.setText(String.valueOf(user.totalExpiredPoints));
+				refuelCount.setText(String.valueOf(user.refuelCount));
 				lastSync.setText(lastSyncTime);
 				lastSync.setTextColor(color);
 			}

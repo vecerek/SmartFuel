@@ -603,7 +603,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 		Cursor cursor = db.rawQuery(
 		"SELECT ROUND(100 * (d.corr_dist / (d.corr_dist+d.speed_dist))) AS "+succRate+", " +
-				"ROUND(corr_dist+speed_dist) AS "+totKm+", " + totEx + " " +
+				"ROUND(d.corr_dist+d.speed_dist) AS "+totKm+", " + totEx + " " +
 				"FROM (" +
 					"SELECT SUM(" + SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE + ") AS corr_dist, " +
 					"SUM(" + SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE + ") AS speed_dist, " +
@@ -613,7 +613,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 		JSONObject data = null;
 		if (cursor != null) {
-			if (cursor.getCount() > 0) {
+			if (cursor.moveToFirst()) {
 				data = new cJSONObject(cursor);
 			}
 			cursor.close();

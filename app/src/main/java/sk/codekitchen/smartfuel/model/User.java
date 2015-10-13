@@ -16,10 +16,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 import sk.codekitchen.smartfuel.exception.IncorrectPasswordException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
@@ -34,6 +36,7 @@ import sk.codekitchen.smartfuel.util.ServerAPI;
  */
 public class User {
 
+	public int id;
 	public String name;
 	public String surname;
 	public String city;
@@ -62,25 +65,32 @@ public class User {
 		this.setUserInfo(ctx);
 	}
 
-	public int id() { return sfdb.getUserID(); }
-
 	protected void setUserInfo(Context ctx) throws JSONException {
+		id = sfdb.getUserID();
+
 		JSONObject user = sfdb.queryUserData();
-		name = user.getString(TABLE.COLUMN.NAME);
-		surname = user.getString(TABLE.COLUMN.SURNAME);
-		city = user.getString(TABLE.COLUMN.CITY);
-		region = user.getString(TABLE.COLUMN.REGION);
-		email = user.getString(TABLE.COLUMN.EMAIL);
-		chipId = user.getString(TABLE.COLUMN.CHIP_ID);
-		totalPoints = user.getInt(TABLE.COLUMN.TOTAL_POINTS);
-		currentPoints = user.getInt(TABLE.COLUMN.CURRENT_POINTS);
+		if (user.has(TABLE.COLUMN.NAME)) name = user.getString(TABLE.COLUMN.NAME);
+		if (user.has(TABLE.COLUMN.SURNAME)) surname = user.getString(TABLE.COLUMN.SURNAME);
+		if (user.has(TABLE.COLUMN.CITY)) city = user.getString(TABLE.COLUMN.CITY);
+		if (user.has(TABLE.COLUMN.REGION)) region = user.getString(TABLE.COLUMN.REGION);
+		if (user.has(TABLE.COLUMN.EMAIL)) email = user.getString(TABLE.COLUMN.EMAIL);
+		if (user.has(TABLE.COLUMN.CHIP_ID)) chipId = user.getString(TABLE.COLUMN.CHIP_ID);
+		if (user.has(TABLE.COLUMN.TOTAL_POINTS)) totalPoints = user.getInt(TABLE.COLUMN.TOTAL_POINTS);
+		if (user.has(TABLE.COLUMN.CURRENT_POINTS)) currentPoints = user.getInt(TABLE.COLUMN.CURRENT_POINTS);
 
 		picture = getProfilePic();
 
 		JSONObject profileData = sfdb.queryProfileData();
-		totalDistance = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_DISTANCE);
-		totalExpiredPoints = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_EXPIRED_POINTS);
-		totalSuccessRate = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_SUCCESS_RATE);
+		if(profileData.has(GLOBALS.PARAM_KEY.TOTAL_DISTANCE)) {
+			totalDistance = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_DISTANCE);
+		}
+		if(profileData.has(GLOBALS.PARAM_KEY.TOTAL_EXPIRED_POINTS)) {
+			totalExpiredPoints = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_EXPIRED_POINTS);
+		}
+		if(profileData.has(GLOBALS.PARAM_KEY.TOTAL_SUCCESS_RATE)) {
+			totalSuccessRate = profileData.getInt(GLOBALS.PARAM_KEY.TOTAL_SUCCESS_RATE);
+		}
+
 		lastSync = new LastSyncTime(ctx);
 	}
 
@@ -146,10 +156,6 @@ public class User {
 
 			File f = new File(directory.getAbsolutePath(), GLOBALS.FILE.PROFILE_PIC);
 			return BitmapFactory.decodeStream(new FileInputStream(f));
-			/* That's how to set an ImageView with Bitmap
-			ImageView img=(ImageView)findViewById(R.id.imgPicker);
-			img.setImageBitmap(b);
-			*/
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -166,7 +172,9 @@ public class User {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
 			String lastSync = prefs.getString(GLOBALS.LAST_UPDATE, "NEVER");
 			try {
-				lastSyncDate = SFDB.DATE_FORMAT.parse(lastSync);
+				DateFormat formatter = SFDB.DATE_FORMAT;
+				formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+				lastSyncDate = formatter.parse(lastSync);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
