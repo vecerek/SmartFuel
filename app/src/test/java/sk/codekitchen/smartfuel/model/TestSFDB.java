@@ -79,7 +79,7 @@ public class TestSFDB extends AndroidTestCase {
 	public void testCreateDb() throws Throwable {
 		final HashSet<String> tableNameHS = new HashSet<>();
 		tableNameHS.add(User.TABLE.NAME);
-		tableNameHS.add(User.STATS.VIEW.NAME);
+		tableNameHS.add(Statistics.VIEW.NAME);
 		tableNameHS.add(SmartFuelActivity.TABLE.NAME);
 		tableNameHS.add(Event.TABLE.NAME);
 		tableNameHS.add(Event.CONTENT.TABLE.NAME);
@@ -327,15 +327,15 @@ public class TestSFDB extends AndroidTestCase {
 
 	private void testStatsViewStructure() {
 		final HashSet<String> statsColumnHS = new HashSet<>();
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.POINTS);
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.CORRECT_DISTANCE);
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.SPEEDING_DISTANCE);
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.TOTAL_EXPIRED);
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.DAY);
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.WEEK);
-		statsColumnHS.add(User.STATS.VIEW.COLUMN.MONTH);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.POINTS);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.CORRECT_DISTANCE);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.SPEEDING_DISTANCE);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.TOTAL_EXPIRED);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.DAY);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.WEEK);
+		statsColumnHS.add(Statistics.VIEW.COLUMN.MONTH);
 
-		checkTableColumns(User.STATS.VIEW.NAME, statsColumnHS);
+		checkTableColumns(Statistics.VIEW.NAME, statsColumnHS);
 	}
 
 }

@@ -119,7 +119,7 @@ public class SFDB extends SQLiteOpenHelper {
 		db.execSQL(Event.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE_INDEX);
-		db.execSQL(User.STATS.VIEW.CREATE);
+		db.execSQL(Statistics.VIEW.CREATE);
 	}
 
 	/** {@inheritDoc}
@@ -133,7 +133,7 @@ public class SFDB extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(SFDB.class.getName(), "Upgrading database from version " + oldVersion + "to version " + newVersion);
 		db.execSQL(User.TABLE.DROP);
-		db.execSQL(User.STATS.VIEW.DROP);
+		db.execSQL(Statistics.VIEW.DROP);
 		db.execSQL(SmartFuelActivity.TABLE.DROP);
 		db.execSQL(Event.TABLE.DROP);
 		db.execSQL(Event.CONTENT.TABLE.DROP);
@@ -673,7 +673,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 * @since 1.0
 	 */
 	public JSONObject queryStats() throws JSONException {
-		Cursor cursor = db.query(User.STATS.VIEW.NAME, null, null, null, null, null, null, null);
+		Cursor cursor = db.query(Statistics.VIEW.NAME, null, null, null, null, null, null, null);
 		JSONObject stats = parseStats(new cJSONArray(cursor));
 		cursor.close();
 
@@ -751,20 +751,20 @@ public class SFDB extends SQLiteOpenHelper {
 		JSONObject tmp;
 		for (int i = 0; i < stats.length(); i++) {
 			tmp = stats.getJSONObject(i);
-			if (tmp.has(User.STATS.VIEW.COLUMN.DAY)) {
-				String d = tmp.getString(User.STATS.VIEW.COLUMN.DAY);
+			if (tmp.has(Statistics.VIEW.COLUMN.DAY)) {
+				String d = tmp.getString(Statistics.VIEW.COLUMN.DAY);
 				d = removeStartingZero(d);
-				tmp.remove(User.STATS.VIEW.COLUMN.DAY);
+				tmp.remove(Statistics.VIEW.COLUMN.DAY);
 				week.put(d, tmp);
-			} else if (tmp.has(User.STATS.VIEW.COLUMN.WEEK)) {
-				String w = tmp.getString(User.STATS.VIEW.COLUMN.WEEK);
+			} else if (tmp.has(Statistics.VIEW.COLUMN.WEEK)) {
+				String w = tmp.getString(Statistics.VIEW.COLUMN.WEEK);
 				w = removeStartingZero(w);
-				tmp.remove(User.STATS.VIEW.COLUMN.WEEK);
+				tmp.remove(Statistics.VIEW.COLUMN.WEEK);
 				month.put(w, tmp);
-			} else if (tmp.has(User.STATS.VIEW.COLUMN.MONTH)) {
-				String m = tmp.getString(User.STATS.VIEW.COLUMN.MONTH);
+			} else if (tmp.has(Statistics.VIEW.COLUMN.MONTH)) {
+				String m = tmp.getString(Statistics.VIEW.COLUMN.MONTH);
 				m = removeStartingZero(m);
-				tmp.remove(User.STATS.VIEW.COLUMN.MONTH);
+				tmp.remove(Statistics.VIEW.COLUMN.MONTH);
 				year.put(m, tmp);
 			}
 		}

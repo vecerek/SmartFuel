@@ -94,10 +94,6 @@ public class User {
 		lastSync = new LastSyncTime(ctx);
 	}
 
-	public JSONObject getStats() throws JSONException {
-		return sfdb.queryStats();
-	}
-
 	public static int authenticate(String email, String password)
 			throws Exception {
 
@@ -253,69 +249,6 @@ public class User {
 			public static final String TOTAL_POINTS = "total_points";
 			public static final String CURRENT_POINTS = "current_points";
 			public static final String EDITED = "edited";
-		}
-	}
-
-	public static final class STATS {
-
-		public static final class VIEW {
-			public static final String NAME = "statistics";
-
-			/**
-			 * (strftime('%j', date(MyDate, '-3 days', 'weekday 4')) - 1) / 7 + 1 represent the ISOWeekNumber
-			 *
-			 * @see <a href="http://stackoverflow.com/questions/15082584/sqlite-return-wrong-week-number-for-2013#answer-15511864">Stackoverflow sqlite week number issue</a>
-			 */
-			public static final String CREATE =
-					"CREATE VIEW " + NAME + " AS " +
-							"SELECT SUM(points) as " + COLUMN.POINTS + "," +
-							"ROUND(SUM(correct_dist), 1) as " + COLUMN.CORRECT_DISTANCE + "," +
-							"ROUND(SUM(speeding_dist), 1) as " + COLUMN.SPEEDING_DISTANCE + "," +
-							"SUM((points - spent)*expired) as " + COLUMN.TOTAL_EXPIRED + "," +
-							"strftime('%u', created_at) as " + COLUMN.DAY + ", " + //returns days of week (1-7) starting with Monday
-							"NULL as " + COLUMN.WEEK + "," +
-							"NULL as " + COLUMN.MONTH + "\n" +
-							"FROM `" + SmartFuelActivity.TABLE.NAME + "`\n" +
-							"WHERE date(" + SmartFuelActivity.TABLE.COLUMN.CREATED_AT + ") BETWEEN date('now', 'weekday 1', '-7 days') AND date('now', 'weekday 1', '-1 day')\n" +
-							"GROUP BY " + COLUMN.DAY + "\n" +
-
-							"UNION ALL\n" +
-
-							"SELECT SUM(points) as " + COLUMN.POINTS + "," +
-							"ROUND(SUM(correct_dist), 1) as " + COLUMN.CORRECT_DISTANCE + "," +
-							"ROUND(SUM(speeding_dist), 1) as " + COLUMN.SPEEDING_DISTANCE + "," +
-							"SUM((points - spent)*expired) as " + COLUMN.TOTAL_EXPIRED + "," +
-							"NULL as " + COLUMN.DAY + ", " +
-							"(strftime('%j', date(created_at, '-3 days', 'weekday 4')) - 1) / 7 + 1 as " + COLUMN.WEEK + "," + //returns the ISOWeekNumbers
-							"NULL as " + COLUMN.MONTH + "\n" +
-							"FROM `" + SmartFuelActivity.TABLE.NAME + "`\n" +
-							"WHERE date(" + SmartFuelActivity.TABLE.COLUMN.CREATED_AT + ") BETWEEN date('now', 'start of month') AND date('now', 'start of month', '+1 month', '-1 day')\n" +
-							"GROUP BY " + COLUMN.WEEK + "\n" +
-
-							"UNION ALL\n" +
-
-							"SELECT SUM(points) as " + COLUMN.POINTS + "," +
-							"ROUND(SUM(correct_dist), 1) as " + COLUMN.CORRECT_DISTANCE + "," +
-							"ROUND(SUM(speeding_dist), 1) as " + COLUMN.SPEEDING_DISTANCE + "," +
-							"SUM((points - spent)*expired) as " + COLUMN.TOTAL_EXPIRED + "," +
-							"NULL as " + COLUMN.DAY + ", " +
-							"NULL as " + COLUMN.WEEK + "," +
-							"strftime('%m', created_at) as " + COLUMN.MONTH + "\n" + //returns the months (01-12)
-							"FROM `" + SmartFuelActivity.TABLE.NAME + "`\n" +
-							"WHERE date(" + SmartFuelActivity.TABLE.COLUMN.CREATED_AT + ") BETWEEN date('now', 'start of year') AND date('now', 'start of year', '+1 year', '-1 day')\n" +
-							"GROUP BY " + COLUMN.MONTH;
-
-			public static final String DROP = "DROP VIEW IF EXISTS " + NAME;
-
-			public static final class COLUMN {
-				public static final String POINTS = SmartFuelActivity.TABLE.COLUMN.POINTS;
-				public static final String CORRECT_DISTANCE = SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE;
-				public static final String SPEEDING_DISTANCE = SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE;
-				public static final String TOTAL_EXPIRED = "total_expired";
-				public static final String DAY = "day";
-				public static final String WEEK = "week";
-				public static final String MONTH = "month";
-			}
 		}
 	}
 }
