@@ -42,6 +42,7 @@ public class TestSFDB extends AndroidTestCase {
 
 	protected SFDB sfdb;
 	protected SharedPreferences prefs;
+	protected Context context;
 
 	protected JSONObject snapshots = new JSONObject();
 
@@ -51,7 +52,7 @@ public class TestSFDB extends AndroidTestCase {
 	@Before
 	public void setUp()
 			throws DuplicateSavepointException, ParseException, UnknownUserException {
-		Context context = RuntimeEnvironment.application.getApplicationContext();
+		context = RuntimeEnvironment.application.getApplicationContext();
 		prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		if (prefs.getInt(GLOBALS.USER_ID, -1) != 1) {
 			prefs.edit().putInt(GLOBALS.USER_ID, 1).commit();
@@ -227,17 +228,24 @@ public class TestSFDB extends AndroidTestCase {
 	 */
 
 	private void testUpdateData() throws Throwable {
-		JSONObject user = sfdb.queryUserData();
-		user.put("name", "Andrej");
-		sfdb.saveData(User.TABLE.NAME, user, SFDB.ORIGIN_LOCAL);
+		String nameBeforeUpdate = (new User(context)).name;
 
-		JSONObject userAfterUpdate = sfdb.queryUserData(true);
+		JSONObject userData = sfdb.queryUserData();
+		userData.put("name", "Andrej");
+		sfdb.saveData(User.TABLE.NAME, userData, SFDB.ORIGIN_LOCAL);
+
+		String nameAfterUpdate = (new User(context)).name;
 
 		assertFalse("Error: Update has not been completed",
-				user.toString().equals(userAfterUpdate.toString()));
+				nameBeforeUpdate.equals(nameAfterUpdate));
 
 		try {
 			sfdb.sync(true);
+			String nameAfterServerUpdate = (new User(context)).name;
+			assertFalse("Error: test server update not synced with local database",
+					nameAfterUpdate.equals(nameAfterServerUpdate));
+			assertTrue(nameAfterServerUpdate.substring(nameAfterServerUpdate.length() - 2).equals("fy"));
+
 		} catch (Exception e) {
 			Assert.fail("Error: Update has not been successful");
 		}

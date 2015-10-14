@@ -254,32 +254,21 @@ public class SFDB extends SQLiteOpenHelper {
 	}
 
 	/**
-	 * Returns requested database data from the server.
-	 * Initial data download.
-	 *
-	 * @return the server's response data
-	 * @throws IOException if database connection could not be established
-	 *         or the server's response could not be parsed.
-	 * @since 1.0
-	 */
-	protected JSONObject downloadDatabase() throws IOException { return downloadDatabase(null); }
-
-	/**
 	 * Returns requested database data from the server based on the last update time.
 	 *
-	 * @param lastUpdate last database update time
 	 * @return the server's response data
 	 * @throws IOException if database connection could not be established
 	 *         or the server's response could not be parsed.
 	 * @since 1.0
 	 */
-	protected JSONObject downloadDatabase(String lastUpdate) throws IOException {
+	protected JSONObject downloadDatabase(boolean test) throws IOException {
 		try {
 			Map<String, String> params = new HashMap<>();
 			params.put(GLOBALS.USER_ID, Integer.toString(userID));
 			if(lastUpdate != null) {
-				params.put(GLOBALS.LAST_UPDATE, lastUpdate);
+				params.put(GLOBALS.LAST_UPDATE, DATE_FORMAT.format(this.lastUpdate));
 			}
+			if (test) params.put("test", String.valueOf(true));;
 
 			return (new ServerAPI("download_db").sendRequest(params));
 
@@ -470,11 +459,7 @@ public class SFDB extends SQLiteOpenHelper {
 						throw new IOException("Server database update failed");
 			}
 
-			if (lastUpdate == null) {
-				result = downloadDatabase();
-			} else {
-				result = downloadDatabase(DATE_FORMAT.format(lastUpdate));
-			}
+			result = downloadDatabase(test);
 
 			if (result.has("success")) {
 				if (result.getBoolean("success") && result.has("data")) {
