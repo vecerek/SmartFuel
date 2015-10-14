@@ -31,7 +31,7 @@ public final class Statistics {
 		this.year = new TabData(stats.getJSONObject(TabData.YEAR));
 	}
 
-	public static Statistics getStats(Context context)
+	public static Statistics getInstance(Context context)
 			throws ParseException, UnknownUserException, JSONException {
 
 		return new Statistics(context);
@@ -42,7 +42,7 @@ public final class Statistics {
 		public static final String MONTH = "month";
 		public static final String YEAR = "year";
 
-		public ArrayList<ColumnData> col;
+		public ArrayList<ColumnData> col = new ArrayList<>();
 		public int distance = 0;
 		public int points = 0;
 		public int successRate = 0;
@@ -53,9 +53,17 @@ public final class Statistics {
 
 		private TabData(JSONObject tab) throws JSONException {
 			Iterator<?> keys = tab.keys();
+			String key;
+			ColumnData col;
 			while(keys.hasNext()) {
-				String key = (String) keys.next();
-				ColumnData col = new ColumnData(key, tab.getJSONObject(key));
+				key = (String) keys.next();
+				if (!tab.isNull(key)) {
+					col = new ColumnData(key, tab.getJSONObject(key));
+				}
+				else {
+					col = new ColumnData(key);
+				}
+
 				correctDistance += col.correctDistance;
 				speedingDistance += col.speedingDistance;
 				points += col.points;
@@ -63,7 +71,8 @@ public final class Statistics {
 				this.col.add(col);
 			}
 			distance = correctDistance + speedingDistance;
-			successRate = 100 * (correctDistance / distance);
+			successRate = distance == 0 ?
+					-1 : (int) Math.round(100 * (correctDistance / (double) distance));
 		}
 
 		class ColumnData {
@@ -75,7 +84,23 @@ public final class Statistics {
 			public int speedingDistance;
 			public int expiredPoints;
 
+			private ColumnData(String index) {
+				setIndexAndKey(index);
+				points = 0;
+				correctDistance = 0;
+				speedingDistance = 0;
+				expiredPoints = 0;
+			}
+
 			private ColumnData(String index, JSONObject col) throws JSONException {
+				setIndexAndKey(index);
+				points = col.getInt("points");
+				correctDistance = col.getInt("correct_dist");
+				speedingDistance = col.getInt("speeding_dist");
+				expiredPoints = col.getInt("total_expired");
+			}
+
+			private void setIndexAndKey(String index) {
 				this.index = Integer.valueOf(index);
 				Calendar cal = Calendar.getInstance();
 				Locale locale = Locale.getDefault();
@@ -94,11 +119,6 @@ public final class Statistics {
 						key = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
 						break;
 				}
-
-				points = col.getInt("points");
-				correctDistance = col.getInt("correct_dist");
-				speedingDistance = col.getInt("speeding_dist");
-				expiredPoints = col.getInt("total_expired");
 			}
 		}
 	}
