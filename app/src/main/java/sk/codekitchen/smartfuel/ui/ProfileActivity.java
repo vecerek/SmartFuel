@@ -71,12 +71,13 @@ public class ProfileActivity extends Activity implements View.OnClickListener{
 				Context ctx = getApplicationContext();
 				user = new User(ctx);
 				int tmp = user.lastSync.getTime();
+				lastSyncTime = getText(R.string.profile_last_sync_before_text).toString() + " ";
 				if (tmp >= 24) {
-					lastSyncTime = String.valueOf(tmp/24) + " " +
+					lastSyncTime += String.valueOf(tmp/24) +
 							getText(R.string.profile_last_sync_days).toString();
 					color = ContextCompat.getColor(ctx, R.color.RED);
 				} else {
-					lastSyncTime = String.valueOf(tmp) + " " +
+					lastSyncTime += String.valueOf(tmp) +
 							getText(R.string.profile_last_sync_hours).toString();
 					color = ContextCompat.getColor(ctx, R.color.GREEN);
 				}
@@ -95,17 +96,32 @@ public class ProfileActivity extends Activity implements View.OnClickListener{
 				if (user.picture != null) {
 					profilePic.setImageBitmap(user.picture);
 				}
-				fullName.setText(user.getFullname().toLowerCase());
-				address.setText(user.getAddress().toLowerCase());
+				fullName.setText(getFullNameFormatted(user.name, user.surname));
+				address.setText(getFullAddressFormatted(user.city, user.region));
 				totalDistance.setText(String.valueOf(user.totalDistance));
 				currentPoints.setText(String.valueOf(user.currentPoints));
-				successRate.setText(String.valueOf(user.totalSuccessRate));
+				successRate.setText(getPercentageValue(user.totalSuccessRate));
 				totalPoints.setText(String.valueOf(user.totalPoints));
 				expiredPoints.setText(String.valueOf(user.totalExpiredPoints));
 				refuelCount.setText(String.valueOf(user.refuelCount));
 				lastSync.setText(lastSyncTime);
 				lastSync.setTextColor(color);
 			}
+		}
+
+		private String getPercentageValue(int value) { return String.valueOf(value) + "%"; }
+
+		private String getFullAddressFormatted(String city, String region) {
+			return toUpperCaseFirst(city) + ", " + toUpperCaseFirst(region);
+		}
+
+		private String getFullNameFormatted(String name, String surname) {
+			return toUpperCaseFirst(name) + " " + toUpperCaseFirst(surname);
+		}
+
+		private String toUpperCaseFirst(String str) {
+			str = str.toLowerCase();
+			return Character.toUpperCase(str.charAt(0)) + str.substring(1);
 		}
 	}
 }

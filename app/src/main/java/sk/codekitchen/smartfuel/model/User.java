@@ -94,10 +94,6 @@ public class User {
 		lastSync = new LastSyncTime(ctx);
 	}
 
-	public String getFullname() { return name + " " + surname; }
-
-	public String getAddress() { return city + ", " + region; }
-
 	public JSONObject getStats() throws JSONException {
 		return sfdb.queryStats();
 	}

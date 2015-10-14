@@ -37,6 +37,7 @@
     <string name="profile_days">dní</string>
     <string name="profile_total_points_text">všetky body</string>
     <string name="profile_last_sync_text">Posledná synchronyzácia</string>
+    <string name="profile_last_sync_before_text">pred</string>
     <string name="profile_last_sync_hours">h</string>
     <string name="profile_last_sync_days">d</string>
     <string name="profile_refueling_count_text">Počet tankováni</string>
