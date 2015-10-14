@@ -162,8 +162,8 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
         // find maximal value in chart
         float max = 0;
-        for (int i = 0; i < chartValues.length; i++){
-            if (chartValues[i] > max) max = chartValues[i];
+        for (float chartValue : chartValues) {
+            if (chartValue > max) max = chartValue;
         }
 
         // set maximal displayed value on axisY
@@ -257,53 +257,50 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
      * @param setTo
      */
     private void setRangeTo(int setTo){
+	    LightTextView ltv;
 
-        switch (setTo){
-            case RANGE_WEEK:
-                if (isPositive) {
-                    Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_good);
-                    rangeWeek.setTextColor(Colors.MAIN);
-                }
-                else {
-                    Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_bad);
-                    rangeWeek.setTextColor(Colors.RED);
-                }
-                break;
-            case RANGE_MONTH:
-                if (isPositive){
-                    Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_good);
-                    rangeMonth.setTextColor(Colors.MAIN);
-                }
-                else {
-                    Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_bad);
-                    rangeMonth.setTextColor(Colors.RED);
-                }
-                break;
-            case RANGE_YEAR:
-                if (isPositive){
-                    Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_good);
-                    rangeYear.setTextColor(Colors.MAIN);
-                }
-                else {
-                    Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_bad);
-                    rangeYear.setTextColor(Colors.RED);
-                }
-                break;
-        }
+	    switch (setTo) {
+		    case RANGE_WEEK:
+			    ltv = rangeWeek;
+			    break;
+		    case RANGE_MONTH:
+			    ltv = rangeMonth;
+			    break;
+		    case RANGE_YEAR:
+			    ltv = rangeYear;
+			    break;
+		    default:
+			    ltv = null;
+	    }
+
+	    if (ltv != null) {
+		    if (isPositive) {
+			    Utils.setBackgroundOfView(this, ltv, R.drawable.border_bottom_selected_good);
+			    ltv.setTextColor(Colors.MAIN);
+		    } else {
+			    Utils.setBackgroundOfView(this, ltv, R.drawable.border_bottom_selected_bad);
+			    ltv.setTextColor(Colors.RED);
+		    }
+	    }
+
         switch (range){
             case RANGE_WEEK:
-                Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom);
-                rangeWeek.setTextColor(Colors.GRAY);
+	            ltv = rangeWeek;
                 break;
             case RANGE_MONTH:
-                Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom);
-                rangeMonth.setTextColor(Colors.GRAY);
+	            ltv = rangeMonth;
                 break;
             case RANGE_YEAR:
-                Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom);
-                rangeYear.setTextColor(Colors.GRAY);
+	            ltv = rangeYear;
                 break;
+	        default:
+		        ltv = null;
         }
+
+	    if (ltv != null) {
+		    Utils.setBackgroundOfView(this, ltv, R.drawable.border_bottom);
+		    ltv.setTextColor(Colors.GRAY);
+	    }
 
         range = setTo;
 
@@ -314,57 +311,46 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
      * changes color scheme to the opposite
      */
     private void changeColorScheme(){
-        isPositive = !isPositive;
+	    LightTextView ltv;
+	    isPositive = !isPositive;
 
-        int c = switchNeg.getCurrentTextColor();
-        switchNeg.setTextColor(switchPos.getCurrentTextColor());
-        switchPos.setTextColor(c);
+	    switchNeg.setTextColor(switchPos.getCurrentTextColor());
+	    switchPos.setTextColor(switchNeg.getCurrentTextColor());
 
-        if (isPositive){ // positive
-            Utils.setBackgroundOfView(this, switchPos, R.drawable.round_highlight_box_left);
-            Utils.setBackgroundOfView(this, switchNeg, R.drawable.round_transparent);
+	    switch (range) {
+		    case RANGE_WEEK:
+			    ltv = rangeWeek;
+			    break;
+		    case RANGE_MONTH:
+			    ltv = rangeMonth;
+			    break;
+		    case RANGE_YEAR:
+			    ltv = rangeYear;
+			    break;
+		    default:
+			    ltv = null;
+	    }
 
-            switch (range){
-                case RANGE_WEEK:
-                    Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_good);
-                    rangeWeek.setTextColor(Colors.MAIN);
-                    break;
-                case RANGE_MONTH:
-                    Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_good);
-                    rangeMonth.setTextColor(Colors.MAIN);
-                    break;
-                case RANGE_YEAR:
-                    Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_good);
-                    rangeYear.setTextColor(Colors.MAIN);
-                    break;
-            }
-        }
-        else { // negative
-            Utils.setBackgroundOfView(this, switchPos, R.drawable.round_transparent);
-            Utils.setBackgroundOfView(this, switchNeg, R.drawable.round_bad_box_right);
+	    if (ltv != null) {
+		    if (isPositive){
+			    Utils.setBackgroundOfView(this, switchPos, R.drawable.round_highlight_box_left);
+			    Utils.setBackgroundOfView(this, switchNeg, R.drawable.round_transparent);
+			    Utils.setBackgroundOfView(this, ltv, R.drawable.border_bottom_selected_good);
+			    ltv.setTextColor(Colors.MAIN);
+		    } else {
+			    Utils.setBackgroundOfView(this, switchPos, R.drawable.round_transparent);
+			    Utils.setBackgroundOfView(this, switchNeg, R.drawable.round_bad_box_right);
+			    Utils.setBackgroundOfView(this, ltv, R.drawable.border_bottom_selected_bad);
+			    ltv.setTextColor(Colors.RED);
+		    }
+	    }
+	    updateChartData();
 
-            switch (range){
-                case RANGE_WEEK:
-                    Utils.setBackgroundOfView(this, rangeWeek, R.drawable.border_bottom_selected_bad);
-                    rangeWeek.setTextColor(Colors.RED);
-                    break;
-                case RANGE_MONTH:
-                    Utils.setBackgroundOfView(this, rangeMonth, R.drawable.border_bottom_selected_bad);
-                    rangeMonth.setTextColor(Colors.RED);
-                    break;
-                case RANGE_YEAR:
-                    Utils.setBackgroundOfView(this, rangeYear, R.drawable.border_bottom_selected_bad);
-                    rangeYear.setTextColor(Colors.RED);
-                    break;
-            }
-        }
-
-        updateChartData();
     }
 
     @Override
     public void onBackPressed() {
-        menu.goToActivity(menu.RECORDER_ID, RecorderActivity.class);
+        menu.goToActivity(MainMenu.RECORDER_ID, RecorderActivity.class);
     }
 
 }
