@@ -7,7 +7,9 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
+import java.util.Locale;
 
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 
@@ -24,19 +26,23 @@ public final class Statistics {
 			throws ParseException, UnknownUserException, JSONException {
 
 		JSONObject stats = (new SFDB(context)).queryStats();
-		this.week = new TabData(stats.getJSONObject("week"));
-		this.month = new TabData(stats.getJSONObject("month"));
-		this.year = new TabData(stats.getJSONObject("year"));
+		this.week = new TabData(stats.getJSONObject(TabData.WEEK));
+		this.month = new TabData(stats.getJSONObject(TabData.MONTH));
+		this.year = new TabData(stats.getJSONObject(TabData.YEAR));
 	}
 
-	public static Statistics getStats(Context context)
+	public static Statistics getInstance(Context context)
 			throws ParseException, UnknownUserException, JSONException {
 
 		return new Statistics(context);
 	}
 
 	class TabData {
-		public ArrayList<ColumnData> col;
+		public static final String WEEK = "week";
+		public static final String MONTH = "month";
+		public static final String YEAR = "year";
+
+		public ArrayList<ColumnData> col = new ArrayList<>();
 		public int distance = 0;
 		public int points = 0;
 		public int successRate = 0;
@@ -47,9 +53,17 @@ public final class Statistics {
 
 		private TabData(JSONObject tab) throws JSONException {
 			Iterator<?> keys = tab.keys();
+			String key;
+			ColumnData col;
 			while(keys.hasNext()) {
-				String key = (String) keys.next();
-				ColumnData col = new ColumnData(key, tab.getJSONObject(key));
+				key = (String) keys.next();
+				if (!tab.isNull(key)) {
+					col = new ColumnData(key, tab.getJSONObject(key));
+				}
+				else {
+					col = new ColumnData(key);
+				}
+
 				correctDistance += col.correctDistance;
 				speedingDistance += col.speedingDistance;
 				points += col.points;
@@ -57,24 +71,55 @@ public final class Statistics {
 				this.col.add(col);
 			}
 			distance = correctDistance + speedingDistance;
-			successRate = 100 * (correctDistance / distance);
+			successRate = distance == 0 ?
+					-1 : (int) Math.round(100 * (correctDistance / (double) distance));
 		}
-	}
 
-	class ColumnData {
-		public int index;
+		class ColumnData {
+			public int index;
+			public String key;
 
-		public int points;
-		public int correctDistance;
-		public int speedingDistance;
-		public int expiredPoints;
+			public int points;
+			public int correctDistance;
+			public int speedingDistance;
+			public int expiredPoints;
 
-		private ColumnData(String index, JSONObject col) throws JSONException {
-			this.index = Integer.valueOf(index);
-			points = col.getInt("points");
-			correctDistance = col.getInt("correct_dist");
-			speedingDistance = col.getInt("speeding_dist");
-			expiredPoints = col.getInt("total_expired");
+			private ColumnData(String index) {
+				setIndexAndKey(index);
+				points = 0;
+				correctDistance = 0;
+				speedingDistance = 0;
+				expiredPoints = 0;
+			}
+
+			private ColumnData(String index, JSONObject col) throws JSONException {
+				setIndexAndKey(index);
+				points = col.getInt("points");
+				correctDistance = col.getInt("correct_dist");
+				speedingDistance = col.getInt("speeding_dist");
+				expiredPoints = col.getInt("total_expired");
+			}
+
+			private void setIndexAndKey(String index) {
+				this.index = Integer.valueOf(index);
+				Calendar cal = Calendar.getInstance();
+				Locale locale = Locale.getDefault();
+
+				switch (index) {
+					case WEEK:
+						cal.set(Calendar.DAY_OF_WEEK, this.index);
+						key = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
+						break;
+					case MONTH:
+						cal.set(Calendar.WEEK_OF_YEAR, this.index);
+						key = cal.getDisplayName(Calendar.WEEK_OF_MONTH, Calendar.SHORT, locale);
+						break;
+					case YEAR:
+						cal.set(Calendar.MONTH, this.index);
+						key = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
+						break;
+				}
+			}
 		}
 	}
 

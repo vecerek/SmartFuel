@@ -268,7 +268,7 @@ public class SFDB extends SQLiteOpenHelper {
 			if(lastUpdate != null) {
 				params.put(GLOBALS.LAST_UPDATE, DATE_FORMAT.format(this.lastUpdate));
 			}
-			if (test) params.put("test", String.valueOf(true));;
+			if (test) params.put("test", String.valueOf(true));
 
 			return (new ServerAPI("download_db").sendRequest(params));
 
@@ -754,9 +754,9 @@ public class SFDB extends SQLiteOpenHelper {
 			}
 		}
 
-		parsed.put("week", week);
-		parsed.put("month", month);
-		parsed.put("year", year);
+		parsed.put(Statistics.TabData.WEEK, week);
+		parsed.put(Statistics.TabData.MONTH, month);
+		parsed.put(Statistics.TabData.YEAR, year);
 
 		return parsed;
 	}
