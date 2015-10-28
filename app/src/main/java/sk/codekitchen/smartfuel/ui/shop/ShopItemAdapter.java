@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import sk.codekitchen.smartfuel.*;
-import sk.codekitchen.smartfuel.ui.GUI.*;
+import sk.codekitchen.smartfuel.ui.views.*;
 
 /**
  * @author Gabriel Lehocky

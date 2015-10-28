@@ -20,11 +20,12 @@ import java.util.Vector;
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.model.SFDB;
 import sk.codekitchen.smartfuel.model.User;
-import sk.codekitchen.smartfuel.ui.GUI.CustomViewPager;
-import sk.codekitchen.smartfuel.ui.GUI.EditLightTextView;
-import sk.codekitchen.smartfuel.ui.GUI.FragmentAdapter;
-import sk.codekitchen.smartfuel.ui.GUI.LightTextView;
-import sk.codekitchen.smartfuel.ui.GUI.Utils;
+import sk.codekitchen.smartfuel.ui.fragments.CustomViewPager;
+import sk.codekitchen.smartfuel.ui.views.EditLightTextView;
+import sk.codekitchen.smartfuel.ui.fragments.FragmentAdapter;
+import sk.codekitchen.smartfuel.ui.views.LightTextView;
+import sk.codekitchen.smartfuel.ui.views.Utils;
+import sk.codekitchen.smartfuel.ui.fragments.IntroFragment;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 
@@ -70,9 +71,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        setView();
+
 	    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	    isLoggedIn = preferences.getInt(GLOBALS.USER_ID, -1) != -1;
+
+		setView();
 
         if (isLoggedIn){
 			goToRecorderActivity();
@@ -110,8 +113,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		tabLayout.addTab(tabLayout.newTab().setText("Login"));
 		tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+
+		final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+		IntroFragment t1 = new IntroFragment();
+		t1.setContent(0);
+		adapter.addFragment(t1);
+		IntroFragment t2 = new IntroFragment();
+		t2.setContent(1);
+		adapter.addFragment(t2);
+		IntroFragment t3 = new IntroFragment();
+		t3.setContent(2);
+		adapter.addFragment(t3);
+		IntroFragment tLogin = new IntroFragment();
+		tLogin.setContent(3);
+		adapter.addFragment(tLogin);
+
 		viewPager = (CustomViewPager) findViewById(R.id.pager);
-		final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 		viewPager.setAdapter(adapter);
 		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

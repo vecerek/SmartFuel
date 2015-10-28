@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 
-import sk.codekitchen.smartfuel.ui.GUI.*;
+import sk.codekitchen.smartfuel.ui.views.*;
 import sk.codekitchen.smartfuel.ui.shop.*;
 import sk.codekitchen.smartfuel.R;
 

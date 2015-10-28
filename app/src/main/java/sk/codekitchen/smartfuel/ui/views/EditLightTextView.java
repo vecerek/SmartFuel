@@ -1,18 +1,18 @@
-package sk.codekitchen.smartfuel.ui.GUI;
+package sk.codekitchen.smartfuel.ui.views;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.TextView;
+import android.widget.EditText;
 
 /**
  * @author Gabriel Lehocky
  *
- * Extends TextView by custom Light font type
+ * Extends EditText view by custom font type
  */
-public class LightTextView extends TextView {
+public class EditLightTextView extends EditText{
 
-    public LightTextView(Context context, AttributeSet attrs){
+    public EditLightTextView(Context context, AttributeSet attrs){
         super(context, attrs);
         this.setTypeface(Typeface.createFromAsset(context.getAssets(), "Fonts/ProximaNova-Light.otf"));
     }

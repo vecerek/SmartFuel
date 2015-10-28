@@ -13,7 +13,7 @@ import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
 import com.db.chart.view.LineChartView;
 
-import sk.codekitchen.smartfuel.ui.GUI.*;
+import sk.codekitchen.smartfuel.ui.views.*;
 import sk.codekitchen.smartfuel.R;
 
 /**

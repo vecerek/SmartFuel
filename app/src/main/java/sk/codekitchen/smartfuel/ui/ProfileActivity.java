@@ -8,7 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import sk.codekitchen.smartfuel.model.User;
-import sk.codekitchen.smartfuel.ui.GUI.*;
+import sk.codekitchen.smartfuel.ui.views.*;
 import sk.codekitchen.smartfuel.R;
 
 public class ProfileActivity extends Activity implements View.OnClickListener{

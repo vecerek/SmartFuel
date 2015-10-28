@@ -11,7 +11,7 @@
     android:id="@+id/profile_layout"
     android:weightSum="1">
 
-    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
+    <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:text="@string/title_acc"
@@ -37,7 +37,7 @@
             android:weightSum="1"
             android:gravity="center">
 
-            <sk.codekitchen.smartfuel.ui.GUI.RoundedImageView
+            <sk.codekitchen.smartfuel.ui.views.RoundedImageView
                 android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:id="@+id/profile_picture"
@@ -46,7 +46,7 @@
 
         </LinearLayout>
 
-        <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+        <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
             android:layout_weight="0.15"
             android:layout_height="0dp"
             android:layout_width="fill_parent"
@@ -70,7 +70,7 @@
                 android:src="@mipmap/pin"
                 android:layout_marginRight="10dp"/>
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:id="@+id/profile_address"
@@ -102,7 +102,7 @@
             android:gravity="center"
             android:background="@drawable/border_top_right">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -113,7 +113,7 @@
                 android:textColor="@color/WHITE"
                 />
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -133,7 +133,7 @@
             android:gravity="center"
             android:background="@drawable/border_top">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -144,7 +144,7 @@
                 android:textColor="@color/MAIN"
                 />
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -164,7 +164,7 @@
             android:gravity="center"
             android:background="@drawable/border_top_left">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -175,7 +175,7 @@
                 android:textColor="@color/WHITE"
                 />
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -205,7 +205,7 @@
             android:gravity="center"
             android:background="@drawable/border_top_right">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -215,7 +215,7 @@
                 android:gravity="center"
                 android:textColor="@color/WHITE"/>
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -235,7 +235,7 @@
             android:gravity="center"
             android:background="@drawable/border_top">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -245,7 +245,7 @@
                 android:gravity="center"
                 android:textColor="@color/RED"/>
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -275,7 +275,7 @@
             android:gravity="center"
             android:background="@drawable/border_top_right">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -286,7 +286,7 @@
                 android:textColor="@color/WHITE"
                 />
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -307,7 +307,7 @@
             android:gravity="center"
             android:background="@drawable/border_top">
 
-            <sk.codekitchen.smartfuel.ui.GUI.SemiboldTextView
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -318,7 +318,7 @@
                 android:textColor="@color/GREEN"
                 />
 
-            <sk.codekitchen.smartfuel.ui.GUI.LightTextView
+            <sk.codekitchen.smartfuel.ui.views.LightTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"

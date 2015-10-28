@@ -1,4 +1,4 @@
-package sk.codekitchen.smartfuel.ui.GUI;
+package sk.codekitchen.smartfuel.ui.fragments;
 
 import android.content.Context;
 import android.util.AttributeSet;

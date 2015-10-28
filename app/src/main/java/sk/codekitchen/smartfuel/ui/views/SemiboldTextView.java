@@ -1,4 +1,4 @@
-package sk.codekitchen.smartfuel.ui.GUI;
+package sk.codekitchen.smartfuel.ui.views;
 
 import android.content.Context;
 import android.graphics.Typeface;

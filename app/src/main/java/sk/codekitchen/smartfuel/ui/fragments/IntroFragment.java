@@ -1,4 +1,4 @@
-package sk.codekitchen.smartfuel.ui.GUI;
+package sk.codekitchen.smartfuel.ui.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import sk.codekitchen.smartfuel.R;
+import sk.codekitchen.smartfuel.ui.views.LightTextView;
+import sk.codekitchen.smartfuel.ui.views.Utils;
 
 /**
  * Created by Gabriel Lehocky on 15/10/10.
@@ -46,7 +48,7 @@ public class IntroFragment extends Fragment {
             case 0:
                 introTitle.setText(getString(R.string.intro_1));
                 introText.setText(getString(R.string.intro_1_comment));
-                Utils.setBackgroundOfView(getActivity(),bck, R.drawable.bck1);
+                Utils.setBackgroundOfView(getActivity(), bck, R.drawable.bck1);
                 break;
             case 1:
                 introTitle.setText(getString(R.string.intro_2));

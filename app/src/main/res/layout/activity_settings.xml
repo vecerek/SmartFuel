@@ -11,7 +11,7 @@
     android:id="@+id/settings_layout"
     android:weightSum="1">
 
-    <sk.codekitchen.smartfuel.ui.GUI.ExtraboldTextView
+    <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:text="@string/title_set"

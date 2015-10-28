@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import sk.codekitchen.smartfuel.ui.GUI.*;
+import sk.codekitchen.smartfuel.ui.views.*;
 import sk.codekitchen.smartfuel.R;
 
 /**
