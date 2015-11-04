@@ -183,7 +183,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <sk.codekitchen.smartfuel.ui.fragments.CustomViewPager
-        android:id="@+id/pager"
+        android:id="@+id/pager_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/tab_layout"/>

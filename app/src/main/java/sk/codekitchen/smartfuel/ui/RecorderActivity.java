@@ -76,7 +76,7 @@ public class RecorderActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recorder);
+        setContentView(R.layout.fragment_recorder);
 
         menu = new MainMenu(this, MainMenu.RECORDER_ID);
         setView();

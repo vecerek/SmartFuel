@@ -7,19 +7,13 @@
     android:layout_height="match_parent"
     android:padding="0dp"
     android:orientation="vertical"
-    android:background="@drawable/bck"
     android:id="@+id/profile_layout"
     android:weightSum="1">
 
-    <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
+    <Space
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:text="@string/title_acc"
-        android:textColor="@color/WHITE"
-        android:textSize="@dimen/title_size"
-        android:textIsSelectable="false"
-        android:layout_weight="0.1"
-        android:gravity="center"/>
+        android:layout_weight="0.02"/>
 
     <LinearLayout
         android:orientation="vertical"
@@ -91,7 +85,7 @@
         android:layout_height="0dp"
         android:weightSum="1"
         android:gravity="center"
-        android:layout_weight="0.14">
+        android:layout_weight="0.20">
 
         <LinearLayout
             android:orientation="vertical"
@@ -194,7 +188,7 @@
         android:layout_height="0dp"
         android:weightSum="1"
         android:gravity="center"
-        android:layout_weight="0.14">
+        android:layout_weight="0.20">
 
         <LinearLayout
             android:orientation="vertical"
@@ -264,7 +258,7 @@
         android:layout_height="0dp"
         android:weightSum="1"
         android:gravity="center"
-        android:layout_weight="0.14">
+        android:layout_weight="0.20">
 
         <LinearLayout
             android:orientation="vertical"
@@ -331,13 +325,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <include
-        layout="@layout/menu_icons"
-        android:id="@+id/menu_icons"
-        android:layout_height="0dp"
-        android:layout_width="fill_parent"
-        android:layout_weight="0.1"/>
 
 </LinearLayout>
 

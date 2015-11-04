@@ -29,7 +29,7 @@ public class ProfileActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.fragment_profile);
 
         menu = new MainMenu(this, MainMenu.USER_ID);
         setView();

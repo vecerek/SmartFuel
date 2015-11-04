@@ -7,21 +7,13 @@
     android:layout_height="match_parent"
     android:padding="0dp"
     android:orientation="vertical"
-    android:background="@drawable/bck"
     android:id="@+id/settings_layout"
     android:weightSum="1">
 
-    <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
+    <Space
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:textSize="@dimen/title_size"
-        android:text="@string/title_rec"
-        android:id="@+id/title"
-        android:textColor="@color/WHITE"
-        android:textIsSelectable="false"
-        android:layout_weight="0.1"
-        android:gravity="center"
-        />
+        android:layout_weight="0.05"/>
 
     <LinearLayout
         android:id="@+id/switch_meter"
@@ -104,6 +96,11 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.03"/>
 
     <RelativeLayout
         android:id="@+id/progressArea"
@@ -247,13 +244,18 @@
 
     </RelativeLayout>
 
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.02"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:weightSum="1"
         android:gravity="center"
-        android:layout_weight="0.15">
+        android:layout_weight="0.25">
 
         <LinearLayout
             android:orientation="vertical"
@@ -318,12 +320,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <include
-        layout="@layout/menu_icons"
-        android:id="@+id/menu_icons"
-        android:layout_height="0dp"
-        android:layout_width="fill_parent"
-        android:layout_weight="0.1"/>
 
 </LinearLayout>

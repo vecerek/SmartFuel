@@ -16,7 +16,7 @@ import sk.codekitchen.smartfuel.ui.views.Utils;
  *
  * Fragment that contains one intro screen
  */
-public class IntroFragment extends Fragment {
+public class FragmentIntro extends Fragment {
 
     private int id;
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_recorder"
+            android:icon="@mipmap/speed"
+            android:checked="true"
+            android:title="@string/title_rec"/>
+        <item
+            android:id="@+id/nav_stat"
+            android:icon="@mipmap/graph"
+            android:title="@string/title_stat"/>
+        <item
+            android:id="@+id/nav_shop"
+            android:icon="@mipmap/shop"
+            android:title="@string/title_shop"/>
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@mipmap/profile"
+            android:title="@string/title_acc"/>
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@mipmap/settings"
+            android:title="@string/title_set"/>
+    </group>
+</menu>

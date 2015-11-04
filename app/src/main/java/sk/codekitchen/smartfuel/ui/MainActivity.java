@@ -25,7 +25,7 @@ import sk.codekitchen.smartfuel.ui.views.EditLightTextView;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentAdapter;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
-import sk.codekitchen.smartfuel.ui.fragments.IntroFragment;
+import sk.codekitchen.smartfuel.ui.fragments.FragmentIntro;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 
@@ -115,20 +115,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 		final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-		IntroFragment t1 = new IntroFragment();
+		FragmentIntro t1 = new FragmentIntro();
 		t1.setContent(0);
 		adapter.addFragment(t1);
-		IntroFragment t2 = new IntroFragment();
+		FragmentIntro t2 = new FragmentIntro();
 		t2.setContent(1);
 		adapter.addFragment(t2);
-		IntroFragment t3 = new IntroFragment();
+		FragmentIntro t3 = new FragmentIntro();
 		t3.setContent(2);
 		adapter.addFragment(t3);
-		IntroFragment tLogin = new IntroFragment();
+		FragmentIntro tLogin = new FragmentIntro();
 		tLogin.setContent(3);
 		adapter.addFragment(tLogin);
 
-		viewPager = (CustomViewPager) findViewById(R.id.pager);
+		viewPager = (CustomViewPager) findViewById(R.id.pager_main);
 		viewPager.setAdapter(adapter);
 		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				e.printStackTrace();
 			}
 
-			Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
+			Intent intent = new Intent(MainActivity.this, SmartFuelActivity.class);
 
 			startActivity(intent);
 			finish();

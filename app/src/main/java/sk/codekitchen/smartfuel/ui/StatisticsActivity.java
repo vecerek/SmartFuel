@@ -60,7 +60,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
+        setContentView(R.layout.fragment_statistics);
 
         menu = new MainMenu(this, MainMenu.STATISTICS_ID);
         setView();

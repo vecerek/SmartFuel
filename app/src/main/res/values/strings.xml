@@ -93,5 +93,10 @@
     <string name="error_invalid_email">Not a valid email.</string>
     <string name="error_field_required">Required field.</string>
     <string name="error_unexpected">Something unexpected has happened. Please, try it later.</string>
+    <string name="title_activity_smart_fuel">SmartFuelActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
 
 </resources>
