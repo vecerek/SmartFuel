@@ -98,5 +98,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="toolbar_rec">REC</string>
+    <string name="toolbar_stop">STOP</string>
+
+    <string name="notification_title">SmartFuel zaznamenáva vašu aktivitu</string>
 
 </resources>
