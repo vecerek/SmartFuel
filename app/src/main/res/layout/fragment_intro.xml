@@ -4,9 +4,8 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:background="@mipmap/bg"
-              android:gravity="bottom"
-              android:paddingBottom="@dimen/intro_bottom_padding">
+              android:background="@mipmap/bck1"
+              android:gravity="bottom">
 
     <sk.codekitchen.smartfuel.ui.views.LightTextView
         android:id="@+id/intro_title"
@@ -28,4 +27,8 @@
         android:layout_margin="@dimen/intro_margins"
         android:gravity="center"/>
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/intro_bottom_padding"
+        />
 </LinearLayout>
