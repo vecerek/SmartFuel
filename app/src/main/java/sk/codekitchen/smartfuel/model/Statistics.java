@@ -26,9 +26,9 @@ public final class Statistics {
 			throws ParseException, UnknownUserException, JSONException {
 
 		JSONObject stats = (new SFDB(context)).queryStats();
-		this.week = new TabData(stats.getJSONObject(TabData.WEEK));
-		this.month = new TabData(stats.getJSONObject(TabData.MONTH));
-		this.year = new TabData(stats.getJSONObject(TabData.YEAR));
+		this.week = new TabData(TabData.WEEK, stats.getJSONObject(TabData.WEEK));
+		this.month = new TabData(TabData.MONTH, stats.getJSONObject(TabData.MONTH));
+		this.year = new TabData(TabData.YEAR, stats.getJSONObject(TabData.YEAR));
 	}
 
 	public static Statistics getInstance(Context context)
@@ -37,12 +37,13 @@ public final class Statistics {
 		return new Statistics(context);
 	}
 
-	class TabData {
+	public class TabData {
 		public static final String WEEK = "week";
 		public static final String MONTH = "month";
 		public static final String YEAR = "year";
+		public final String type;
 
-		public ArrayList<ColumnData> col = new ArrayList<>();
+		public ArrayList<ColumnData> cols = new ArrayList<>();
 		public int distance = 0;
 		public int points = 0;
 		public int successRate = 0;
@@ -51,7 +52,8 @@ public final class Statistics {
 		private int correctDistance = 0;
 		private int speedingDistance = 0;
 
-		private TabData(JSONObject tab) throws JSONException {
+		private TabData(String type, JSONObject tab) throws JSONException {
+			this.type = type;
 			Iterator<?> keys = tab.keys();
 			String key;
 			ColumnData col;
@@ -68,14 +70,14 @@ public final class Statistics {
 				speedingDistance += col.speedingDistance;
 				points += col.points;
 				totalExpiredPoints += col.expiredPoints;
-				this.col.add(col);
+				this.cols.add(col);
 			}
 			distance = correctDistance + speedingDistance;
 			successRate = distance == 0 ?
 					-1 : (int) Math.round(100 * (correctDistance / (double) distance));
 		}
 
-		class ColumnData {
+		public class ColumnData {
 			public int index;
 			public String key;
 
@@ -105,7 +107,7 @@ public final class Statistics {
 				Calendar cal = Calendar.getInstance();
 				Locale locale = Locale.getDefault();
 
-				switch (index) {
+				switch (type) {
 					case WEEK:
 						cal.set(Calendar.DAY_OF_WEEK, this.index);
 						key = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);

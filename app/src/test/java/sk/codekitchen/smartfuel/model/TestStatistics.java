@@ -90,10 +90,10 @@ public class TestStatistics extends AndroidTestCase {
 					} else {
 						col = null;
 					}
-					tPoints += points = tabData.col.get(colNum).points;
-					tCorrectDistance += correctDistance = tabData.col.get(colNum).correctDistance;
-					tSpeedingDistance += speedingDistance = tabData.col.get(colNum).speedingDistance;
-					tExpiredPoints += expiredPoints = tabData.col.get(colNum).expiredPoints;
+					tPoints += points = tabData.cols.get(colNum).points;
+					tCorrectDistance += correctDistance = tabData.cols.get(colNum).correctDistance;
+					tSpeedingDistance += speedingDistance = tabData.cols.get(colNum).speedingDistance;
+					tExpiredPoints += expiredPoints = tabData.cols.get(colNum).expiredPoints;
 
 					if (col == null) {
 						assertEquals("Error: Values do not equal in " + key + " of " + tabKey,
