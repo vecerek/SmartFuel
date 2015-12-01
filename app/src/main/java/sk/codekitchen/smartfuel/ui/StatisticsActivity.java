@@ -60,15 +60,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-	    Log.i("onCreate", "Start");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
         menu = new MainMenu(this, MainMenu.STATISTICS_ID);
 	    setView();
-	    Log.i("onCreate", "Before AsyncTask");
 	    (new LoadStatsDataTask()).execute((Void) null);
-	    Log.i("onCreate", "After AsyncTask");
     }
 
     /**
@@ -205,19 +202,15 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
         private int successRate;
 
         StatsTab(LightTextView ltv, Statistics.TabData data) {
-	        Log.i("StatsTab", "start");
             this.ltv = ltv;
 
 	        distance = data.distance;
 	        points = data.points;
 	        successRate = data.successRate;
-	        Log.i("StatsTab", "before processing data");
 			processStatisticData(data.cols);
-	        Log.i("StatsTab", "after processing data");
         }
 
 	    protected void processStatisticData(ArrayList<Statistics.TabData.ColumnData> cols) {
-		    Log.i("processStatisticsData", "start");
 		    int size = cols.size() + 2;
 		    chartLabels = new String[size];
 		    float[] valuesPos = new float[size];
@@ -232,11 +225,8 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 		    int i = 1;
 		    for (Statistics.TabData.ColumnData col : cols) {
 			    chartLabels[i] = col.key;
-			    Log.i("label "+String.valueOf(i), col.key.equals("") ? "null":col.key);
 			    valuesPos[i] = (float) col.correctDistance;
-			    Log.i("posVal "+String.valueOf(i), String.valueOf(col.correctDistance));
 			    valuesNeg[i] = (float) col.speedingDistance;
-			    Log.i("negVal "+String.valueOf(i), String.valueOf(col.speedingDistance));
 			    i++;
 			    if (col.correctDistance > maxPos) maxPos = col.correctDistance;
 			    if (col.speedingDistance > maxNeg) maxNeg = col.speedingDistance;
@@ -256,7 +246,6 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
 		    chartMaxValues.put(true, maxPos);
 		    chartMaxValues.put(false, maxNeg);
-		    Log.i("processStatisticsData", "end");
 	    }
 
         /**
@@ -310,11 +299,9 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
          * Changes view based on the set range
          */
         protected void activate() {
-	        Log.i("activate", "start");
 	        infoDistance.setText(String.valueOf(this.distance));
 	        infoPoints.setText(String.valueOf(this.points));
 	        infoSuccess.setText(String.valueOf(this.successRate) + " %");
-	        Log.i("activate", "text set");
 
             if (ltv != null) {
                 if (isPositive) {
@@ -325,7 +312,6 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                     ltv.setTextColor(Colors.RED);
                 }
             }
-	        Log.i("activate", "updating chart...");
             updateChart();
         }
 
@@ -344,16 +330,11 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
          * Fills chart view with the actual data
          */
         protected void updateChart() {
-	        Log.i("updateChart", "start");
             removeDataPoint();
-	        Log.i("updateChart", "datapoint removed");
-
             lineChart.dismiss();
-	        Log.i("updateChart", "linechart dismissed");
 
 	        LineSet dataSet = lineSets.get(isPositive);
 			dataSet.setThickness(5f);
-	        Log.i("updateChart", "dataset set thickness");
 
             if (isPositive) {
                 dataSet.setColor(Colors.MAIN)
@@ -364,16 +345,16 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                         .setGradientFill(Colors.GRADIENT_RED, null)
                         .setSmooth(true);
             }
-	        Log.i("updateChart", "dataset set color, gradient, etc.");
 
             int max = chartMaxValues.get(isPositive);
+            int step = max/CHART_VALUE_STEP;
+            max -= max % step;
 
             // displays new data in the chart view
-            lineChart.setAxisBorderValues(0, max,(max)/CHART_VALUE_STEP);
+            lineChart.setAxisBorderValues(0, max, step);
             lineChart.removeAllViews();
             lineChart.addData(dataSet);
             lineChart.show();
-	        Log.i("updateChart", "linechart showed");
         }
 
     }
@@ -384,10 +365,8 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
         @Override
         protected Void doInBackground(Void... params) {
-	        Log.i("doInBackground", "start");
             try {
                 stats = Statistics.getInstance(getApplicationContext());
-	            Log.i("doInBackground", "stats gathered");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -396,17 +375,12 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 
 	    @Override
 	    protected void onPostExecute(Void param) {
-		    Log.i("onPostExecute", "start");
 		    if (stats != null) {
 				week = new StatsTab(weekTab, stats.week);
 			    month = new StatsTab(monthTab, stats.month);
 			    year = new StatsTab(yearTab, stats.year);
 			    current = week;
-			    Log.i("onPostExecute", "current has been set");
-
-			    Log.i("onPostExecute", "before tab activating");
 			    current.activate();
-			    Log.i("onPostExecute", "after tab activating");
 		    }
 	    }
     }

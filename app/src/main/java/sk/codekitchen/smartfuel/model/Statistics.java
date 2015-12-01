@@ -64,7 +64,6 @@ public final class Statistics {
 			ColumnData col;
 			while(keys.hasNext()) {
 				key = (String) keys.next();
-				System.out.println("Key: " + key);
 				if (!tab.isNull(key)) {
 					col = new ColumnData(key, tab.getJSONObject(key));
 				}
