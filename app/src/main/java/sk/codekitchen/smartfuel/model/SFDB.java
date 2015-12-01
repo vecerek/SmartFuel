@@ -119,7 +119,7 @@ public class SFDB extends SQLiteOpenHelper {
 		db.execSQL(Event.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE_INDEX);
-		db.execSQL(Statistics.VIEW.CREATE);
+		db.execSQL(Statistics.VIEW.create());
 	}
 
 	/** {@inheritDoc}

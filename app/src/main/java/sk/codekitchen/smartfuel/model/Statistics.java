@@ -22,10 +22,16 @@ public final class Statistics {
 	public TabData month;
 	public TabData year;
 
+	protected Calendar cal;
+	protected int offset;
+
 	private Statistics(Context context)
 			throws ParseException, UnknownUserException, JSONException {
 
+		cal = Calendar.getInstance();
+		offset = cal.getFirstDayOfWeek() == Calendar.MONDAY ? 1:0;
 		JSONObject stats = (new SFDB(context)).queryStats();
+		System.out.println("Stats: " + stats.toString());
 		this.week = new TabData(TabData.WEEK, stats.getJSONObject(TabData.WEEK));
 		this.month = new TabData(TabData.MONTH, stats.getJSONObject(TabData.MONTH));
 		this.year = new TabData(TabData.YEAR, stats.getJSONObject(TabData.YEAR));
@@ -59,6 +65,7 @@ public final class Statistics {
 			ColumnData col;
 			while(keys.hasNext()) {
 				key = (String) keys.next();
+				System.out.println("Key: " + key);
 				if (!tab.isNull(key)) {
 					col = new ColumnData(key, tab.getJSONObject(key));
 				}
@@ -103,13 +110,13 @@ public final class Statistics {
 			}
 
 			private void setIndexAndKey(String index) {
+				System.out.println("Setting index and key...");
 				this.index = Integer.valueOf(index);
-				Calendar cal = Calendar.getInstance();
 				Locale locale = Locale.getDefault();
 
 				switch (type) {
 					case WEEK:
-						cal.set(Calendar.DAY_OF_WEEK, this.index);
+						cal.set(Calendar.DAY_OF_WEEK, this.index + offset);
 						key = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
 						break;
 					case MONTH:
@@ -117,15 +124,17 @@ public final class Statistics {
 						key = cal.getDisplayName(Calendar.WEEK_OF_MONTH, Calendar.SHORT, locale);
 						break;
 					case YEAR:
-						cal.set(Calendar.MONTH, this.index);
+						cal.set(Calendar.MONTH, this.index - 1);
 						key = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
 						break;
 				}
+				System.out.println("Index: " + this.index + " Key: " + key);
 			}
 		}
 	}
 
 	public static final class VIEW {
+		protected static final String WEEK_START = "<!--WEEK_START-->";
 		public static final String NAME = "statistics";
 
 		/**
@@ -139,7 +148,7 @@ public final class Statistics {
 						"ROUND(SUM(correct_dist), 1) as " + COLUMN.CORRECT_DISTANCE + "," +
 						"ROUND(SUM(speeding_dist), 1) as " + COLUMN.SPEEDING_DISTANCE + "," +
 						"SUM((points - spent)*expired) as " + COLUMN.TOTAL_EXPIRED + "," +
-						"strftime('%u', created_at) as " + COLUMN.DAY + ", " + //returns days of week (1-7) starting with Monday
+						"strftime('%"+WEEK_START+"', created_at) as " + COLUMN.DAY + ", " + //returns days of week (1-7) starting with Monday or (0-6) starting with Sunday
 						"NULL as " + COLUMN.WEEK + "," +
 						"NULL as " + COLUMN.MONTH + "\n" +
 						"FROM `" + SmartFuelActivity.TABLE.NAME + "`\n" +
@@ -182,6 +191,13 @@ public final class Statistics {
 			public static final String DAY = "day";
 			public static final String WEEK = "week";
 			public static final String MONTH = "month";
+		}
+
+		public static String create() {
+			// get settings or inspect locale
+			int startOfWeek = Calendar.getInstance().getFirstDayOfWeek(); // 1 is Sunday, 2 is Monday
+			System.out.println("Locale: " + Locale.getDefault() + " Week starts with: " + startOfWeek);
+			return CREATE.replace(WEEK_START, startOfWeek == 1 ? "w":"u");
 		}
 	}
 }
