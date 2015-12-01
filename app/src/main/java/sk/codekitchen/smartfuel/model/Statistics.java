@@ -31,7 +31,6 @@ public final class Statistics {
 		cal = Calendar.getInstance();
 		offset = cal.getFirstDayOfWeek() == Calendar.MONDAY ? 1:0;
 		JSONObject stats = (new SFDB(context)).queryStats();
-		System.out.println("Stats: " + stats.toString());
 		this.week = new TabData(TabData.WEEK, stats.getJSONObject(TabData.WEEK));
 		this.month = new TabData(TabData.MONTH, stats.getJSONObject(TabData.MONTH));
 		this.year = new TabData(TabData.YEAR, stats.getJSONObject(TabData.YEAR));
@@ -110,7 +109,6 @@ public final class Statistics {
 			}
 
 			private void setIndexAndKey(String index) {
-				System.out.println("Setting index and key...");
 				this.index = Integer.valueOf(index);
 				Locale locale = Locale.getDefault();
 
@@ -127,7 +125,6 @@ public final class Statistics {
 						key = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
 						break;
 				}
-				System.out.println("Index: " + this.index + " Key: " + key);
 			}
 		}
 	}
@@ -195,7 +192,6 @@ public final class Statistics {
 		public static String create() {
 			// get settings or inspect locale
 			int startOfWeek = Calendar.getInstance().getFirstDayOfWeek(); // 1 is Sunday, 2 is Monday
-			System.out.println("Locale: " + Locale.getDefault() + " Week starts with: " + startOfWeek);
 			return CREATE.replace(WEEK_START, startOfWeek == 1 ? "w":"u");
 		}
 	}
