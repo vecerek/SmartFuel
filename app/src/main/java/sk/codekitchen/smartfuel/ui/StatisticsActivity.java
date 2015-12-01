@@ -149,16 +149,25 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.stat_week:
-                if (current != week) current = week;
-                current.activate();
+                if (current != week) {
+                    current.deactivate();
+                    current = week;
+                    current.activate();
+                }
                 break;
             case R.id.stat_month:
-                if (current != month) current = month;
-                current.activate();
+                if (current != month) {
+                    current.deactivate();
+                    current = month;
+                    current.activate();
+                }
                 break;
             case R.id.stat_year:
-                if (current != year) current = year;
-                current.activate();
+                if (current != year) {
+                    current.deactivate();
+                    current = year;
+                    current.activate();
+                }
                 break;
             case R.id.btn_positive:
                 if (!isPositive) current.changeColorScheme();
@@ -254,20 +263,22 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
          * changes color scheme to the opposite
          */
         protected void changeColorScheme() {
-            switchNeg.setTextColor(switchPos.getCurrentTextColor());
-            switchPos.setTextColor(switchNeg.getCurrentTextColor());
+            int posColor = switchPos.getCurrentTextColor();
+            int negColor = switchNeg.getCurrentTextColor();
+            switchNeg.setTextColor(posColor);
+            switchPos.setTextColor(negColor);
 
             if (ltv != null) {
-                if (isPositive){
-                    Utils.setBackgroundOfView(StatisticsActivity.this, switchPos, R.drawable.round_highlight_box_left);
-                    Utils.setBackgroundOfView(StatisticsActivity.this, switchNeg, R.drawable.round_transparent);
-                    Utils.setBackgroundOfView(StatisticsActivity.this, ltv, R.drawable.border_bottom_selected_good);
-                    ltv.setTextColor(Colors.MAIN);
-                } else {
-                    Utils.setBackgroundOfView(StatisticsActivity.this, switchPos, R.drawable.round_transparent);
+                if (isPositive) { // Turn statistics to negative view
                     Utils.setBackgroundOfView(StatisticsActivity.this, switchNeg, R.drawable.round_bad_box_right);
+                    Utils.setBackgroundOfView(StatisticsActivity.this, switchPos, R.drawable.round_transparent);
                     Utils.setBackgroundOfView(StatisticsActivity.this, ltv, R.drawable.border_bottom_selected_bad);
                     ltv.setTextColor(Colors.RED);
+                } else { // Turn statistics to positive view
+                    Utils.setBackgroundOfView(StatisticsActivity.this, switchNeg, R.drawable.round_transparent);
+                    Utils.setBackgroundOfView(StatisticsActivity.this, switchPos, R.drawable.round_highlight_box_left);
+                    Utils.setBackgroundOfView(StatisticsActivity.this, ltv, R.drawable.border_bottom_selected_good);
+                    ltv.setTextColor(Colors.MAIN);
                 }
             }
 
@@ -313,12 +324,16 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
                     Utils.setBackgroundOfView(StatisticsActivity.this, ltv, R.drawable.border_bottom_selected_bad);
                     ltv.setTextColor(Colors.RED);
                 }
-
-                Utils.setBackgroundOfView(StatisticsActivity.this, ltv, R.drawable.border_bottom);
-                ltv.setTextColor(Colors.GRAY);
             }
 	        Log.i("activate", "updating chart...");
             updateChart();
+        }
+
+        protected void deactivate() {
+            if (ltv != null) {
+                Utils.setBackgroundOfView(StatisticsActivity.this, ltv, R.drawable.border_bottom);
+                ltv.setTextColor(Colors.GRAY);
+            }
         }
 
         protected boolean isBlankColumn(int col) {
