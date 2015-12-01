@@ -120,8 +120,7 @@ public final class Statistics {
 						key = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
 						break;
 					case MONTH:
-						cal.set(Calendar.WEEK_OF_YEAR, this.index);
-						key = cal.getDisplayName(Calendar.WEEK_OF_MONTH, Calendar.SHORT, locale);
+						key = Integer.toString(this.index);
 						break;
 					case YEAR:
 						cal.set(Calendar.MONTH, this.index - 1);
