@@ -80,7 +80,7 @@ public final class Statistics {
 			}
 			distance = correctDistance + speedingDistance;
 			successRate = distance == 0 ?
-					-1 : (int) Math.round(100 * (correctDistance / (double) distance));
+					0 : (int) Math.round(100 * (correctDistance / (double) distance));
 		}
 
 		public class ColumnData {

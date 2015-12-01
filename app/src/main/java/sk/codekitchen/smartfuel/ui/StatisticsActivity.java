@@ -313,7 +313,7 @@ public class StatisticsActivity extends Activity implements View.OnClickListener
 	        Log.i("activate", "start");
 	        infoDistance.setText(String.valueOf(this.distance));
 	        infoPoints.setText(String.valueOf(this.points));
-	        infoSuccess.setText(String.valueOf(this.successRate));
+	        infoSuccess.setText(String.valueOf(this.successRate) + " %");
 	        Log.i("activate", "text set");
 
             if (ltv != null) {
