@@ -7,20 +7,9 @@
     android:layout_height="match_parent"
     android:padding="0dp"
     android:orientation="vertical"
-    android:background="@drawable/bck"
     android:id="@+id/stat_layout"
     android:weightSum="1"
     >
-
-    <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:text="@string/title_stat"
-        android:textColor="@color/WHITE"
-        android:textSize="@dimen/title_size"
-        android:textIsSelectable="false"
-        android:layout_weight="0.11"
-        android:gravity="center"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -28,12 +17,12 @@
         android:layout_height="0dp"
         android:id="@+id/stat_intervals"
         android:weightSum="1"
-        android:layout_weight="0.07"
+        android:layout_weight="0.1"
         >
 
         <sk.codekitchen.smartfuel.ui.views.LightTextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearance"
             android:text="@string/stat_week"
             android:layout_weight="0.33"
@@ -46,7 +35,7 @@
 
         <sk.codekitchen.smartfuel.ui.views.LightTextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearance"
             android:text="@string/stat_month"
             android:layout_weight="0.34"
@@ -59,7 +48,7 @@
 
         <sk.codekitchen.smartfuel.ui.views.LightTextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:textAppearance="?android:attr/textAppearance"
             android:text="@string/stat_year"
             android:layout_weight="0.33"
@@ -72,6 +61,11 @@
 
     </LinearLayout>
 
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05"/>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -81,7 +75,7 @@
         android:background="@drawable/round_border_box"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
-        android:layout_weight="0.07"
+        android:layout_weight="0.1"
         android:padding="5dp"
         >
 
@@ -114,11 +108,10 @@
 
     </LinearLayout>
 
-
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="0.55"
         android:paddingTop="25dp"
         android:paddingBottom="25dp"
         android:gravity="center">
@@ -151,7 +144,7 @@
         android:layout_height="0dp"
         android:weightSum="1"
         android:gravity="center"
-        android:layout_weight="0.15">
+        android:layout_weight="0.2">
 
         <LinearLayout
             android:orientation="vertical"
@@ -247,13 +240,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <include
-        layout="@layout/menu_icons"
-        android:id="@+id/menu_icons"
-        android:layout_height="0dp"
-        android:layout_width="fill_parent"
-        android:layout_weight="0.1"/>
 
 </LinearLayout>
 

@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 
-import sk.codekitchen.smartfuel.ui.fragments.IntroFragment;
-
 /**
  * Created by Gabriel Lehock
  *
@@ -19,7 +17,6 @@ public class FragmentAdapter extends FragmentStatePagerAdapter {
     ArrayList<Fragment> fragments;
 
     /**
-     * Constructs object with 4 tabs
      * @param fm
      */
     public FragmentAdapter(FragmentManager fm) {

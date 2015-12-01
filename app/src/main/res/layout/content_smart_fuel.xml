@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="sk.codekitchen.smartfuel.ui.SmartFuelActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/TRANSPARENT">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/TRANSPARENT"
+            app:title=""
+            >
+
+            <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:text="@string/title_rec"
+                android:textIsSelectable="false"
+                android:textColor="@color/WHITE"
+                android:textSize="@dimen/title_size"
+                android:id="@+id/toolbar_title"
+                />
+
+
+            <ImageView
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:src="@drawable/toolbar_rec"
+                android:padding="@dimen/toolbar_icon_padding"
+                android:clickable="true"
+                android:id="@+id/toolbar_rec"
+                android:layout_gravity="right"
+                android:visibility="visible"/>
+
+            <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
+                android:id="@+id/toolbar_rec_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toolbar_rec"
+                android:layout_gravity="right"
+                android:visibility="visible"
+                android:textColor="@color/RED"
+                android:clickable="true"/>
+
+            <ImageView
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:src="@drawable/toolbar_stop"
+                android:padding="@dimen/toolbar_icon_padding"
+                android:clickable="true"
+                android:id="@+id/toolbar_stop"
+                android:layout_gravity="right"
+                android:visibility="gone"/>
+
+            <sk.codekitchen.smartfuel.ui.views.ExtraboldTextView
+                android:id="@+id/toolbar_stop_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toolbar_stop"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                android:textColor="@color/WHITE"
+                android:clickable="true"/>
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <sk.codekitchen.smartfuel.ui.fragments.CustomViewPager
+        android:id="@+id/pager_sf"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
+
+
+</android.support.design.widget.CoordinatorLayout>

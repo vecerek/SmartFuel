@@ -1,6 +1,7 @@
 package sk.codekitchen.smartfuel.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -10,6 +11,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +28,7 @@ import sk.codekitchen.smartfuel.ui.views.EditLightTextView;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentAdapter;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
-import sk.codekitchen.smartfuel.ui.fragments.IntroFragment;
+import sk.codekitchen.smartfuel.ui.fragments.FragmentIntro;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 
@@ -76,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	    isLoggedIn = preferences.getInt(GLOBALS.USER_ID, -1) != -1;
 
 		setView();
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         if (isLoggedIn){
 			goToRecorderActivity();
         }
@@ -96,7 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         login = (Button) findViewById(R.id.login_btn);
         login.setOnClickListener(this);
         mail = (EditLightTextView) findViewById(R.id.login_mail);
+		mail.setSelected(false);
         pass = (EditLightTextView) findViewById(R.id.login_pass);
+		pass.setSelected(false);
         register = (LightTextView) findViewById(R.id.login_register);
         register.setOnClickListener(this);
         forgotten = (LightTextView) findViewById(R.id.login_forgotten);
@@ -115,20 +120,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 		final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-		IntroFragment t1 = new IntroFragment();
+		FragmentIntro t1 = new FragmentIntro();
 		t1.setContent(0);
 		adapter.addFragment(t1);
-		IntroFragment t2 = new IntroFragment();
+		FragmentIntro t2 = new FragmentIntro();
 		t2.setContent(1);
 		adapter.addFragment(t2);
-		IntroFragment t3 = new IntroFragment();
+		FragmentIntro t3 = new FragmentIntro();
 		t3.setContent(2);
 		adapter.addFragment(t3);
-		IntroFragment tLogin = new IntroFragment();
+		FragmentIntro tLogin = new FragmentIntro();
 		tLogin.setContent(3);
 		adapter.addFragment(tLogin);
 
-		viewPager = (CustomViewPager) findViewById(R.id.pager);
+		viewPager = (CustomViewPager) findViewById(R.id.pager_main);
 		viewPager.setAdapter(adapter);
 		viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 		tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -357,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				e.printStackTrace();
 			}
 
-			Intent intent = new Intent(MainActivity.this, RecorderActivity.class);
+			Intent intent = new Intent(MainActivity.this, SmartFuelActivity.class);
 
 			startActivity(intent);
 			finish();

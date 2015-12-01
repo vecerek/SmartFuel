@@ -5,7 +5,9 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
                 tools:context=".MainActivity"
-                android:background="@drawable/bck4">
+                android:background="@drawable/bck4"
+                android:scaleType="fitXY">
+
 
     <ImageView
         android:id="@+id/intro_logo"
@@ -79,7 +81,8 @@
                     android:layout_marginLeft="@dimen/intro_margins"
                     android:layout_marginRight="@dimen/intro_margins"
                     android:hint="@string/login_mail"
-                    android:layout_weight="0.9"/>
+                    android:layout_weight="0.9"
+                    />
 
             </LinearLayout>
 
@@ -183,7 +186,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <sk.codekitchen.smartfuel.ui.fragments.CustomViewPager
-        android:id="@+id/pager"
+        android:id="@+id/pager_main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/tab_layout"/>

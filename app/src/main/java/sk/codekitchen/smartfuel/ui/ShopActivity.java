@@ -28,7 +28,7 @@ public class ShopActivity extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shop);
+        setContentView(R.layout.fragmnet_shop);
 
         menu = new MainMenu(this, MainMenu.SHOP_ID);
 

@@ -1,30 +1,26 @@
-package sk.codekitchen.smartfuel.ui;
+package sk.codekitchen.smartfuel.ui.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import sk.codekitchen.smartfuel.ui.views.*;
 import sk.codekitchen.smartfuel.R;
+import sk.codekitchen.smartfuel.ui.views.Colors;
+import sk.codekitchen.smartfuel.ui.views.LightTextView;
+import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
+import sk.codekitchen.smartfuel.ui.views.Utils;
 
 /**
  * @author Gabriel Lehocky
- *
- * The activity that works with the actual data.
- * 2 view modes:
- *  - Progress of getting a point
- *  - Speedmeter
- * Other features:
- *  - showing maximal permitted speed
- *  - in case of overspeeding the texture changes to warning colors
- *
  */
-public class RecorderActivity extends Activity implements View.OnClickListener {
+public class FragmentRecorder extends Fragment implements View.OnClickListener{
 
     /**
      * isOverLimit: set to true in case of overspeeding
@@ -39,12 +35,11 @@ public class RecorderActivity extends Activity implements View.OnClickListener {
      * true = speed
      */
     private boolean speedOrPercent = false;
+
     /**
      * speedLimit: 0 if unknown or unlimited
      */
     private int speedLimit = 0;
-
-    private MainMenu menu;
 
     private SemiboldTextView noGps;
     private SemiboldTextView noSignal;
@@ -74,45 +69,38 @@ public class RecorderActivity extends Activity implements View.OnClickListener {
     private SemiboldTextView pointOverall;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_recorder);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_recorder, container, false);
 
-        menu = new MainMenu(this, MainMenu.RECORDER_ID);
-        setView();
-    }
-
-    /**
-     * initializes the View
-     */
-    private void setView(){
         // speed/percent switch
-        btnSpeed = (LinearLayout) findViewById(R.id.btn_speed);
-        btnPercent = (LinearLayout) findViewById(R.id.btn_percent);
+        btnSpeed = (LinearLayout) view.findViewById(R.id.btn_speed);
+        btnPercent = (LinearLayout) view.findViewById(R.id.btn_percent);
         btnSpeed.setOnClickListener(this);
         btnPercent.setOnClickListener(this);
-        icoBtnPercent = (ImageView) findViewById(R.id.icon_percent);
-        icoBtnSpeed = (ImageView) findViewById(R.id.icon_speed);
-        txtBtnPercent = (LightTextView) findViewById(R.id.txt_percent);
-        txtBtnSpeed = (LightTextView) findViewById(R.id.txt_speed);
+        icoBtnPercent = (ImageView) view.findViewById(R.id.icon_percent);
+        icoBtnSpeed = (ImageView) view.findViewById(R.id.icon_speed);
+        txtBtnPercent = (LightTextView) view.findViewById(R.id.txt_percent);
+        txtBtnSpeed = (LightTextView) view.findViewById(R.id.txt_speed);
 
         // progressbar
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        progressValue = (LightTextView) findViewById(R.id.progress_value);
-        progressSufix = (LightTextView) findViewById(R.id.progress_symbol);
-        progressComment = (LightTextView) findViewById(R.id.progress_comment);
-        progressCommentBold = (SemiboldTextView) findViewById(R.id.progress_comment_bold);
-        progressData = (LinearLayout) findViewById(R.id.progress_central_data);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressValue = (LightTextView) view.findViewById(R.id.progress_value);
+        progressSufix = (LightTextView) view.findViewById(R.id.progress_symbol);
+        progressComment = (LightTextView) view.findViewById(R.id.progress_comment);
+        progressCommentBold = (SemiboldTextView) view.findViewById(R.id.progress_comment_bold);
+        progressData = (LinearLayout) view.findViewById(R.id.progress_central_data);
 
-        noGps = (SemiboldTextView) findViewById(R.id.progress_no_gps);
-        noSignal = (SemiboldTextView) findViewById(R.id.progress_no_signal);
+        noGps = (SemiboldTextView) view.findViewById(R.id.progress_no_gps);
+        noSignal = (SemiboldTextView) view.findViewById(R.id.progress_no_signal);
         noGps.setOnClickListener(this);
-        maxPermittedSpeed = (SemiboldTextView) findViewById(R.id.max_permitted_speed);
-        maxPermittedSign =(LinearLayout) findViewById(R.id.max_permitted_sign);
+        maxPermittedSpeed = (SemiboldTextView) view.findViewById(R.id.max_permitted_speed);
+        maxPermittedSign =(LinearLayout) view.findViewById(R.id.max_permitted_sign);
 
         // points data
-        pointCurrent = (SemiboldTextView) findViewById(R.id.actual_points);
-        pointOverall = (SemiboldTextView) findViewById(R.id.overall_points);
+        pointCurrent = (SemiboldTextView) view.findViewById(R.id.actual_points);
+        pointOverall = (SemiboldTextView) view.findViewById(R.id.overall_points);
+
+        return view;
     }
 
     @Override
@@ -181,28 +169,28 @@ public class RecorderActivity extends Activity implements View.OnClickListener {
      */
     public void changeColorBySpeed() {
         if (speedOrPercent) { // speed
-            Utils.setBackgroundOfView(this, btnPercent, R.drawable.round_transparent);
+            Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_transparent);
             if (isOverLimit) {
-                Utils.setBackgroundOfView(this, btnSpeed, R.drawable.round_bad_box_right);
-                Utils.setProgressBarProgress(this, progressBar, R.drawable.progressbar_arch_grad_bad);
+                Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_bad_box_right);
+                Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_bad);
                 progressValue.setTextColor(Colors.RED);
             } else {
-                Utils.setBackgroundOfView(this, btnSpeed, R.drawable.round_highlight_box_right);
-                Utils.setProgressBarProgress(this, progressBar, R.drawable.progressbar_arch_grad_good);
+                Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_highlight_box_right);
+                Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_good);
                 progressValue.setTextColor(Colors.WHITE);
             }
         } else { // percent
-            Utils.setBackgroundOfView(this, btnSpeed, R.drawable.round_transparent);
+            Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_transparent);
             if (isOverLimit) {
-                Utils.setBackgroundOfView(this, btnPercent, R.drawable.round_bad_box_left);
-                Utils.setProgressBarProgress(this, progressBar, R.drawable.progressbar_arch_grad_bad);
+                Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_bad_box_left);
+                Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_bad);
                 progressSufix.setTextColor(Colors.RED);
                 progressValue.setTextColor(Colors.ORANGE);
 
             }
             else {
-                Utils.setBackgroundOfView(this, btnPercent, R.drawable.round_highlight_box_left);
-                Utils.setProgressBarProgress(this, progressBar, R.drawable.progressbar_arch_grad_good);
+                Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_highlight_box_left);
+                Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_good);
                 progressSufix.setTextColor(Colors.MAIN);
                 progressValue.setTextColor(Colors.WHITE);
             }
@@ -329,8 +317,4 @@ public class RecorderActivity extends Activity implements View.OnClickListener {
         pointOverall.setText(String.valueOf(val));
     }
 
-    @Override
-    public void onBackPressed() {
-
-    }
 }
