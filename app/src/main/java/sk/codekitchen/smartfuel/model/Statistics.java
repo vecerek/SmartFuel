@@ -22,13 +22,18 @@ public final class Statistics {
 	public TabData month;
 	public TabData year;
 
+	protected Calendar cal;
+	protected int offset;
+
 	private Statistics(Context context)
 			throws ParseException, UnknownUserException, JSONException {
 
+		cal = Calendar.getInstance();
+		offset = cal.getFirstDayOfWeek() == Calendar.MONDAY ? 1:0;
 		JSONObject stats = (new SFDB(context)).queryStats();
-		this.week = new TabData(stats.getJSONObject(TabData.WEEK));
-		this.month = new TabData(stats.getJSONObject(TabData.MONTH));
-		this.year = new TabData(stats.getJSONObject(TabData.YEAR));
+		this.week = new TabData(TabData.WEEK, stats.getJSONObject(TabData.WEEK));
+		this.month = new TabData(TabData.MONTH, stats.getJSONObject(TabData.MONTH));
+		this.year = new TabData(TabData.YEAR, stats.getJSONObject(TabData.YEAR));
 	}
 
 	public static Statistics getInstance(Context context)
@@ -37,12 +42,13 @@ public final class Statistics {
 		return new Statistics(context);
 	}
 
-	class TabData {
+	public class TabData {
 		public static final String WEEK = "week";
 		public static final String MONTH = "month";
 		public static final String YEAR = "year";
+		public final String type;
 
-		public ArrayList<ColumnData> col = new ArrayList<>();
+		public ArrayList<ColumnData> cols = new ArrayList<>();
 		public int distance = 0;
 		public int points = 0;
 		public int successRate = 0;
@@ -51,7 +57,8 @@ public final class Statistics {
 		private int correctDistance = 0;
 		private int speedingDistance = 0;
 
-		private TabData(JSONObject tab) throws JSONException {
+		private TabData(String type, JSONObject tab) throws JSONException {
+			this.type = type;
 			Iterator<?> keys = tab.keys();
 			String key;
 			ColumnData col;
@@ -68,14 +75,14 @@ public final class Statistics {
 				speedingDistance += col.speedingDistance;
 				points += col.points;
 				totalExpiredPoints += col.expiredPoints;
-				this.col.add(col);
+				this.cols.add(col);
 			}
 			distance = correctDistance + speedingDistance;
 			successRate = distance == 0 ?
-					-1 : (int) Math.round(100 * (correctDistance / (double) distance));
+					0 : (int) Math.round(100 * (correctDistance / (double) distance));
 		}
 
-		class ColumnData {
+		public class ColumnData {
 			public int index;
 			public String key;
 
@@ -102,20 +109,18 @@ public final class Statistics {
 
 			private void setIndexAndKey(String index) {
 				this.index = Integer.valueOf(index);
-				Calendar cal = Calendar.getInstance();
 				Locale locale = Locale.getDefault();
 
-				switch (index) {
+				switch (type) {
 					case WEEK:
-						cal.set(Calendar.DAY_OF_WEEK, this.index);
+						cal.set(Calendar.DAY_OF_WEEK, this.index + offset);
 						key = cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, locale);
 						break;
 					case MONTH:
-						cal.set(Calendar.WEEK_OF_YEAR, this.index);
-						key = cal.getDisplayName(Calendar.WEEK_OF_MONTH, Calendar.SHORT, locale);
+						key = Integer.toString(this.index);
 						break;
 					case YEAR:
-						cal.set(Calendar.MONTH, this.index);
+						cal.set(Calendar.MONTH, this.index - 1);
 						key = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, locale);
 						break;
 				}
@@ -124,6 +129,7 @@ public final class Statistics {
 	}
 
 	public static final class VIEW {
+		protected static final String WEEK_START = "<!--WEEK_START-->";
 		public static final String NAME = "statistics";
 
 		/**
@@ -137,7 +143,7 @@ public final class Statistics {
 						"ROUND(SUM(correct_dist), 1) as " + COLUMN.CORRECT_DISTANCE + "," +
 						"ROUND(SUM(speeding_dist), 1) as " + COLUMN.SPEEDING_DISTANCE + "," +
 						"SUM((points - spent)*expired) as " + COLUMN.TOTAL_EXPIRED + "," +
-						"strftime('%u', created_at) as " + COLUMN.DAY + ", " + //returns days of week (1-7) starting with Monday
+						"strftime('%"+WEEK_START+"', created_at) as " + COLUMN.DAY + ", " + //returns days of week (1-7) starting with Monday or (0-6) starting with Sunday
 						"NULL as " + COLUMN.WEEK + "," +
 						"NULL as " + COLUMN.MONTH + "\n" +
 						"FROM `" + SmartFuelActivity.TABLE.NAME + "`\n" +
@@ -180,6 +186,12 @@ public final class Statistics {
 			public static final String DAY = "day";
 			public static final String WEEK = "week";
 			public static final String MONTH = "month";
+		}
+
+		public static String create() {
+			// get settings or inspect locale
+			int startOfWeek = Calendar.getInstance().getFirstDayOfWeek(); // 1 is Sunday, 2 is Monday
+			return CREATE.replace(WEEK_START, startOfWeek == 1 ? "w":"u");
 		}
 	}
 }

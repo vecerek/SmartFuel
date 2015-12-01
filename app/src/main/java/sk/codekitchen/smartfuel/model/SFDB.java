@@ -119,7 +119,7 @@ public class SFDB extends SQLiteOpenHelper {
 		db.execSQL(Event.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE_INDEX);
-		db.execSQL(Statistics.VIEW.CREATE);
+		db.execSQL(Statistics.VIEW.create());
 	}
 
 	/** {@inheritDoc}
@@ -796,6 +796,8 @@ public class SFDB extends SQLiteOpenHelper {
 		int firstWeekOfMonth = cal.get(Calendar.WEEK_OF_YEAR);
 		cal.set(Calendar.DAY_OF_MONTH, lastDayOfMonth);
 		int lastWeekOfMonth = cal.get(Calendar.WEEK_OF_YEAR);
+		if (lastWeekOfMonth == 1)
+			lastWeekOfMonth = getNumberOfWeeks(cal);
 
 		Set<Integer> ISOWeekNumbers = new HashSet<>();
 		for (int i = firstWeekOfMonth; i <= lastWeekOfMonth; i++) {
@@ -803,6 +805,20 @@ public class SFDB extends SQLiteOpenHelper {
 		}
 
 		return ISOWeekNumbers.toArray(new Integer[ISOWeekNumbers.size()]);
+	}
+
+	/**
+	 * Returns the number of weeks, resp. number of last week of the current year.
+	 * @param cal instance of calendar
+	 * @return int number of weeks
+	 */
+	protected int getNumberOfWeeks(Calendar cal) {
+		cal.set(Calendar.MONTH, Calendar.DECEMBER);
+		cal.set(Calendar.DAY_OF_MONTH, 31);
+
+		int ordinalDay = cal.get(Calendar.DAY_OF_YEAR);
+		int weekDay = cal.get(Calendar.DAY_OF_WEEK) - 1; // Sunday = 0
+		return (ordinalDay - weekDay + 10) / 7;
 	}
 
 }
