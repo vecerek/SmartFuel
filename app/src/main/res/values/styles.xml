@@ -12,4 +12,7 @@
         <item name="android:activatedBackgroundIndicator">@color/MAIN</item>
     </style>
 
+    <style name="AppTheme.NavigationMenu">
+
+    </style>
 </resources>

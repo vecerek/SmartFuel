@@ -107,6 +107,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         }
         else if (viewPager.getCurrentItem() != 0){
             viewPager.setCurrentItem(0, false);
+            menu.setCheckedItem(0);
         }
         else {
             super.onBackPressed();
