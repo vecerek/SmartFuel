@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">SmartFuel</string>
+
+    <string name="title_rec">MERANIE</string>
+    <string name="title_stat">ŠTATISTIKA</string>
+    <string name="title_shop">OBCHOD</string>
+    <string name="title_acc">PROFIL</string>
+    <string name="title_set">NASTAVENIE</string>
+
+    <string name="rec_point_acutal">AKTUÁLNE BODY</string>
+    <string name="rec_point_overall">CELKOVÉ BODY</string>
+    <string name="rec_percent"> Percentá</string>
+    <string name="rec_speed">Rýchlosť</string>
+    <string name="rec_percent_symbol">%</string>
+    <string name="rec_kmph">km/h</string>
+    <string name="rec_mph">m/h</string>
+    <string name="rec_comment_1">k získaniu</string>
+    <string name="rec_comment_2">1 bodu</string>
+    <string name="rec_turn_gps_on">Zapnúť GPS</string>
+    <string name="rec_no_gps_signal">Čakám na signál</string>
+
+    <string name="stat_week">TÝŽDEŇ</string>
+    <string name="stat_month">MESIAC</string>
+    <string name="stat_year">ROK</string>
+    <string name="stat_pos">Kladné km</string>
+    <string name="stat_neg">Záporné km</string>
+    <string name="profile_total_distance_text">KM</string>
+    <string name="profile_current_points_text">BODOV</string>
+    <string name="profile_success_rate_text">ÚSPEŠNOSŤ</string>
+
+    <string name="shop_product">PRODUKTY</string>
+    <string name="shop_promo">AKCIE</string>
+    <string name="shop_contest">SÚŤAŽE</string>
+
+    <string name="profile_oil">OLEJ</string>
+    <string name="profile_service">SERVIS</string>
+    <string name="profile_tyres">GUMY</string>
+    <string name="profile_days">dní</string>
+    <string name="profile_total_points_text">všetky body</string>
+    <string name="profile_last_sync_text">Posledná synchronizácia</string>
+    <string name="profile_last_sync_before_text">pred</string>
+    <string name="profile_last_sync_hours">h</string>
+    <string name="profile_last_sync_days">d</string>
+    <string name="profile_refueling_count_text">Počet tankováni</string>
+    <string name="profile_expired_points_text">expirovaných bodov</string>
+
+    <string name="intro_1">Jazda</string>
+    <string name="intro_1_comment">Precestujte svet bezpečnou jazdou, pretože…</string>
+    <string name="intro_2">Body</string>
+    <string name="intro_2_comment">Získate body za bezpečnú jazdu.</string>
+    <string name="intro_3">Odmena</string>
+    <string name="intro_3_comment">Odmeníme Vás lacnejším palivom.</string>
+
+    <string name="login_start">Začíname</string>
+    <string name="login_comment">Prihláste sa do svojho SmartFuel účtu</string>
+    <string name="login_mail">E-mail</string>
+    <string name="login_pass">Heslo</string>
+    <string name="login_btn">Prihlásiť sa</string>
+    <string name="login_forget">Stratené?</string>
+    <string name="login_no_acc">Nevlastníte ešte SmartFuel účet?</string>
+    <string name="login_reg">Vytvorte si ho zadarmo</string>
+
+    <string name="login_progress_title">Prihlásiť sa</string>
+    <string name="login_progress_msg">Prihlasujem sa…</string>
+
+    <string name="error_account_not_registered">Neexistujúci účet.</string>
+    <string name="error_incorrect_password">Nesprávne heslo.</string>
+    <string name="error_invalid_password">Neplatné heslo.</string>
+    <string name="error_invalid_email">Neplatný e-mail.</string>
+    <string name="error_field_required">Povinné pole.</string>
+    <string name="error_unexpected">Vyskytla sa neočakávaná chyba. Skúste, prosím, neskôr.</string>
+    <string name="title_activity_smart_fuel">SmartFuelActivity</string>
+
+    <string name="navigation_drawer_open">Otvoriť navigačné menu</string>
+    <string name="navigation_drawer_close">Zatvoriť navigation drawer</string>
+
+    <string name="toolbar_rec">REC</string>
+    <string name="toolbar_stop">STOP</string>
+
+    <string name="notification_title">SmartFuel zaznamenáva vašu aktivitu</string>
+
+</resources>
