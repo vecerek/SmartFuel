@@ -10,6 +10,110 @@
     android:id="@+id/settings_layout"
     android:weightSum="1">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:orientation="vertical">
 
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/setting_language_text"
+                    android:text="@string/set_language"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/settings_text"
+                    android:gravity="center_vertical"/>
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/set_language_spinner"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/setting_audio_text"
+                    android:text="@string/set_audio"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/settings_text"
+                    android:gravity="center_vertical"/>
+
+                <Switch
+                    android:id="@+id/set_audio_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize">
+
+                <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/setting_units_text"
+                    android:text="@string/set_units"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/settings_text"
+                    android:gravity="center_vertical"/>
+
+                <sk.codekitchen.smartfuel.ui.views.LightTextView
+                    android:id="@+id/set_units_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:textSize="@dimen/settings_text"
+                    android:gravity="center_vertical"
+                    android:clickable="true"/>
+
+            </RelativeLayout>
+
+            <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
+                android:id="@+id/set_about_text"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:textSize="@dimen/settings_text"
+                android:text="@string/set_about"
+                android:gravity="center_vertical"/>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

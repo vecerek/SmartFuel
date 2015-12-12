@@ -13,7 +13,7 @@
     <string name="rec_speed">Speed</string>
     <string name="rec_percent_symbol">%</string>
     <string name="rec_kmph">km/h</string>
-    <string name="rec_mph">m/h</string>
+    <string name="rec_mph">mph</string>
     <string name="rec_comment_1">to receive</string>
     <string name="rec_comment_2">1 point</string>
     <string name="rec_turn_gps_on">Turn on GPS</string>
@@ -78,5 +78,10 @@
     <string name="toolbar_stop">STOP</string>
 
     <string name="notification_title">SmartFuel is recording your activity</string>
+
+    <string name="set_language">Language</string>
+    <string name="set_audio">Audio</string>
+    <string name="set_units">Units</string>
+    <string name="set_about">About</string>
 
 </resources>

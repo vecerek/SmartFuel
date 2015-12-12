@@ -13,7 +13,7 @@
     <string name="rec_speed">Rýchlosť</string>
     <string name="rec_percent_symbol">%</string>
     <string name="rec_kmph">km/h</string>
-    <string name="rec_mph">m/h</string>
+    <string name="rec_mph">mph</string>
     <string name="rec_comment_1">k získaniu</string>
     <string name="rec_comment_2">1 bodu</string>
     <string name="rec_turn_gps_on">Zapnúť GPS</string>
@@ -78,5 +78,10 @@
     <string name="toolbar_stop">STOP</string>
 
     <string name="notification_title">SmartFuel zaznamenáva vašu aktivitu</string>
+
+    <string name="set_language">Jazyk</string>
+    <string name="set_audio">Zvuky</string>
+    <string name="set_units">Jednotky</string>
+    <string name="set_about">O aplikácie</string>
 
 </resources>
