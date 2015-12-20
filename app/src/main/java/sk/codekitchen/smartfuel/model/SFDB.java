@@ -115,7 +115,7 @@ public class SFDB extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(User.TABLE.CREATE);
-		db.execSQL(SmartFuelActivity.TABLE.CREATE);
+		db.execSQL(Ride.TABLE.CREATE);
 		db.execSQL(Event.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE);
 		db.execSQL(Event.CONTENT.TABLE.CREATE_INDEX);
@@ -134,7 +134,7 @@ public class SFDB extends SQLiteOpenHelper {
 		Log.w(SFDB.class.getName(), "Upgrading database from version " + oldVersion + "to version " + newVersion);
 		db.execSQL(User.TABLE.DROP);
 		db.execSQL(Statistics.VIEW.DROP);
-		db.execSQL(SmartFuelActivity.TABLE.DROP);
+		db.execSQL(Ride.TABLE.DROP);
 		db.execSQL(Event.TABLE.DROP);
 		db.execSQL(Event.CONTENT.TABLE.DROP);
 		onCreate(db);
@@ -324,11 +324,11 @@ public class SFDB extends SQLiteOpenHelper {
 				idCol = User.TABLE.COLUMN.ID;
 				if (data.has(idCol)) id = data.getInt(idCol);
 				break;
-			case SmartFuelActivity.TABLE.NAME:
+			case Ride.TABLE.NAME:
 				//server updates synchronize the data, local changes desynchronize them
 				Boolean _synchronized = origin.equals(ORIGIN_SERVER);
-				cv = SmartFuelActivity.TABLE.getContentValues(data, _synchronized);
-				idCol = SmartFuelActivity.TABLE.COLUMN.ID;
+				cv = Ride.TABLE.getContentValues(data, _synchronized);
+				idCol = Ride.TABLE.COLUMN.ID;
 				if (data.has(idCol)) id = data.getInt(idCol);
 				break;
 			case Event.TABLE.NAME:
@@ -440,7 +440,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 		try {
 			//check, if there are any pending activities, that need to be evaluated
-			SmartFuelActivity.evaluatePendingActivities(ctx);
+			Ride.evaluatePendingActivities(ctx);
 
 			JSONObject editedData = queryEditedData();
 			JSONObject result;
@@ -590,10 +590,10 @@ public class SFDB extends SQLiteOpenHelper {
 		"SELECT ROUND(100 * (d.corr_dist / (d.corr_dist+d.speed_dist))) AS "+succRate+", " +
 				"ROUND(d.corr_dist+d.speed_dist) AS "+totKm+", " + totEx + " " +
 				"FROM (" +
-					"SELECT SUM(" + SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE + ") AS corr_dist, " +
-					"SUM(" + SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE + ") AS speed_dist, " +
-					"SUM("+SmartFuelActivity.TABLE.COLUMN.POINTS+"*"+SmartFuelActivity.TABLE.COLUMN.EXPIRED+") as " + totEx + " " +
-					"FROM " + SmartFuelActivity.TABLE.NAME + ") AS d", null
+					"SELECT SUM(" + Ride.TABLE.COLUMN.CORRECT_DISTANCE + ") AS corr_dist, " +
+					"SUM(" + Ride.TABLE.COLUMN.SPEEDING_DISTANCE + ") AS speed_dist, " +
+					"SUM("+ Ride.TABLE.COLUMN.POINTS+"*"+ Ride.TABLE.COLUMN.EXPIRED+") as " + totEx + " " +
+					"FROM " + Ride.TABLE.NAME + ") AS d", null
 		);
 
 		JSONObject data = null;
@@ -626,21 +626,21 @@ public class SFDB extends SQLiteOpenHelper {
 	public JSONArray queryActivities(Boolean _synchronized) {
 		Cursor cursor;
 		String[] projection = new String[] {
-				SmartFuelActivity.TABLE.COLUMN.ID,
-				SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE,
-				SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE,
-				SmartFuelActivity.TABLE.COLUMN.CREATED_AT,
-				SmartFuelActivity.TABLE.COLUMN.POINTS,
-				SmartFuelActivity.TABLE.COLUMN.EXPIRED,
-				SmartFuelActivity.TABLE.COLUMN.SPENT
+				Ride.TABLE.COLUMN.ID,
+				Ride.TABLE.COLUMN.CORRECT_DISTANCE,
+				Ride.TABLE.COLUMN.SPEEDING_DISTANCE,
+				Ride.TABLE.COLUMN.CREATED_AT,
+				Ride.TABLE.COLUMN.POINTS,
+				Ride.TABLE.COLUMN.EXPIRED,
+				Ride.TABLE.COLUMN.SPENT
 		};
 
 		if (_synchronized != null) {
-			String where = SmartFuelActivity.TABLE.COLUMN.SYNCHRONIZED + "=?";
+			String where = Ride.TABLE.COLUMN.SYNCHRONIZED + "=?";
 			String[] params = {String.valueOf(_synchronized ? 1 : 0)};
-			cursor = db.query(SmartFuelActivity.TABLE.NAME, projection, where, params, null, null, null, null);
+			cursor = db.query(Ride.TABLE.NAME, projection, where, params, null, null, null, null);
 		} else {
-			cursor = db.query(SmartFuelActivity.TABLE.NAME, projection, null, null, null, null, null, null);
+			cursor = db.query(Ride.TABLE.NAME, projection, null, null, null, null, null, null);
 		}
 
 		cJSONArray result = new cJSONArray(cursor);

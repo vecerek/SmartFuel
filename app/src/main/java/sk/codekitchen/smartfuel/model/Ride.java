@@ -32,7 +32,7 @@ import sk.codekitchen.smartfuel.util.GPXGenerator;
  * to possible lack of connectivity to the internet.
  * @author Attila Večerek
  */
-public class SmartFuelActivity {
+public class Ride {
 
 	protected static final String API_KEY = "xzu3bpa7jeqpkcu8ncp48593";
 	protected RoadInfoListener TTlistener;
@@ -65,7 +65,7 @@ public class SmartFuelActivity {
 
 	protected boolean connectionAborted = false;
 
-	public SmartFuelActivity(Context ctx)
+	public Ride(Context ctx)
 			throws ParseException, UnknownUserException {
 
 		this.ctx = ctx;
@@ -189,9 +189,9 @@ public class SmartFuelActivity {
 
 		if (pendingActivitiesDir.exists()) {
 			File[] dirFiles = pendingActivitiesDir.listFiles();
-			SmartFuelActivity roadActivity;
+			Ride roadActivity;
 			for (File pending : dirFiles) {
-				roadActivity  = new SmartFuelActivity(ctx);
+				roadActivity  = new Ride(ctx);
 				GPXGenerator gpx = new GPXGenerator(ctx, pending);
 				Vector<Location> locations = gpx.getLocations();
 				for (Location loc : locations) {
