@@ -81,6 +81,7 @@ public class GPXGenerator {
 			throws IOException, SAXException, ParserConfigurationException {
 
 		this.ctx = ctx;
+		this.locations = new Vector<>();
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -91,7 +92,13 @@ public class GPXGenerator {
 
 	public Vector<Location> getLocations() { return locations; }
 
+	public int getNumLocations() { return locations.size(); }
+
 	public String getCreatedAt() { return createdAt; }
+
+	public int getNodesNumberOf(String nodeName) {
+		return doc.getElementsByTagName(nodeName).getLength();
+	}
 
 	protected void parseXML() {
 		doc.getDocumentElement().normalize();
