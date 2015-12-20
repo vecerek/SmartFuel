@@ -125,7 +125,7 @@ public class TestStatistics extends AndroidTestCase {
 						tCorrectDistance + tSpeedingDistance, tabData.distance);
 				if (tCorrectDistance + tSpeedingDistance == 0) {
 					assertEquals("Error: the value of success rate does not equal with the expected value",
-							-1, tabData.successRate);
+							0, tabData.successRate);
 				} else {
 					int sRate = (int) Math.round(
 							(100 * tCorrectDistance/(double) (tCorrectDistance + tSpeedingDistance))
