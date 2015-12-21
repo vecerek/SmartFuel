@@ -69,6 +69,7 @@ public class Ride {
 			throws ParseException, UnknownUserException {
 
 		this.ctx = ctx;
+		this.locations = new Vector<>();
 		sfdb = new SFDB(ctx);
 		userID = sfdb.getUserID();
 

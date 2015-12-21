@@ -2,6 +2,7 @@ package sk.codekitchen.smartfuel.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.test.AndroidTestCase;
@@ -50,6 +51,13 @@ public class TestRide extends AndroidTestCase {
                 TestGPXGenerator.getFileFromPath(this, TEST_FILE_WITH_SPEED));
         try {
             Ride ride = new Ride(this.context);
+            try {
+                for (Location loc : gpx.getLocations()) {
+                    ride.addRecord(loc);
+                }
+            } catch (Exception e) {
+                Assert.fail("Adding records should not fail: " + e.getMessage());
+            }
 
         } catch (Exception e) {
             Assert.fail("Object construction shouldn't throw an exception: " + e.getMessage());
