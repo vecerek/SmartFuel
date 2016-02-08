@@ -33,8 +33,8 @@ public class GPSTrackerService extends Service implements LocationListener {
 	//protected Location location = null;
 	protected Ride roadActivity;
 
-	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 0 meters
-	private static final long MIN_TIME_BW_UPDATES = 0; // 0 sec
+	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 25; // meters
+	private static final long MIN_TIME_BW_UPDATES = 1000; // millisec
 
 	protected LocationManager locationManager;
 
