@@ -103,10 +103,11 @@
                 />
 
             <sk.codekitchen.smartfuel.ui.views.LightTextView
+                android:id="@+id/profile_total_distance_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/profile_total_distance_text"
+                android:text="@string/profile_total_distance_km"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:textColor="@color/GRAY"

@@ -2,6 +2,6 @@
 <resources>
 
     <style name="AppTheme.NavigationMenu">
-        <item name="android:fontFamily">fonts/ProximaNova-Light.otf</item>
+        <item name="android:fontFamily">Fonts/ProximaNova-Extrabold.otf</item>
     </style>
 </resources>

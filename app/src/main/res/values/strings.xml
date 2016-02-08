@@ -22,9 +22,12 @@
     <string name="stat_week">WEEK</string>
     <string name="stat_month">MONTH</string>
     <string name="stat_year">YEAR</string>
-    <string name="stat_pos">Affirmative km</string>
-    <string name="stat_neg">Negative km</string>
-    <string name="profile_total_distance_text">KM</string>
+    <string name="stat_pos_km">Affirmative km</string>
+    <string name="stat_neg_km">Negative km</string>
+    <string name="stat_pos_mile">Affirmative mi</string>
+    <string name="stat_neg_mile">Negative mi</string>
+    <string name="profile_total_distance_km">KM</string>
+    <string name="profile_total_distance_mile">MILES</string>
     <string name="profile_current_points_text">POINTS</string>
     <string name="profile_success_rate_text">SUCCESS RATE</string>
 

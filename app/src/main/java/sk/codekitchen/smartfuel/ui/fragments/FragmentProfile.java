@@ -1,10 +1,13 @@
 package sk.codekitchen.smartfuel.ui.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +17,7 @@ import sk.codekitchen.smartfuel.model.User;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.RoundedImageView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
  * @author Gabriel Lehocky
@@ -30,25 +34,37 @@ public class FragmentProfile extends Fragment {
     private SemiboldTextView expiredPoints;
     private SemiboldTextView refuelCount;
     private SemiboldTextView lastSync;
+    private LightTextView totalDistanceUnits;
+
+    private SharedPreferences preferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        address       = (LightTextView) view.findViewById(R.id.profile_address);
-        profilePic    = (RoundedImageView) view.findViewById(R.id.profile_picture);
-        fullName      = (SemiboldTextView) view.findViewById(R.id.profile_full_name);
+        address = (LightTextView) view.findViewById(R.id.profile_address);
+        profilePic = (RoundedImageView) view.findViewById(R.id.profile_picture);
+        fullName = (SemiboldTextView) view.findViewById(R.id.profile_full_name);
         totalDistance = (SemiboldTextView) view.findViewById(R.id.profile_total_distance);
         currentPoints = (SemiboldTextView) view.findViewById(R.id.profile_current_points);
-        successRate   = (SemiboldTextView) view.findViewById(R.id.profile_success_rate);
-        totalPoints   = (SemiboldTextView) view.findViewById(R.id.profile_total_points);
+        successRate = (SemiboldTextView) view.findViewById(R.id.profile_success_rate);
+        totalPoints = (SemiboldTextView) view.findViewById(R.id.profile_total_points);
         expiredPoints = (SemiboldTextView) view.findViewById(R.id.profile_expired_points);
-        refuelCount   = (SemiboldTextView) view.findViewById(R.id.profile_refueling_count);
-        lastSync      = (SemiboldTextView) view.findViewById(R.id.profile_last_sync);
+        refuelCount = (SemiboldTextView) view.findViewById(R.id.profile_refueling_count);
+        lastSync = (SemiboldTextView) view.findViewById(R.id.profile_last_sync);
+        totalDistanceUnits = (LightTextView) view.findViewById(R.id.profile_total_distance_unit);
 
         (new InsertProfileDataTask()).execute((Void) null);
 
         return view;
+    }
+
+    public void loadUnits(){
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
+        if (isMph) {
+            totalDistanceUnits.setText(getString(R.string.profile_total_distance_mile));
+        }
     }
 
     private class InsertProfileDataTask extends AsyncTask<Void, Void, Void> {

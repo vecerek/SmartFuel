@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,9 +14,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.ui.fragments.CustomViewPager;
@@ -26,6 +32,7 @@ import sk.codekitchen.smartfuel.ui.fragments.FragmentSettings;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentShop;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentStatistics;
 import sk.codekitchen.smartfuel.ui.views.ExtraboldTextView;
+import sk.codekitchen.smartfuel.ui.views.MenuTextItems;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 
 /**
@@ -87,6 +94,12 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         menu = (NavigationView) findViewById(R.id.nav_view);
         menu.setNavigationItemSelectedListener(this);
 
+        Menu m = menu.getMenu();
+        for (int i = 0; i < m.size() ; i++) {
+            MenuItem mi = m.getItem(i);
+            applyFontToMenuItem(mi);
+        }
+
         final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.addFragment(fRecorder);
         adapter.addFragment(fStatistics);
@@ -98,6 +111,13 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnabled(false);
 
+    }
+
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "Fonts/ProximaNova-Light.otf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new MenuTextItems("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 
     @Override
@@ -120,7 +140,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        title.setText(item.getTitle());
+        title.setText(item.getTitle().toString());
 
         if (id == R.id.nav_recorder) {
             viewPager.setCurrentItem(0, false);
@@ -128,6 +148,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         }
         else if (id == R.id.nav_stat) {
             viewPager.setCurrentItem(1, false);
+            fStatistics.loadUnits();
             toolbarIcons(false);
         }
         else if (id == R.id.nav_shop) {
@@ -136,6 +157,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         }
         else if (id == R.id.nav_profile) {
             viewPager.setCurrentItem(3, false);
+            fProfile.loadUnits();
             toolbarIcons(false);
         }
         else if (id == R.id.nav_settings) {

@@ -1,9 +1,12 @@
 package sk.codekitchen.smartfuel.ui.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import sk.codekitchen.smartfuel.ui.views.Colors;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
  * @author Gabriel Lehocky
@@ -30,11 +34,11 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
     private boolean isOverLimit = false;
 
     /**
-     * speedOrPercent: change between the 2 view modes
+     * isSetToSpeed: change between the 2 view modes
      * false = percent
      * true = speed
      */
-    private boolean speedOrPercent = false;
+    private boolean isSetToSpeed = false;
 
     /**
      * speedLimit: 0 if unknown or unlimited
@@ -67,6 +71,8 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
 
     private SemiboldTextView pointCurrent;
     private SemiboldTextView pointOverall;
+
+    private SharedPreferences preferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -107,12 +113,12 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_speed:
-                if (!speedOrPercent)
-                    changeColorsBySwitch();
+                if (!isSetToSpeed)
+                    changeProgressBySwitch();
                 break;
             case R.id.btn_percent:
-                if(speedOrPercent)
-                    changeColorsBySwitch();
+                if(isSetToSpeed)
+                    changeProgressBySwitch();
                 break;
             case R.id.progress_no_gps:
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -125,8 +131,8 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * Called when the view has to change to the other view.
      * (from percent to speed or from speed to percent view)
      */
-    private void changeColorsBySwitch() {
-        speedOrPercent = !speedOrPercent;
+    private void changeProgressBySwitch() {
+        isSetToSpeed = !isSetToSpeed;
 
         // change icon alphas
         float a = icoBtnPercent.getAlpha();
@@ -140,16 +146,20 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
 
         changeColorBySpeed();
 
-        if (speedOrPercent) { // speed
+        if (isSetToSpeed) { // speed
             progressSufix.setText("");
             progressComment.setText("");
-            progressCommentBold.setText(getString(R.string.rec_kmph));
+            preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+            boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
+            if (isMph) {
+                progressCommentBold.setText(getString(R.string.rec_mph));
+            }
+            else {
+                progressCommentBold.setText(getString(R.string.rec_kmph));
+            }
 
             setSpeedLimit(speedLimit);
-
-            // ---- TEST DATA ONLY --------------------------------------------------
             changeProgress(progressSpeed);
-            // -------------------------------------------------------------------
         }
         else { // percent
             progressSufix.setText(getString(R.string.rec_percent_symbol));
@@ -157,10 +167,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
             progressCommentBold.setText(getString(R.string.rec_comment_2));
 
             changeProgressMax(100); // 100% is always max for ths view
-
-            // ---- TEST DATA ONLY --------------------------------------------------
             changeProgress(progressPercent);
-            // -------------------------------------------------------------------
         }
     }
 
@@ -168,25 +175,26 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * Changes color scheme based on the isOverLimit and
      */
     public void changeColorBySpeed() {
-        if (speedOrPercent) { // speed
+        if (isSetToSpeed) { // speed
             Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_transparent);
             if (isOverLimit) {
                 Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_bad_box_right);
                 Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_bad);
                 progressValue.setTextColor(Colors.RED);
-            } else {
+            }
+            else {
                 Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_highlight_box_right);
                 Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_good);
                 progressValue.setTextColor(Colors.WHITE);
             }
-        } else { // percent
+        }
+        else { // percent
             Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_transparent);
             if (isOverLimit) {
                 Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_bad_box_left);
                 Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_bad);
                 progressSufix.setTextColor(Colors.RED);
                 progressValue.setTextColor(Colors.ORANGE);
-
             }
             else {
                 Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_highlight_box_left);
@@ -206,7 +214,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
         progressMax = max;
         progressBar.setMax(progressMax + progressMax / 3);
 
-        if (speedOrPercent) { // speed
+        if (isSetToSpeed) { // speed
             if (progressMax <= progressSpeed){
                 isOverLimit = false;
                 changeColorBySpeed();
@@ -241,7 +249,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
         if (l > 0) {
             maxPermittedSign.setVisibility(View.VISIBLE);
             maxPermittedSpeed.setText(String.valueOf(l));
-            if (speedOrPercent) changeProgressMax(l);
+            if (isSetToSpeed) changeProgressMax(l);
         }
         else if (l == 0){
             maxPermittedSign.setVisibility(View.INVISIBLE);
@@ -285,7 +293,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      */
     public void setSpeed(int s){
         progressSpeed = s;
-        if (speedOrPercent) changeProgress(s);
+        if (isSetToSpeed) changeProgress(s);
         if (progressSpeed > speedLimit) {
             isOverLimit = true;
             changeColorBySpeed();
@@ -298,7 +306,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      */
     public void setPercent(int p){
         progressPercent = p;
-        if (!speedOrPercent) changeProgress(p);
+        if (!isSetToSpeed) changeProgress(p);
     }
 
     /**
