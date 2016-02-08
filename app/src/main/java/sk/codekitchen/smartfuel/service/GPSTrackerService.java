@@ -12,26 +12,29 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 
+import org.json.JSONException;
+
 import java.text.ParseException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import sk.codekitchen.smartfuel.exception.PermissionDeniedException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.model.Ride;
-//import sk.codekitchen.smartfuel.ui.MainActivity;
+import sk.codekitchen.smartfuel.ui.MainActivity;
 
 public class GPSTrackerService extends Service implements LocationListener {
 
-	protected static final int LOCATION_REQUEST_CODE = 1;
 	private final Context mContext;
 
-	//private MainActivity mainActivity;
+	private MainActivity mainActivity;
 
 	protected boolean isGPSEnabled = false;
 	//protected boolean isNetworkEnabled = false;
 	protected boolean canGetLocation = false;
 
 	//protected Location location = null;
-	protected Ride roadActivity;
+	protected Ride ride;
 
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 25; // meters
 	private static final long MIN_TIME_BW_UPDATES = 1000; // millisec
@@ -45,8 +48,8 @@ public class GPSTrackerService extends Service implements LocationListener {
 		this.mContext = context;
 
 		try {
-			this.roadActivity = new Ride(context);
-			this.roadActivity.addRecord(getLocation());
+			this.ride = new Ride(context);
+			this.ride.addRecord(getLocation());
 
 		} catch (PermissionDeniedException e) {
 			e.printStackTrace();
@@ -54,6 +57,19 @@ public class GPSTrackerService extends Service implements LocationListener {
 		} catch (UnknownUserException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		locationManager.removeUpdates(GPSTrackerService.this);
+
+		try {
+			ride.saveActivity();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -109,18 +125,18 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 	@Override
 	public void onLocationChanged(Location location) {
-		roadActivity.addRecord(location);
+		ride.addRecord(location);
 		//mainActivity.newGPSData(location.getLatitude(), location.getLongitude(), location.getSpeed(), location.getAccuracy(), distance, speedLimit);
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		if(locationManager == null){
+		if(locationManager == null) {
 			locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 		}
 
 		locationManager.removeUpdates(GPSTrackerService.this);
-		roadActivity.resetLocations();
+		ride.resetLocations();
 	}
 
 	@Override
@@ -132,7 +148,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 		Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (location != null) {
-			roadActivity.addRecord(location);
+			ride.addRecord(location);
 			//mainActivity.newGPSData(location.getLatitude(), location.getLongitude(), location.getSpeed(), location.getAccuracy(), distance, speedLimit);
 		}
 	}
