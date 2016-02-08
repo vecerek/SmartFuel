@@ -21,8 +21,6 @@ import java.util.HashMap;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.model.Statistics;
-import sk.codekitchen.smartfuel.ui.MainMenu;
-import sk.codekitchen.smartfuel.ui.RecorderActivity;
 import sk.codekitchen.smartfuel.ui.views.Colors;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;

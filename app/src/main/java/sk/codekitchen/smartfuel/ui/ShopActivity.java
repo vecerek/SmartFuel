@@ -13,7 +13,7 @@ import sk.codekitchen.smartfuel.R;
 
 public class ShopActivity extends Activity implements View.OnClickListener {
 
-    private MainMenu menu;
+    //private MainMenu menu;
 
     private final static int TAB_PRODUCT = 1;
     private final static int TAB_PROMO = 2;
@@ -30,7 +30,7 @@ public class ShopActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragmnet_shop);
 
-        menu = new MainMenu(this, MainMenu.SHOP_ID);
+        //menu = new MainMenu(this, MainMenu.SHOP_ID);
 
         setView();
         loadItems();
@@ -48,10 +48,10 @@ public class ShopActivity extends Activity implements View.OnClickListener {
 
     }
 
-    @Override
+    /*@Override
     public void onBackPressed() {
         menu.goToActivity(menu.RECORDER_ID, RecorderActivity.class);
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
