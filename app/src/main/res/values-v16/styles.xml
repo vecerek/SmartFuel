@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="AppTheme.NavigationMenu">
-        <item name="android:fontFamily">Fonts/ProximaNova-Extrabold.otf</item>
-    </style>
-</resources>

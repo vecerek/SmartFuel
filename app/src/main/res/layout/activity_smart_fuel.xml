@@ -23,6 +23,8 @@
         app:headerLayout="@layout/header_smart_fuel"
         app:menu="@menu/activity_smart_fuel_drawer"
         android:background="@color/DARK"
-        style="@style/AppTheme.NavigationMenu"/>
+        app:itemIconTint="@color/WHITE"
+        app:itemTextColor="@color/WHITE"
+        />
 
 </android.support.v4.widget.DrawerLayout>

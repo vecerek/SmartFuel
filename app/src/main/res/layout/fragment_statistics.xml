@@ -43,7 +43,7 @@
             android:gravity="center"
             android:background="@drawable/border_bottom"
             android:clickable="true"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             />
 
         <sk.codekitchen.smartfuel.ui.views.LightTextView
@@ -56,7 +56,7 @@
             android:gravity="center"
             android:background="@drawable/border_bottom"
             android:clickable="true"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             />
 
     </LinearLayout>
@@ -100,7 +100,7 @@
             android:textAppearance="?android:attr/textAppearance"
             android:text="@string/stat_neg_km"
             android:layout_gravity="center_horizontal"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             android:background="@drawable/round_transparent"
             android:clickable="true"
             android:layout_weight="0.5"
@@ -127,7 +127,7 @@
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:minWidth="25dp"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             android:text=" "
             android:visibility="invisible"
             android:gravity="center"
@@ -174,7 +174,7 @@
                 android:text="@string/profile_total_distance_km"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -205,7 +205,7 @@
                 android:text="@string/profile_current_points_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -236,7 +236,7 @@
                 android:text="@string/profile_success_rate_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 

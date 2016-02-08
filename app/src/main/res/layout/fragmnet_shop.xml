@@ -30,7 +30,7 @@
             android:gravity="center"
             android:background="@drawable/border_bottom"
             android:clickable="true"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             />
 
         <sk.codekitchen.smartfuel.ui.views.LightTextView
@@ -56,7 +56,7 @@
             android:gravity="center"
             android:background="@drawable/border_bottom"
             android:clickable="true"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             />
 
     </LinearLayout>
