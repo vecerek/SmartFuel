@@ -31,7 +31,9 @@ public class TestGPXGenerator extends AndroidTestCase {
 
 	@Before
 	public void setUp() {
-		this.context = RuntimeEnvironment.application.getApplicationContext();
+		if(this.context == null) {
+			this.context = RuntimeEnvironment.application.getApplicationContext();
+		}
 	}
 
 	@Test
@@ -52,7 +54,7 @@ public class TestGPXGenerator extends AndroidTestCase {
 		}
 	}
 
-	private static File getFileFromPath(Object obj, String fileName) {
+	public static File getFileFromPath(Object obj, String fileName) {
 		ClassLoader classLoader = obj.getClass().getClassLoader();
 		URL resource = classLoader.getResource(fileName);
 		return new File(resource.getPath());

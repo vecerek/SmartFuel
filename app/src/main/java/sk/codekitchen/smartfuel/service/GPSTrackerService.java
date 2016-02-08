@@ -1,25 +1,22 @@
 package sk.codekitchen.smartfuel.service;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 
 import java.text.ParseException;
 
 import sk.codekitchen.smartfuel.exception.PermissionDeniedException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
-import sk.codekitchen.smartfuel.model.SmartFuelActivity;
+import sk.codekitchen.smartfuel.model.Ride;
 //import sk.codekitchen.smartfuel.ui.MainActivity;
 
 public class GPSTrackerService extends Service implements LocationListener {
@@ -34,7 +31,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 	protected boolean canGetLocation = false;
 
 	//protected Location location = null;
-	protected SmartFuelActivity roadActivity;
+	protected Ride roadActivity;
 
 	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0; // 0 meters
 	private static final long MIN_TIME_BW_UPDATES = 0; // 0 sec
@@ -48,7 +45,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 		this.mContext = context;
 
 		try {
-			this.roadActivity = new SmartFuelActivity(context);
+			this.roadActivity = new Ride(context);
 			this.roadActivity.addRecord(getLocation());
 
 		} catch (PermissionDeniedException e) {

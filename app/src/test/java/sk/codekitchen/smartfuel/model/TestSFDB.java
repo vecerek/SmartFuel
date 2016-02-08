@@ -81,7 +81,7 @@ public class TestSFDB extends AndroidTestCase {
 		final HashSet<String> tableNameHS = new HashSet<>();
 		tableNameHS.add(User.TABLE.NAME);
 		tableNameHS.add(Statistics.VIEW.NAME);
-		tableNameHS.add(SmartFuelActivity.TABLE.NAME);
+		tableNameHS.add(Ride.TABLE.NAME);
 		tableNameHS.add(Event.TABLE.NAME);
 		tableNameHS.add(Event.CONTENT.TABLE.NAME);
 
@@ -154,14 +154,14 @@ public class TestSFDB extends AndroidTestCase {
 
 		JSONArray jsonArr = new JSONArray();
 		JSONObject activity1 = new JSONObject();
-		activity1.put(SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE, "58.1");
-		activity1.put(SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE, "3.76");
-		activity1.put(SmartFuelActivity.TABLE.COLUMN.POINTS, "55");
+		activity1.put(Ride.TABLE.COLUMN.CORRECT_DISTANCE, "58.1");
+		activity1.put(Ride.TABLE.COLUMN.SPEEDING_DISTANCE, "3.76");
+		activity1.put(Ride.TABLE.COLUMN.POINTS, "55");
 
 		JSONObject activity2 = new JSONObject();
-		activity2.put(SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE, "31.9");
-		activity2.put(SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE, "2.08");
-		activity2.put(SmartFuelActivity.TABLE.COLUMN.POINTS, "27");
+		activity2.put(Ride.TABLE.COLUMN.CORRECT_DISTANCE, "31.9");
+		activity2.put(Ride.TABLE.COLUMN.SPEEDING_DISTANCE, "2.08");
+		activity2.put(Ride.TABLE.COLUMN.POINTS, "27");
 
 		jsonArr.put(activity1);
 		jsonArr.put(activity2);
@@ -171,7 +171,7 @@ public class TestSFDB extends AndroidTestCase {
 		//save snapshot for later use e.g.: (in another tests)
 		snapshots.put(INSERT_SAVEPOINT, activitiesBefore);
 
-		sfdb.saveData(SmartFuelActivity.TABLE.NAME, jsonArr, SFDB.ORIGIN_LOCAL);
+		sfdb.saveData(Ride.TABLE.NAME, jsonArr, SFDB.ORIGIN_LOCAL);
 
 		JSONArray activitiesAfter = sfdb.queryActivities();
 
@@ -185,13 +185,13 @@ public class TestSFDB extends AndroidTestCase {
 		for (int i = 0; i < unsyncedActivities.length(); i++) {
 			tmp = unsyncedActivities.getJSONObject(i);
 			//Tests the default values set by the database
-			assertEquals("0", tmp.getString(SmartFuelActivity.TABLE.COLUMN.EXPIRED));
-			assertEquals("0", tmp.getString(SmartFuelActivity.TABLE.COLUMN.SPENT));
+			assertEquals("0", tmp.getString(Ride.TABLE.COLUMN.EXPIRED));
+			assertEquals("0", tmp.getString(Ride.TABLE.COLUMN.SPENT));
 
-			tmp.remove(SmartFuelActivity.TABLE.COLUMN.ID);
-			tmp.remove(SmartFuelActivity.TABLE.COLUMN.CREATED_AT);
-			tmp.remove(SmartFuelActivity.TABLE.COLUMN.EXPIRED);
-			tmp.remove(SmartFuelActivity.TABLE.COLUMN.SPENT);
+			tmp.remove(Ride.TABLE.COLUMN.ID);
+			tmp.remove(Ride.TABLE.COLUMN.CREATED_AT);
+			tmp.remove(Ride.TABLE.COLUMN.EXPIRED);
+			tmp.remove(Ride.TABLE.COLUMN.SPENT);
 		}
 
 		assertTrue("Error: unsynced and inserted activities do not match",
@@ -206,9 +206,9 @@ public class TestSFDB extends AndroidTestCase {
 
 		assertFalse("Error: table " + User.TABLE.NAME + " is not empty.", c.moveToNext());
 
-		c = sfdb.db.rawQuery("SELECT * FROM "+SmartFuelActivity.TABLE.NAME, null);
+		c = sfdb.db.rawQuery("SELECT * FROM "+ Ride.TABLE.NAME, null);
 
-		assertFalse("Error: table " + SmartFuelActivity.TABLE.NAME + " is not empty.", c.moveToNext());
+		assertFalse("Error: table " + Ride.TABLE.NAME + " is not empty.", c.moveToNext());
 
 		c = sfdb.db.rawQuery("SELECT * FROM "+Event.TABLE.NAME, null);
 
@@ -300,16 +300,16 @@ public class TestSFDB extends AndroidTestCase {
 
 	private void testRoadActivityTableStructure() {
 		final HashSet<String> roadActivityColumnHS = new HashSet<>();
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.ID);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.POINTS);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.CORRECT_DISTANCE);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.SPEEDING_DISTANCE);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.CREATED_AT);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.EXPIRED);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.SPENT);
-		roadActivityColumnHS.add(SmartFuelActivity.TABLE.COLUMN.SYNCHRONIZED);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.ID);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.POINTS);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.CORRECT_DISTANCE);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.SPEEDING_DISTANCE);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.CREATED_AT);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.EXPIRED);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.SPENT);
+		roadActivityColumnHS.add(Ride.TABLE.COLUMN.SYNCHRONIZED);
 
-		checkTableColumns(SmartFuelActivity.TABLE.NAME, roadActivityColumnHS);
+		checkTableColumns(Ride.TABLE.NAME, roadActivityColumnHS);
 	}
 
 	private void testEventTableStructure() {
