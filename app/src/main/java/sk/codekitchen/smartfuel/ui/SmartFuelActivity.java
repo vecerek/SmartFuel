@@ -4,9 +4,13 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.opengl.Visibility;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,12 +20,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.ui.fragments.CustomViewPager;
@@ -34,6 +41,7 @@ import sk.codekitchen.smartfuel.ui.fragments.FragmentStatistics;
 import sk.codekitchen.smartfuel.ui.views.ExtraboldTextView;
 import sk.codekitchen.smartfuel.ui.views.MenuTextItems;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
  * @author Gabriel Lehocky
@@ -68,6 +76,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smart_fuel);
 
+        setTitle(getString(R.string.app_name));
         initLayout();
 
     }
@@ -91,6 +100,22 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        createMenu();
+
+        final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        addFragments(adapter);
+
+        viewPager = (CustomViewPager) findViewById(R.id.pager_sf);
+        viewPager.setAdapter(adapter);
+        viewPager.setPagingEnabled(false);
+
+        SharedPreferences preferences;
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        setLocale(preferences.getString(GLOBALS.SETTINGS_LANG, ""));
+
+    }
+
+    private void createMenu(){
         menu = (NavigationView) findViewById(R.id.nav_view);
         menu.setNavigationItemSelectedListener(this);
 
@@ -99,18 +124,14 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
             MenuItem mi = m.getItem(i);
             applyFontToMenuItem(mi);
         }
+    }
 
-        final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+    private void addFragments(FragmentAdapter adapter){
         adapter.addFragment(fRecorder);
         adapter.addFragment(fStatistics);
         adapter.addFragment(fShop);
         adapter.addFragment(fProfile);
         adapter.addFragment(fSettings);
-
-        viewPager = (CustomViewPager) findViewById(R.id.pager_sf);
-        viewPager.setAdapter(adapter);
-        viewPager.setPagingEnabled(false);
-
     }
 
     private void applyFontToMenuItem(MenuItem mi) {
@@ -232,5 +253,22 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
 
     private void destroyNotification(){
         notificationManager.cancel(NOTIFICATION_RECORDING_ID);
+    }
+
+
+    public void setLocale(String lang) {
+        if (lang.equals("")) return;
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        Intent refresh = new Intent(this, SmartFuelActivity.class);
+        startActivity(refresh);
+
+        if (viewPager != null)
+            viewPager.setCurrentItem(0, false);
+            menu.setCheckedItem(R.id.nav_recorder);
     }
 }

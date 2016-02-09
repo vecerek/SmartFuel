@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sk.codekitchen.smartfuel.ui.views.LightTextView
+    android:id="@+id/dialog_language_name"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:textColor="@color/WHITE"
+    android:textSize="@dimen/dialog_button_text"
+    android:gravity="left"
+    android:layout_centerVertical="true"
+    android:layout_gravity="left"
+    android:background="@color/DARK"
+    android:padding="@dimen/activity_vertical_margin"
+    />

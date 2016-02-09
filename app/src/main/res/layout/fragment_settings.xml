@@ -40,15 +40,16 @@
                     android:textSize="@dimen/settings_text"
                     android:gravity="center_vertical"/>
 
-                <Spinner
+                <sk.codekitchen.smartfuel.ui.views.LightTextView
+                    android:id="@+id/set_language"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:id="@+id/set_language_spinner"
-                    android:gravity="right"
-                    android:textAlignment="viewEnd"/>
+                    android:textSize="@dimen/settings_text"
+                    android:gravity="center_vertical"
+                    android:clickable="true"/>
 
             </RelativeLayout>
 
