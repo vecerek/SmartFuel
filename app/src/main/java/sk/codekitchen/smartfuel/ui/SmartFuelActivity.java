@@ -1,5 +1,6 @@
 package sk.codekitchen.smartfuel.ui;
 
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -245,7 +246,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                 new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.speed)
                 .setContentTitle(getString(R.string.notification_title))
-                .addAction(R.drawable.toolbar_stop, getString(R.string.toolbar_stop), stopRecorder)
+                .addAction(R.drawable.ic_notification, getString(R.string.toolbar_stop), stopRecorder)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         notificationManager.notify(NOTIFICATION_RECORDING_ID, newNotification.build());
@@ -267,8 +268,10 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         Intent refresh = new Intent(this, SmartFuelActivity.class);
         startActivity(refresh);
 
-        if (viewPager != null)
+        if (viewPager.getCurrentItem() == 4){
             viewPager.setCurrentItem(0, false);
             menu.setCheckedItem(R.id.nav_recorder);
+        }
+
     }
 }

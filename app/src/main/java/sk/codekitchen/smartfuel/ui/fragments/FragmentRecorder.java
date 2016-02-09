@@ -61,10 +61,16 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
 
     private LinearLayout btnSpeed;
     private LinearLayout btnPercent;
+    private LinearLayout btnChange;
     private ImageView icoBtnPercent;
     private ImageView icoBtnSpeed;
     private LightTextView txtBtnPercent;
     private LightTextView txtBtnSpeed;
+
+    private float switchSelectIco;
+    private int switchSelectText;
+    private float switchDeslectIco;
+    private int switchDeselectText;
 
     private LinearLayout maxPermittedSign;
     private SemiboldTextView maxPermittedSpeed;
@@ -79,14 +85,19 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_recorder, container, false);
 
         // speed/percent switch
-        btnSpeed = (LinearLayout) view.findViewById(R.id.btn_speed);
         btnPercent = (LinearLayout) view.findViewById(R.id.btn_percent);
-        btnSpeed.setOnClickListener(this);
-        btnPercent.setOnClickListener(this);
+        btnSpeed = (LinearLayout) view.findViewById(R.id.btn_speed);
+        btnChange = (LinearLayout) view.findViewById(R.id.switch_meter);
+        btnChange.setOnClickListener(this);
         icoBtnPercent = (ImageView) view.findViewById(R.id.icon_percent);
         icoBtnSpeed = (ImageView) view.findViewById(R.id.icon_speed);
         txtBtnPercent = (LightTextView) view.findViewById(R.id.txt_percent);
         txtBtnSpeed = (LightTextView) view.findViewById(R.id.txt_speed);
+
+        switchSelectIco = icoBtnPercent.getAlpha();
+        switchDeslectIco = icoBtnSpeed.getAlpha();
+        switchSelectText = txtBtnPercent.getCurrentTextColor();
+        switchDeselectText = txtBtnSpeed.getCurrentTextColor();
 
         // progressbar
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -112,13 +123,8 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_speed:
-                if (!isSetToSpeed)
-                    changeProgressBySwitch();
-                break;
-            case R.id.btn_percent:
-                if(isSetToSpeed)
-                    changeProgressBySwitch();
+            case R.id.switch_meter:
+                changeProgressBySwitch();
                 break;
             case R.id.progress_no_gps:
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -133,16 +139,6 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      */
     private void changeProgressBySwitch() {
         isSetToSpeed = !isSetToSpeed;
-
-        // change icon alphas
-        float a = icoBtnPercent.getAlpha();
-        icoBtnPercent.setAlpha(icoBtnSpeed.getAlpha());
-        icoBtnSpeed.setAlpha(a);
-
-        // change text colors
-        int c = txtBtnPercent.getCurrentTextColor();
-        txtBtnPercent.setTextColor(txtBtnSpeed.getCurrentTextColor());
-        txtBtnSpeed.setTextColor(c);
 
         changeColorBySpeed();
 
@@ -176,6 +172,10 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      */
     public void changeColorBySpeed() {
         if (isSetToSpeed) { // speed
+            icoBtnSpeed.setAlpha(switchSelectIco);
+            icoBtnPercent.setAlpha(switchDeslectIco);
+            txtBtnSpeed.setTextColor(switchSelectText);
+            txtBtnPercent.setTextColor(switchDeselectText);
             Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_transparent);
             if (isOverLimit) {
                 Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_bad_box_right);
@@ -189,6 +189,10 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
             }
         }
         else { // percent
+            icoBtnPercent.setAlpha(switchSelectIco);
+            icoBtnSpeed.setAlpha(switchDeslectIco);
+            txtBtnPercent.setTextColor(switchSelectText);
+            txtBtnSpeed.setTextColor(switchDeselectText);
             Utils.setBackgroundOfView(getActivity(), btnSpeed, R.drawable.round_transparent);
             if (isOverLimit) {
                 Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_bad_box_left);
