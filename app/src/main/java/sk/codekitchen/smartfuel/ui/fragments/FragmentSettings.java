@@ -81,7 +81,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener, 
     private void loadSavedSettings(){
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
-        isAudio = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, true);
+        isAudio = preferences.getBoolean(GLOBALS.SETTINGS_IS_AUDIO, true);
         actualLocale = preferences.getString(GLOBALS.SETTINGS_LANG, "");
 
         String langName = getString(R.string.set_automatic);
@@ -115,7 +115,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener, 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()){
             case R.id.set_audio_switch:
-                isAudio = !isAudio;
+                isAudio = audio.isChecked();
                 preferences.edit().putBoolean(GLOBALS.SETTINGS_IS_AUDIO, isAudio).commit();
                 break;
         }

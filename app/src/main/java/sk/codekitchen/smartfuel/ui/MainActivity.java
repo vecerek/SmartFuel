@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		setTitle(getString(R.string.app_name));
-
 	    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	    isLoggedIn = preferences.getInt(GLOBALS.USER_ID, -1) != -1;
 
@@ -87,7 +85,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         if (isLoggedIn){
 			goToRecorderActivity();
+			loginScreen.setVisibility(View.INVISIBLE);
         }
+		else {
+			splashScreen.setVisibility(View.INVISIBLE);
+		}
     }
 
     /**
@@ -179,15 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		});
     }
 
-    /**
-     * Makes splashscreen visible
-     */
-	public void displaySplashScreen(){
-		viewPager.setCurrentItem(3);
-		loginScreen.setVisibility(View.INVISIBLE);
-		splashScreen.setVisibility(View.VISIBLE);
-	}
-
     @Override
 	protected void onResume() {
         super.onResume();
@@ -208,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Loggs in the user syncs data, then opens .RecorderActivity
 	private void goToRecorderActivity() {
-		displaySplashScreen();
+		viewPager.setCurrentItem(3);
 		(new SyncDatabaseTask()).execute((Void) null);
 	}
 

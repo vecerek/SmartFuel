@@ -77,7 +77,6 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smart_fuel);
 
-        setTitle(getString(R.string.app_name));
         initLayout();
 
     }
