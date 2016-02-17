@@ -63,7 +63,7 @@
             android:text="kralovany, zilinsky kraj"
             android:inputType="textCapWords"
             android:gravity="center"
-            android:textColor="@color/GRAY"
+            android:textColor="@color/LIGHT_GRAY"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
     </LinearLayout>
@@ -103,13 +103,14 @@
                 />
 
             <sk.codekitchen.smartfuel.ui.views.LightTextView
+                android:id="@+id/profile_total_distance_unit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/profile_total_distance_text"
+                android:text="@string/profile_total_distance_km"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -140,7 +141,7 @@
                 android:text="@string/profile_current_points_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -171,7 +172,7 @@
                 android:text="@string/profile_success_rate_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -211,7 +212,7 @@
                 android:text="@string/profile_total_points_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -241,7 +242,7 @@
                 android:text="@string/profile_expired_points_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
         </LinearLayout>
 
@@ -282,7 +283,7 @@
                 android:text="@string/profile_refueling_count_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
 
         </LinearLayout>
@@ -314,7 +315,7 @@
                 android:text="@string/profile_last_sync_text"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/GRAY"
+                android:textColor="@color/LIGHT_GRAY"
                 android:layout_marginTop="5dp"/>
 
         </LinearLayout>

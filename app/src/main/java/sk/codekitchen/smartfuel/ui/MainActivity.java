@@ -4,12 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -17,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.Locale;
 import java.util.Vector;
 
 
@@ -74,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
 	    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	    isLoggedIn = preferences.getInt(GLOBALS.USER_ID, -1) != -1;
 
@@ -82,7 +85,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         if (isLoggedIn){
 			goToRecorderActivity();
+			loginScreen.setVisibility(View.INVISIBLE);
         }
+		else {
+			splashScreen.setVisibility(View.INVISIBLE);
+		}
     }
 
     /**
@@ -174,15 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		});
     }
 
-    /**
-     * Makes splashscreen visible
-     */
-	public void displaySplashScreen(){
-		viewPager.setCurrentItem(3);
-		loginScreen.setVisibility(View.INVISIBLE);
-		splashScreen.setVisibility(View.VISIBLE);
-	}
-
     @Override
 	protected void onResume() {
         super.onResume();
@@ -203,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // Loggs in the user syncs data, then opens .RecorderActivity
 	private void goToRecorderActivity() {
-		displaySplashScreen();
+		viewPager.setCurrentItem(3);
 		(new SyncDatabaseTask()).execute((Void) null);
 	}
 

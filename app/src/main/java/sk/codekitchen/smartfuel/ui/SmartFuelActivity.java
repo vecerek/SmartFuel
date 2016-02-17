@@ -1,14 +1,27 @@
 package sk.codekitchen.smartfuel.ui;
 
 import android.annotation.TargetApi;
+import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.graphics.Typeface;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Typeface;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -18,13 +31,23 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import java.util.Locale;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.service.GPSTrackerService;
@@ -36,7 +59,9 @@ import sk.codekitchen.smartfuel.ui.fragments.FragmentSettings;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentShop;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentStatistics;
 import sk.codekitchen.smartfuel.ui.views.ExtraboldTextView;
+import sk.codekitchen.smartfuel.ui.views.MenuTextItems;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
  * @author Gabriel Lehocky
@@ -75,6 +100,92 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
     private NotificationManager notificationManager;
     private PendingIntent stopRecorder;
 
+    //GPSTrackerService mService;
+    Messenger mGPSTrackerMessenger;
+    boolean mBound = false;
+
+    class IncomingHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message msg) {
+            Log.i("TEST_IPC", "Message getting handled");
+            Bundle b = msg.getData();
+            if (b != null) {
+                Map<String, String> params = getParams(b);
+                if (params != null) {
+                    switch (msg.what) {
+                        case GPSTrackerService.UPDATE_STATE:
+                            break;
+                        case GPSTrackerService.ERROR:
+                            break;
+                        case GPSTrackerService.DEBUG:
+                            Log.d("TEST_IPC", "Response: " + b.getCharSequence("data"));
+                            fRecorder.setSpeed(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.SPEED)));
+                            fRecorder.setPercent(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.PROGRESS)));
+                            fRecorder.setSpeedLimit(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.LIMIT)));
+                            break;
+                        default:
+                            super.handleMessage(msg);
+                    }
+                }
+            }
+        }
+
+        private Map<String, String> getParams(Bundle b) {
+            Map<String, String> mParams = new LinkedHashMap<>();
+            String tParams = (String) b.getCharSequence("data");
+            if (tParams != null) {
+                for (String keyValue : tParams.split("&")) {
+                    String[] pairs = keyValue.split("=", 2);
+                    mParams.put(pairs[0], pairs.length == 1 ? "" : pairs[1]);
+                }
+                return mParams;
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Messenger used for receiving responses from GPSTrackerService.
+     */
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+
+    /** Defines callbacks for service binding, passed to bindService() */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            Log.i("TEST_IPC", "onServiceConnected triggered");
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            //GPSTrackerService.GPSTrackerBinder binder = (GPSTrackerService.GPSTrackerBinder) service;
+            mGPSTrackerMessenger = new Messenger(service);
+            //mService = binder.getService();
+            mBound = true;
+            Log.i("TEST_IPC", "Service's Messenger saved");
+
+            // Register our messenger also on Service side:
+            Message msg = Message.obtain(null, GPSTrackerService.REGISTER);
+            msg.replyTo = mMessenger;
+
+            try {
+                Log.i("TEST_IPC", "Sending REGISTER message to the service");
+                mGPSTrackerMessenger.send(msg);
+            } catch (RemoteException e) {
+                // We always have to trap RemoteException
+                // (DeadObjectException
+                // is thrown if the target Handler no longer exists)
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +194,43 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         initLayout();
 
         //for determining if we have asked the questions..
-        sharedPreferences= PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         coordinatorLayoutView = findViewById(R.id.drawer_layout);
 
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i("TEST_IPC", "onStart triggered");
+        super.onStart();
+        // Bind to LocalService
+        if (mBound) {
+            bindToGPSTrackerService();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        Log.i("TEST_IPC", "onStop triggered");
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+        }
+    }
+
+    protected void bindToGPSTrackerService() {
+        Log.i("TEST_IPC", "Binding to the GPSTrackerService");
+        Intent intent = new Intent(this, GPSTrackerService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        mBound = true;
+    }
+
+    protected void stopGPSTrackerService() {
+        Log.i("TEST_IPC", "Stopping GPSTrackerService");
+        unbindService(mConnection);
+        stopService(new Intent(this, GPSTrackerService.class));
+        mBound = false;
     }
 
     private void initLayout(){
@@ -107,20 +252,45 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        menu = (NavigationView) findViewById(R.id.nav_view);
-        menu.setNavigationItemSelectedListener(this);
+        createMenu();
 
         final FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(fRecorder);
-        adapter.addFragment(fStatistics);
-        adapter.addFragment(fShop);
-        adapter.addFragment(fProfile);
-        adapter.addFragment(fSettings);
+        addFragments(adapter);
 
         viewPager = (CustomViewPager) findViewById(R.id.pager_sf);
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnabled(false);
 
+        SharedPreferences preferences;
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        setLocale(preferences.getString(GLOBALS.SETTINGS_LANG, ""));
+
+    }
+
+    private void createMenu(){
+        menu = (NavigationView) findViewById(R.id.nav_view);
+        menu.setNavigationItemSelectedListener(this);
+
+        Menu m = menu.getMenu();
+        for (int i = 0; i < m.size() ; i++) {
+            MenuItem mi = m.getItem(i);
+            applyFontToMenuItem(mi);
+        }
+    }
+
+    private void addFragments(FragmentAdapter adapter){
+        adapter.addFragment(fRecorder);
+        adapter.addFragment(fStatistics);
+        adapter.addFragment(fShop);
+        adapter.addFragment(fProfile);
+        adapter.addFragment(fSettings);
+    }
+
+    private void applyFontToMenuItem(MenuItem mi) {
+        Typeface font = Typeface.createFromAsset(getAssets(), "Fonts/ProximaNova-Light.otf");
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new MenuTextItems("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 
     @Override
@@ -130,7 +300,8 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         }
         else if (viewPager.getCurrentItem() != 0){
             viewPager.setCurrentItem(0, false);
-            menu.setCheckedItem(0);
+            menu.setCheckedItem(R.id.nav_recorder);
+            toolbarIcons(true);
         }
         else {
             super.onBackPressed();
@@ -142,7 +313,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        title.setText(item.getTitle());
+        title.setText(item.getTitle().toString());
 
         if (id == R.id.nav_recorder) {
             viewPager.setCurrentItem(0, false);
@@ -150,6 +321,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         }
         else if (id == R.id.nav_stat) {
             viewPager.setCurrentItem(1, false);
+            fStatistics.loadUnits();
             toolbarIcons(false);
         }
         else if (id == R.id.nav_shop) {
@@ -158,6 +330,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         }
         else if (id == R.id.nav_profile) {
             viewPager.setCurrentItem(3, false);
+            fProfile.loadUnits();
             toolbarIcons(false);
         }
         else if (id == R.id.nav_settings) {
@@ -186,7 +359,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                 isRecording = false;
                 destroyNotification();
                 toolbarIcons(true);
-                //stopService(new Intent(this, GPSTrackerService.class));
+                stopGPSTrackerService();
                 break;
         }
 
@@ -232,7 +405,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                 new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.speed)
                 .setContentTitle(getString(R.string.notification_title))
-                .addAction(R.drawable.toolbar_stop, getString(R.string.toolbar_stop), stopRecorder)
+                .addAction(R.drawable.ic_notification, getString(R.string.toolbar_stop), stopRecorder)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         notificationManager.notify(NOTIFICATION_RECORDING_ID, newNotification.build());
@@ -242,11 +415,31 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         isRecording = true;
         createNotification();
         toolbarIcons(true);
-        //startService(new Intent(this, GPSTrackerService.class));
+        startService(new Intent(this, GPSTrackerService.class));
+        bindToGPSTrackerService();
     }
 
     private void destroyNotification() {
         notificationManager.cancel(NOTIFICATION_RECORDING_ID);
+    }
+
+
+    public void setLocale(String lang) {
+        if (lang.equals("")) return;
+        Locale myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        Intent refresh = new Intent(this, SmartFuelActivity.class);
+        startActivity(refresh);
+
+        if (viewPager.getCurrentItem() == 4){
+            viewPager.setCurrentItem(0, false);
+            menu.setCheckedItem(R.id.nav_recorder);
+        }
+
     }
 
     @TargetApi(23)

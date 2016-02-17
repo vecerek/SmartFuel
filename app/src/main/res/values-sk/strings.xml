@@ -22,9 +22,12 @@
     <string name="stat_week">TÝŽDEŇ</string>
     <string name="stat_month">MESIAC</string>
     <string name="stat_year">ROK</string>
-    <string name="stat_pos">Kladné km</string>
-    <string name="stat_neg">Záporné km</string>
-    <string name="profile_total_distance_text">KM</string>
+    <string name="stat_pos_km">Kladné km</string>
+    <string name="stat_neg_km">Záporné km</string>
+    <string name="stat_pos_mile">Kladné mi</string>
+    <string name="stat_neg_mile">Záporné mi</string>
+    <string name="profile_total_distance_km">KM</string>
+    <string name="profile_total_distance_mile">MI</string>
     <string name="profile_current_points_text">BODOV</string>
     <string name="profile_success_rate_text">ÚSPEŠNOSŤ</string>
 
@@ -83,5 +86,7 @@
     <string name="set_audio">Zvuky</string>
     <string name="set_units">Jednotky</string>
     <string name="set_about">O aplikácie</string>
+
+    <string name="set_automatic">Automatická</string>
 
 </resources>

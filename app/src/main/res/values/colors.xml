@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">@color/DARK</color>
     <color name="colorPrimaryDark">@color/BLACK</color>
-    <color name="colorAccent">@color/GRAY</color>
+    <color name="colorAccent">@color/DARK_GRAY</color>
 
     <!-- MAIN COLORS -->
     <color name="MAIN">#ff34cfd1</color>
@@ -23,7 +23,8 @@
 
     <color name="BLACK">#ff04060c</color>
     <color name="DARK">#ff111520</color>
-    <color name="GRAY">#ff465165</color>
+    <color name="DARK_GRAY">#1b1e26</color>
+    <color name="LIGHT_GRAY">#ff465165</color>
     <color name="WHITE">#ffd7e8ff</color>
 
 </resources>

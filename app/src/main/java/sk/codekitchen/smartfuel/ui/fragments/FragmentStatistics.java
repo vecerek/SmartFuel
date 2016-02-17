@@ -1,11 +1,14 @@
 package sk.codekitchen.smartfuel.ui.fragments;
 
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +24,11 @@ import java.util.HashMap;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.model.Statistics;
-import sk.codekitchen.smartfuel.ui.MainMenu;
-import sk.codekitchen.smartfuel.ui.RecorderActivity;
 import sk.codekitchen.smartfuel.ui.views.Colors;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
  * @author Gabriel Lehocky
@@ -50,6 +52,7 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
 
     // information text views
     private SemiboldTextView infoDistance;
+    private LightTextView infoDistanceUnit;
     private SemiboldTextView infoPoints;
     private SemiboldTextView infoSuccess;
 
@@ -59,6 +62,8 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
     private LightTextView chartDot;
 
     private boolean isSelectedChartColumn = false;
+
+    private SharedPreferences preferences;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,9 +86,10 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         switchNeg.setOnClickListener(this);
 
         // information
-        infoDistance = (SemiboldTextView) view.findViewById(R.id.stat_km);
+        infoDistance = (SemiboldTextView) view.findViewById(R.id.stat_distance);
         infoPoints = (SemiboldTextView) view.findViewById(R.id.stat_points);
         infoSuccess = (SemiboldTextView) view.findViewById(R.id.stat_success);
+        infoDistanceUnit = (LightTextView) view.findViewById(R.id.stat_distance_unit);
 
         //chart
         Paint linePaint = new Paint();
@@ -108,6 +114,14 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         chartDot = (LightTextView) view.findViewById(R.id.chart_dot);
 
         return view;
+    }
+
+    public void loadUnits(){
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
+        if (isMph) {
+            infoDistanceUnit.setText(getString(R.string.profile_total_distance_mile));
+        }
     }
 
     /**

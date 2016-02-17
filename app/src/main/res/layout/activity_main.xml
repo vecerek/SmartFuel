@@ -14,8 +14,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_margin="35dp"
-        android:src="@mipmap/splash_logo_light"
-        android:visibility="invisible"/>
+        android:src="@mipmap/splash_logo_light"/>
 
     <LinearLayout android:id="@+id/login_screen"
                   android:orientation="vertical"
@@ -74,7 +73,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:inputType="textEmailAddress"
-                    android:textColorHint="@color/GRAY"
+                    android:textColorHint="@color/LIGHT_GRAY"
                     android:textColor="@color/WHITE"
                     android:background="@color/TRANSPARENT"
                     android:editable="false"
@@ -91,7 +90,7 @@
                 android:layout_marginLeft="@dimen/intro_margins"
                 android:layout_marginRight="@dimen/intro_margins"
                 android:layout_height="1dp"
-                android:background="@color/GRAY">
+                android:background="@color/LIGHT_GRAY">
             </FrameLayout>
 
             <LinearLayout
@@ -115,7 +114,7 @@
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
                     android:inputType="textPassword"
-                    android:textColorHint="@color/GRAY"
+                    android:textColorHint="@color/LIGHT_GRAY"
                     android:textColor="@color/WHITE"
                     android:background="@color/TRANSPARENT"
                     android:layout_marginLeft="@dimen/intro_margins"

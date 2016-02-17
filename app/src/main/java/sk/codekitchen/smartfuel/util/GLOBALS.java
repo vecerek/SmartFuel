@@ -13,6 +13,9 @@ public final class GLOBALS {
 	public static final String BAD_EMAIL = "Account does not exist.";
 	public static final String BAD_PASS = "Incorrect password.";
 	public static final String ERROR_MSG_KEY = "error_msg";
+	public static final String SETTINGS_IS_MPH = "is_mph";
+	public static final String SETTINGS_IS_AUDIO = "is_audio";
+	public static final String SETTINGS_LANG = "language";
 
 	public static final class PARAM_KEY {
 		public static final String TOTAL_SUCCESS_RATE = "total_success_rate";
@@ -33,5 +36,11 @@ public final class GLOBALS {
 	public static final class HTTP_RESPONSE {
 		public static final int OK = 200;
 		public static final int FORBIDDEN = 403;
+	}
+
+	public static final class IPC_MESSAGE_KEY {
+		public static final String SPEED = "speed";
+		public static final String PROGRESS = "progress";
+		public static final String LIMIT = "speedlimit";
 	}
 }

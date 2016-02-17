@@ -25,7 +25,7 @@ public class ConnectionManager {
 	 * @param context
 	 * @return
 	 */
-	public static NetworkInfo getNetworkInfo(Context context){
+	public static NetworkInfo getNetworkInfo(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		return cm.getActiveNetworkInfo();
 	}
@@ -34,7 +34,7 @@ public class ConnectionManager {
 	 * Check if there is any connectivity
 	 * @return
 	 */
-	public boolean isConnected(){
+	public boolean isConnected() {
 		NetworkInfo info = ConnectionManager.getNetworkInfo(context);
 		return (info != null && info.isConnected());
 	}
@@ -49,8 +49,7 @@ public class ConnectionManager {
 			Process ipProcess = runtime.exec("/system/bin/ping -c 1 " + serverIP);
 			int     exitValue = ipProcess.waitFor();
 			return (exitValue == 0);
-		} catch (IOException e)          { e.printStackTrace(); }
-		catch (InterruptedException e) { e.printStackTrace(); }
+		} catch (IOException | InterruptedException e) { e.printStackTrace(); }
 
 		return false;
 	}

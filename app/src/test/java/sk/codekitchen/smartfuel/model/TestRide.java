@@ -58,7 +58,7 @@ public class TestRide extends AndroidTestCase {
             } catch (Exception e) {
                 Assert.fail("Adding records should not fail: " + e.getMessage());
             }
-
+            System.out.println(ride.toString());
         } catch (Exception e) {
             Assert.fail("Object construction shouldn't throw an exception: " + e.getMessage());
         }
