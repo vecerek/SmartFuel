@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.location.Location;
 import android.os.Environment;
+import android.util.Log;
 
 import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeData;
 import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeListener;
@@ -81,29 +82,42 @@ public class Ride {
 		TTparams.type = ReverseGeocodeOptionalParameters.REVERSE_TYPE_NATIONAL;
 	}
 
+	public String toString() {
+		return  "userID: " + Integer.toString(userID) + "\n" +
+				"points: " + Integer.toString(points) + "\n" +
+				"total distance: " + Float.toString(totalDistance) + "\n" +
+				"correct distance: " + Float.toString(correctDistance) + "\n" +
+				"speeding distance: " + Float.toString(speedingDistance) + "\n";
+	}
+
+	public Boolean isConnection() { return !connectionAborted; }
 	public void setAbortedConnection() { connectionAborted = true; }
 
 	public void addRecord(Location location) {
-		locations.add(location);
+		Log.i("TEST_IPC", "adding location record");
+        if (location != null) {
+            locations.add(location);
 
-		prevLoc = curLoc;
-		curLoc = location;
+            prevLoc = curLoc;
+            curLoc = location;
 
-		if (speedLimit == 0 || totalDistance >= nextSpeedLimitCall) {
-			updateSpeedLimit(location.getLatitude(), location.getLongitude());
-		}
+            if (speedLimit == 0 || totalDistance >= nextSpeedLimitCall) {
+                Log.i("TEST_IPC", "updating speed limit");
+                updateSpeedLimit(location.getLatitude(), location.getLongitude());
+            }
 
-		float distDiff = computeDistance();
+            float distDiff = computeDistance();
 
-		if(speedLimit != 0) {
-			if (curLoc.getSpeed() * MPS_TO_KMH <= speedLimit) {
-				addCorrectDistance(distDiff);
-			} else {
-				addSpeedingDistance(distDiff);
-			}
-		} else {
-			addTotalDistance(distDiff);
-		}
+            if (speedLimit != 0) {
+                if (curLoc.getSpeed() * MPS_TO_KMH <= speedLimit) {
+                    addCorrectDistance(distDiff);
+                } else {
+                    addSpeedingDistance(distDiff);
+                }
+            } else {
+                addTotalDistance(distDiff);
+            }
+        }
 	}
 
 	public void resetLocations() { prevLoc = curLoc= null; }
@@ -119,6 +133,8 @@ public class Ride {
 
 		return 0f;
 	}
+
+	public int getSpeedLimit() { return speedLimit; }
 
 	public int getPercentage() {
 		return Math.round(100*(progressCounter/DISTANCE_TO_GET_POINTS));
@@ -142,16 +158,6 @@ public class Ride {
 		progressCounter = 0f;
 	}
 
-	protected long insertDBActivity() throws JSONException {
-		JSONObject activity = new JSONObject();
-		activity.put(TABLE.COLUMN.CORRECT_DISTANCE, correctDistance);
-		activity.put(TABLE.COLUMN.SPEEDING_DISTANCE, speedingDistance);
-		activity.put(TABLE.COLUMN.POINTS, points);
-
-		sfdb.saveData(TABLE.NAME, activity, SFDB.ORIGIN_LOCAL);
-		return sfdb.lastInsertedId();
-	}
-
 	public void saveActivity()
 			throws JSONException, ParserConfigurationException {
 
@@ -163,6 +169,16 @@ public class Ride {
 		} else {
 			gpx.save(insertDBActivity());
 		}
+	}
+
+	protected long insertDBActivity() throws JSONException {
+		JSONObject activity = new JSONObject();
+		activity.put(TABLE.COLUMN.CORRECT_DISTANCE, correctDistance);
+		activity.put(TABLE.COLUMN.SPEEDING_DISTANCE, speedingDistance);
+		activity.put(TABLE.COLUMN.POINTS, points);
+
+		sfdb.saveData(TABLE.NAME, activity, SFDB.ORIGIN_LOCAL);
+		return sfdb.lastInsertedId();
 	}
 
 	protected long lazySave() throws JSONException {
@@ -177,6 +193,7 @@ public class Ride {
 	 * @param lon longitude
 	 */
 	protected void updateSpeedLimit(double lat, double lon) {
+        System.out.println("updating speed limit");
 		ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
 	}
 
@@ -223,10 +240,13 @@ public class Ride {
 		@Override
 		public void handleReverseGeocode(Vector<ReverseGeocodeData> data, Object payload) {
 			if(data != null && data.size() > 0) {
+                Log.i("TEST_RIDE_DATA_SIZE", Integer.toString(data.size()));
 				ReverseGeocodeData result = data.elementAt(0);
 				speedLimit = result.maxSpeedKph;
-				//mainActivity.refreshSpeedLimit(speedLimit);
+                Log.i("TEST_RIDE_SPEED", Integer.toString(speedLimit));
+                //mainActivity.refreshSpeedLimit(speedLimit);
 				roadType = result.roadType;
+                Log.i("TEST_RIDE_ROAD_TYPE", roadType);
 				nextSpeedLimitCall += roadType.equals("Motorway") ||
 						roadType.equals("MajorRoad") ||
 						roadType.equals("InternationalRoad") ? HIGHWAY_INTERVAL : ROAD_INTERVAL;

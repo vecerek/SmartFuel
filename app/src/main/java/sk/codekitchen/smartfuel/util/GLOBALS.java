@@ -37,4 +37,10 @@ public final class GLOBALS {
 		public static final int OK = 200;
 		public static final int FORBIDDEN = 403;
 	}
+
+	public static final class IPC_MESSAGE_KEY {
+		public static final String SPEED = "speed";
+		public static final String PROGRESS = "progress";
+		public static final String LIMIT = "speedlimit";
+	}
 }

@@ -788,6 +788,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 */
 	protected Integer[] getISOWeeksOfMonth(int month) {
 		Calendar cal = Calendar.getInstance();
+		cal.setMinimalDaysInFirstWeek(4);
 		cal.set(Calendar.MONTH, month);
 
 		int lastDayOfMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
