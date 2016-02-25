@@ -15,7 +15,6 @@ public final class GLOBALS {
 	public static final String ERROR_MSG_KEY = "error_msg";
 	public static final String SETTINGS_IS_MPH = "is_mph";
 	public static final String SETTINGS_IS_AUDIO = "is_audio";
-	public static final String SETTINGS_LANG = "language";
 
 	public static final class PARAM_KEY {
 		public static final String TOTAL_SUCCESS_RATE = "total_success_rate";

@@ -109,10 +109,6 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         viewPager.setAdapter(adapter);
         viewPager.setPagingEnabled(false);
 
-        SharedPreferences preferences;
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        setLocale(preferences.getString(GLOBALS.SETTINGS_LANG, ""));
-
     }
 
     private void createMenu(){
@@ -255,22 +251,4 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
         notificationManager.cancel(NOTIFICATION_RECORDING_ID);
     }
 
-
-    public void setLocale(String lang) {
-        if (lang.equals("")) return;
-        Locale myLocale = new Locale(lang);
-        Resources res = getResources();
-        DisplayMetrics dm = res.getDisplayMetrics();
-        Configuration conf = res.getConfiguration();
-        conf.locale = myLocale;
-        res.updateConfiguration(conf, dm);
-        Intent refresh = new Intent(this, SmartFuelActivity.class);
-        startActivity(refresh);
-
-        if (viewPager.getCurrentItem() == 4){
-            viewPager.setCurrentItem(0, false);
-            menu.setCheckedItem(R.id.nav_recorder);
-        }
-
-    }
 }

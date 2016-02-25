@@ -77,6 +77,7 @@
         android:layout_marginRight="50dp"
         android:layout_weight="0.1"
         android:padding="5dp"
+        android:clickable="true"
         >
 
         <sk.codekitchen.smartfuel.ui.views.LightTextView
@@ -89,7 +90,6 @@
             android:gravity="center"
             android:textColor="@color/WHITE"
             android:background="@drawable/round_highlight_box_left"
-            android:clickable="true"
             android:layout_weight="0.5"
             />
 
@@ -102,7 +102,6 @@
             android:layout_gravity="center_horizontal"
             android:textColor="@color/LIGHT_GRAY"
             android:background="@drawable/round_transparent"
-            android:clickable="true"
             android:layout_weight="0.5"
             android:gravity="center"/>
 

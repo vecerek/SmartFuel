@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.db.chart.listener.OnEntryClickListener;
@@ -49,6 +50,7 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
     private boolean isPositive = true; // true - positive | false - negative
     private LightTextView switchPos;
     private LightTextView switchNeg;
+    private LinearLayout switchStat;
 
     // information text views
     private SemiboldTextView infoDistance;
@@ -81,9 +83,9 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
 
         // positive / negative
         switchPos = (LightTextView) view.findViewById(R.id.btn_positive);
-        switchPos.setOnClickListener(this);
         switchNeg = (LightTextView) view.findViewById(R.id.btn_negative);
-        switchNeg.setOnClickListener(this);
+        switchStat = (LinearLayout) view.findViewById(R.id.stat_switch);
+        switchStat.setOnClickListener(this);
 
         // information
         infoDistance = (SemiboldTextView) view.findViewById(R.id.stat_distance);
@@ -175,11 +177,8 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
                     current.activate();
                 }
                 break;
-            case R.id.btn_positive:
-                if (!isPositive) current.changeColorScheme();
-                break;
-            case R.id.btn_negative:
-                if (isPositive) current.changeColorScheme();
+            case R.id.stat_switch:
+                current.changeColorScheme();
                 break;
             case R.id.line_chart:
                 if (isSelectedChartColumn){
