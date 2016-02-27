@@ -66,11 +66,13 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
     private boolean isSelectedChartColumn = false;
 
     private SharedPreferences preferences;
+    private boolean isMph;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         (new LoadStatsDataTask()).execute((Void) null);
@@ -121,7 +123,7 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
     }
 
     public void loadUnits() {
-        if (preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false)) {
+        if (isMph) {
             infoDistanceUnit.setText(getString(R.string.profile_total_distance_mile));
         }
     }
@@ -205,10 +207,19 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         StatsTab(LightTextView ltv, Statistics.TabData data) {
             this.ltv = ltv;
 
-            distance = data.distance;
+            distance = getCorrectUnitBasedValue(data.distance);
             points = data.points;
             successRate = data.successRate;
             processStatisticData(data.cols);
+        }
+
+        private int getCorrectUnitBasedValue(int val) {
+            return isMph ? Math.round(val * GLOBALS.CONST.KM2MI) : val;
+        }
+
+        // TODO: Check out, what numbers we get, if each ends with .0, we should round it to a 1 decimal precision
+        private float getCorrectUnitBasedValue(float val) {
+            return isMph ? Math.round(val * GLOBALS.CONST.KM2MI) : val;
         }
 
         protected void processStatisticData(ArrayList<Statistics.TabData.ColumnData> cols) {
@@ -226,8 +237,8 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
             int i = 1;
             for (Statistics.TabData.ColumnData col : cols) {
                 chartLabels[i] = col.key;
-                valuesPos[i] = (float) col.correctDistance;
-                valuesNeg[i] = (float) col.speedingDistance;
+                valuesPos[i] = getCorrectUnitBasedValue((float) col.correctDistance);
+                valuesNeg[i] = getCorrectUnitBasedValue((float) col.speedingDistance);
                 i++;
                 if (col.correctDistance > maxPos) maxPos = col.correctDistance;
                 if (col.speedingDistance > maxNeg) maxNeg = col.speedingDistance;
