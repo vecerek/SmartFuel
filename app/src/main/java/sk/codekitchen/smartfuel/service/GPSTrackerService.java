@@ -278,14 +278,18 @@ public class GPSTrackerService extends Service implements LocationListener {
         df.setRoundingMode(RoundingMode.CEILING);
 
 		return String.format(
-                "%s=%s&%s=%s&%s=%s",
+                "%s=%s&%s=%s&%s=%s&%s=%s&%s=%s",
                 GLOBALS.IPC_MESSAGE_KEY.SPEED,
                 df.format(getPreferredSpeed(location.getSpeed())),
                 GLOBALS.IPC_MESSAGE_KEY.PROGRESS,
                 Integer.toString(ride.getPercentage()),
                 GLOBALS.IPC_MESSAGE_KEY.LIMIT,
-                Integer.toString(ride.getSpeedLimit())
-        );
+                Integer.toString(ride.getSpeedLimit()),
+                GLOBALS.IPC_MESSAGE_KEY.POINTS,
+                Integer.toString(ride.getPoints()),
+                GLOBALS.IPC_MESSAGE_KEY.DIST,
+                Integer.toString(ride.getTotalDistance())
+                );
 	}
 
 	@Override

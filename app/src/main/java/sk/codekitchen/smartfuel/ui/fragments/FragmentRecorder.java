@@ -317,7 +317,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * sets current points text
      * @param val
      */
-    public void setCurrentPoints(int val){
+    public void setDrivingPoints(int val){
         pointCurrent.setText(String.valueOf(val));
     }
 
@@ -325,7 +325,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * sets overall points text
      * @param val
      */
-    public void setOverallPoints(int val){
+    public void setTotalDistance(int val){
         pointOverall.setText(String.valueOf(val));
     }
 

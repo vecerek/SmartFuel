@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.GPXGenerator;
+import sk.codekitchen.smartfuel.util.Units;
 
 /**
  * Class, that handles the activity recording.
@@ -148,12 +149,22 @@ public class Ride {
      * @return the speed limit
      */
 	public int getSpeedLimit() {
-        return isMph ? 5 * Math.round(speedLimit * GLOBALS.CONST.KM2MI / 5f) : speedLimit;
+        return isMph
+				? 5 * Math.round(Units.Speed.toImperial(speedLimit) / 5f)
+				: speedLimit;
     }
 
 	public int getPercentage() {
 		return Math.round(100*(progressCounter/DISTANCE_TO_GET_POINTS));
 	}
+
+	public int getPoints() { return points; }
+
+	public int getTotalDistance() {
+        return (int) (isMph
+                ? Units.Speed.toImperial(totalDistance )
+                : totalDistance);
+    }
 
 	public void addTotalDistance(float dist) { totalDistance += dist; }
 

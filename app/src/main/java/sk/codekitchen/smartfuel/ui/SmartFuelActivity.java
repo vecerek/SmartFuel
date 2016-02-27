@@ -123,6 +123,8 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                             fRecorder.setSpeed(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.SPEED)));
                             fRecorder.setPercent(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.PROGRESS)));
                             fRecorder.setSpeedLimit(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.LIMIT)));
+                            fRecorder.setDrivingPoints(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.POINTS)));
+                            fRecorder.setTotalDistance(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.DIST)));
                             break;
                         default:
                             super.handleMessage(msg);
