@@ -83,7 +83,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener, 
             case R.id.set_units_switch:
                 isMph = !isMph;
                 showActualUnit();
-                preferences.edit().putBoolean(GLOBALS.SETTINGS_IS_MPH, isMph).commit();
+                preferences.edit().putBoolean(GLOBALS.SETTINGS_IS_MPH, isMph).apply();
                 break;
             case R.id.set_about_text:
                 break;
@@ -95,7 +95,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener, 
         switch (buttonView.getId()){
             case R.id.set_audio_switch:
                 isAudio = audio.isChecked();
-                preferences.edit().putBoolean(GLOBALS.SETTINGS_IS_AUDIO, isAudio).commit();
+                preferences.edit().putBoolean(GLOBALS.SETTINGS_IS_AUDIO, isAudio).apply();
                 break;
         }
     }

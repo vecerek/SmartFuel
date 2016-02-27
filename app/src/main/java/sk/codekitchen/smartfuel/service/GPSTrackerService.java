@@ -1,6 +1,5 @@
 package sk.codekitchen.smartfuel.service;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
@@ -180,6 +179,7 @@ public class GPSTrackerService extends Service implements LocationListener {
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             Log.i("TEST_IPC", "check if network provider enabled");
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            Log.i("TEST_CONNECTION", "Network enabled: " + Boolean.toString(isNetworkEnabled));
 
             if (!isGPSEnabled) {
                 showSettingsAlert();
@@ -227,6 +227,8 @@ public class GPSTrackerService extends Service implements LocationListener {
         Log.i("TEST_LOC", "onLocationChanged");
         if (location != null) {
             Log.i("TEST_LOC", "location not null");
+            Log.i("TEST_LOC_LAT", Double.toString(location.getLatitude()));
+            Log.i("TEST_LOC_LONG", Double.toString(location.getLongitude()));
             updateActivity(DEBUG, getCurrentStateMessage(location));
         } else {
             Log.d("TEST_IPC", "location is null");
@@ -258,6 +260,19 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 	}
 
+    /**
+     * Returns the speed in the preferred unit.
+     * @param speedInMps
+     * @return
+     */
+    private float getPreferredSpeed(float speedInMps) {
+        if (ride.isMph()) {
+            return speedInMps * GLOBALS.CONST.MPS2KPH * GLOBALS.CONST.KM2MI;
+        } else {
+            return speedInMps * GLOBALS.CONST.MPS2KPH;
+        }
+    }
+
 	private String getCurrentStateMessage(Location location) {
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -265,7 +280,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 		return String.format(
                 "%s=%s&%s=%s&%s=%s",
                 GLOBALS.IPC_MESSAGE_KEY.SPEED,
-                df.format(location.getSpeed()),
+                df.format(getPreferredSpeed(location.getSpeed())),
                 GLOBALS.IPC_MESSAGE_KEY.PROGRESS,
                 Integer.toString(ride.getPercentage()),
                 GLOBALS.IPC_MESSAGE_KEY.LIMIT,

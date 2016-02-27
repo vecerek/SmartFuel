@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
 import sk.codekitchen.smartfuel.util.GLOBALS;
+import sk.codekitchen.smartfuel.util.Units;
 
 /**
  * @author Gabriel Lehocky
@@ -66,9 +66,13 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
     private boolean isSelectedChartColumn = false;
 
     private SharedPreferences preferences;
+    private boolean isMph;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         (new LoadStatsDataTask()).execute((Void) null);
@@ -118,9 +122,7 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         return view;
     }
 
-    public void loadUnits(){
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
+    public void loadUnits() {
         if (isMph) {
             infoDistanceUnit.setText(getString(R.string.profile_total_distance_mile));
         }
@@ -205,7 +207,7 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         StatsTab(LightTextView ltv, Statistics.TabData data) {
             this.ltv = ltv;
 
-            distance = data.distance;
+            distance = isMph ? Units.Speed.toImperial(data.distance) : data.distance;
             points = data.points;
             successRate = data.successRate;
             processStatisticData(data.cols);
@@ -226,8 +228,12 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
             int i = 1;
             for (Statistics.TabData.ColumnData col : cols) {
                 chartLabels[i] = col.key;
-                valuesPos[i] = (float) col.correctDistance;
-                valuesNeg[i] = (float) col.speedingDistance;
+                valuesPos[i] = isMph
+                        ? Units.Speed.toImperial((float) col.correctDistance)
+                        : (float) col.correctDistance;
+                valuesNeg[i] = isMph
+                        ? Units.Speed.toImperial((float) col.speedingDistance)
+                        : (float) col.speedingDistance;
                 i++;
                 if (col.correctDistance > maxPos) maxPos = col.correctDistance;
                 if (col.speedingDistance > maxNeg) maxNeg = col.speedingDistance;

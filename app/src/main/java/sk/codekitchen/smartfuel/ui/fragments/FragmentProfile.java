@@ -18,6 +18,7 @@ import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.RoundedImageView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.util.GLOBALS;
+import sk.codekitchen.smartfuel.util.Units;
 
 /**
  * @author Gabriel Lehocky
@@ -37,9 +38,13 @@ public class FragmentProfile extends Fragment {
     private LightTextView totalDistanceUnits;
 
     private SharedPreferences preferences;
+    private boolean isMph;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
+
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         address = (LightTextView) view.findViewById(R.id.profile_address);
@@ -60,8 +65,6 @@ public class FragmentProfile extends Fragment {
     }
 
     public void loadUnits(){
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
         if (isMph) {
             totalDistanceUnits.setText(getString(R.string.profile_total_distance_mile));
         }
@@ -106,7 +109,11 @@ public class FragmentProfile extends Fragment {
                 }
                 fullName.setText(getFullNameFormatted(user.name, user.surname));
                 address.setText(getFullAddressFormatted(user.city, user.region));
-                totalDistance.setText(String.valueOf(user.totalDistance));
+                totalDistance.setText(
+                        String.valueOf(
+                            isMph ? Units.Speed.toImperial(user.totalDistance) : user.totalDistance
+                        )
+                );
                 currentPoints.setText(String.valueOf(user.currentPoints));
                 successRate.setText(getPercentageValue(user.totalSuccessRate));
                 totalPoints.setText(String.valueOf(user.totalPoints));
