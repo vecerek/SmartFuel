@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.location.Location;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeData;
@@ -25,6 +26,7 @@ import java.util.Vector;
 import javax.xml.parsers.ParserConfigurationException;
 
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
+import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.GPXGenerator;
 
 /**
@@ -41,7 +43,6 @@ public class Ride {
 
 	protected static final int POINTS_PER_KM = 1;
 	protected static final float DISTANCE_TO_GET_POINTS = 1000f; //in meters
-	protected static final float MPS_TO_KMH = 3.6f;
 	protected static final float ROAD_INTERVAL = 50f; //in meters
 	protected static final float HIGHWAY_INTERVAL = 200f; //in meters
 
@@ -63,6 +64,7 @@ public class Ride {
 	protected long id;
 	protected Context ctx;
 	protected SFDB sfdb;
+	protected Boolean isMph;
 
 	protected boolean connectionAborted = false;
 
@@ -73,6 +75,9 @@ public class Ride {
 		this.locations = new Vector<>();
 		sfdb = new SFDB(ctx);
 		userID = sfdb.getUserID();
+
+		isMph = PreferenceManager.getDefaultSharedPreferences(ctx).
+				getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
 
 		//API Key
 		SDKContext.setDeveloperKey(API_KEY);
@@ -90,6 +95,7 @@ public class Ride {
 				"speeding distance: " + Float.toString(speedingDistance) + "\n";
 	}
 
+    public Boolean isMph() { return isMph; }
 	public Boolean isConnection() { return !connectionAborted; }
 	public void setAbortedConnection() { connectionAborted = true; }
 
@@ -109,7 +115,7 @@ public class Ride {
             float distDiff = computeDistance();
 
             if (speedLimit != 0) {
-                if (curLoc.getSpeed() * MPS_TO_KMH <= speedLimit) {
+                if (curLoc.getSpeed() * GLOBALS.CONST.MPS2KPH <= speedLimit) {
                     addCorrectDistance(distDiff);
                 } else {
                     addSpeedingDistance(distDiff);
@@ -134,7 +140,16 @@ public class Ride {
 		return 0f;
 	}
 
-	public int getSpeedLimit() { return speedLimit; }
+    /**
+     * Returns the speed limit based on the user's preferred speed unit.
+     *
+     * The conversion rounds the speed limit returned in km/h to the nearest 5, that represents the
+     * mph limit. It is not a 100% correct way but hey, what else can we do about it?
+     * @return the speed limit
+     */
+	public int getSpeedLimit() {
+        return isMph ? 5 * Math.round(speedLimit * GLOBALS.CONST.KM2MI / 5f) : speedLimit;
+    }
 
 	public int getPercentage() {
 		return Math.round(100*(progressCounter/DISTANCE_TO_GET_POINTS));

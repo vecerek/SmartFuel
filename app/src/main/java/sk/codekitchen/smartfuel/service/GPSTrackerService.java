@@ -1,6 +1,5 @@
 package sk.codekitchen.smartfuel.service;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
@@ -261,6 +260,19 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 	}
 
+    /**
+     * Returns the speed in the preferred unit.
+     * @param speedInMps
+     * @return
+     */
+    private float getPreferredSpeed(float speedInMps) {
+        if (ride.isMph()) {
+            return speedInMps * GLOBALS.CONST.MPS2KPH * GLOBALS.CONST.KM2MI;
+        } else {
+            return speedInMps * GLOBALS.CONST.MPS2KPH;
+        }
+    }
+
 	private String getCurrentStateMessage(Location location) {
         DecimalFormat df = new DecimalFormat("#.#");
         df.setRoundingMode(RoundingMode.CEILING);
@@ -268,7 +280,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 		return String.format(
                 "%s=%s&%s=%s&%s=%s",
                 GLOBALS.IPC_MESSAGE_KEY.SPEED,
-                df.format(location.getSpeed()),
+                df.format(getPreferredSpeed(location.getSpeed())),
                 GLOBALS.IPC_MESSAGE_KEY.PROGRESS,
                 Integer.toString(ride.getPercentage()),
                 GLOBALS.IPC_MESSAGE_KEY.LIMIT,
