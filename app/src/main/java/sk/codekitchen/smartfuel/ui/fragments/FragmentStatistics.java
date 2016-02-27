@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
 import sk.codekitchen.smartfuel.util.GLOBALS;
+import sk.codekitchen.smartfuel.util.Units;
 
 /**
  * @author Gabriel Lehocky
@@ -207,19 +207,10 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         StatsTab(LightTextView ltv, Statistics.TabData data) {
             this.ltv = ltv;
 
-            distance = getCorrectUnitBasedValue(data.distance);
+            distance = isMph ? Units.Speed.toImperial(data.distance) : data.distance;
             points = data.points;
             successRate = data.successRate;
             processStatisticData(data.cols);
-        }
-
-        private int getCorrectUnitBasedValue(int val) {
-            return isMph ? Math.round(val * GLOBALS.CONST.KM2MI) : val;
-        }
-
-        // TODO: Check out, what numbers we get, if each ends with .0, we should round it to a 1 decimal precision
-        private float getCorrectUnitBasedValue(float val) {
-            return isMph ? Math.round(val * GLOBALS.CONST.KM2MI) : val;
         }
 
         protected void processStatisticData(ArrayList<Statistics.TabData.ColumnData> cols) {
@@ -237,8 +228,12 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
             int i = 1;
             for (Statistics.TabData.ColumnData col : cols) {
                 chartLabels[i] = col.key;
-                valuesPos[i] = getCorrectUnitBasedValue((float) col.correctDistance);
-                valuesNeg[i] = getCorrectUnitBasedValue((float) col.speedingDistance);
+                valuesPos[i] = isMph
+                        ? Units.Speed.toImperial((float) col.correctDistance)
+                        : (float) col.correctDistance;
+                valuesNeg[i] = isMph
+                        ? Units.Speed.toImperial((float) col.speedingDistance)
+                        : (float) col.speedingDistance;
                 i++;
                 if (col.correctDistance > maxPos) maxPos = col.correctDistance;
                 if (col.speedingDistance > maxNeg) maxNeg = col.speedingDistance;
