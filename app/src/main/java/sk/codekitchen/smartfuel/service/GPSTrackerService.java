@@ -25,6 +25,8 @@ import org.json.JSONException;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -47,12 +49,16 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 25; // meters
     private static final long MIN_TIME_BW_UPDATES = 1000; // millisec
+    private static final long NETWORK_CHECK_INTERVAL = 30 * 1000; //30 seconds
 
     protected LocationManager locationManager;
 
     final Messenger mMessenger = new Messenger(new IncomingHandler());
 
     Messenger mActivityeMessenger = null;
+
+    Handler networkHandler = new Handler();
+    Timer mTimer = null;
 
     /**
      * Message type: register the activity's messenger for receiving responses
@@ -139,8 +145,14 @@ public class GPSTrackerService extends Service implements LocationListener {
         try {
             Log.i("TEST_IPC", "Creating Ride object");
             this.ride = new Ride(mContext);
-            Log.i("TEST_IPC", "Checking internet connection");
-            (new checkNetworkConnectionTask()).execute((Void) null);
+
+            if (mTimer != null) {
+                mTimer.cancel();
+            } else {
+                mTimer = new Timer();
+            }
+           mTimer.scheduleAtFixedRate(new checkNetworkConnectionTimerTask(), 0, NETWORK_CHECK_INTERVAL);
+
             Log.i("TEST_IPC", "Location record is being added");
             this.ride.addRecord(getLocation());
 
@@ -158,6 +170,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     @Override
     public void onDestroy() {
+        mTimer.cancel();
         Log.i("TEST_IPC", "onDestroy triggered");
         locationManager.removeUpdates(GPSTrackerService.this);
 
@@ -296,21 +309,24 @@ public class GPSTrackerService extends Service implements LocationListener {
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
+    private class checkNetworkConnectionTimerTask extends TimerTask {
 
-    private class checkNetworkConnectionTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            ConnectionManager cm = new ConnectionManager(mContext);
-            return cm.isConnected() && cm.isOnline();
-        }
+        private int mCounter = 1;
 
         @Override
-        protected void onPostExecute(Boolean isConnection) {
-            if (!isConnection) {
-                ride.setAbortedConnection();
-            }
-            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(ride.isConnection()));
+        public void run() {
+            networkHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("TEST_CONNECTION", "Checking internet connection ("+Integer.toString(mCounter)+")");
+                    ConnectionManager cm = new ConnectionManager(mContext);
+                    if (!(cm.isConnected() && cm.isOnline())) {
+                        ride.setAbortedConnection();
+                    }
+                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(ride.isConnection()));
+                    mCounter++;
+                }
+            });
         }
     }
 }
