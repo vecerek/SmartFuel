@@ -47,5 +47,7 @@ public final class GLOBALS {
 		public static final String SPEED = "speed";
 		public static final String PROGRESS = "progress";
 		public static final String LIMIT = "speedlimit";
+		public static final String POINTS = "driving_points";
+		public static final String DIST = "total_distance";
 	}
 }
