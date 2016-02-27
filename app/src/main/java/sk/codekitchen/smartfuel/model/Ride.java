@@ -64,7 +64,7 @@ public class Ride {
 	protected long id;
 	protected Context ctx;
 	protected SFDB sfdb;
-	protected Boolean isMph;
+	protected boolean isMph;
 
 	protected boolean connectionAborted = false;
 
@@ -95,8 +95,8 @@ public class Ride {
 				"speeding distance: " + Float.toString(speedingDistance) + "\n";
 	}
 
-    public Boolean isMph() { return isMph; }
-	public Boolean isConnection() { return !connectionAborted; }
+    public boolean isMph() { return isMph; }
+	public boolean isConnection() { return !connectionAborted; }
 	public void setAbortedConnection() { connectionAborted = true; }
 
 	public void addRecord(Location location) {
@@ -290,7 +290,7 @@ public class Ride {
 
 		/**
 		 * {@code _synchronized} defaults to false
-		 * @see TABLE#getContentValues(JSONObject, Boolean)
+		 * @see TABLE#getContentValues(JSONObject, boolean)
 		 */
 		public static ContentValues getContentValues(JSONObject data)
 				throws JSONException {
@@ -308,7 +308,7 @@ public class Ride {
 		 * @throws JSONException if the json object could not be read properly
 		 * @since 1.0
 		 */
-		public static ContentValues getContentValues(JSONObject data, Boolean _synchronized)
+		public static ContentValues getContentValues(JSONObject data, boolean _synchronized)
 				throws JSONException {
 
 			ContentValues cv = new ContentValues();
