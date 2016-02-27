@@ -68,6 +68,7 @@ public class Ride {
 	protected boolean isMph;
 
 	protected boolean connectionAborted = false;
+	private static boolean sContinueEvaluation = false;
 
 	public Ride(Context ctx)
 			throws ParseException, UnknownUserException {
@@ -111,6 +112,8 @@ public class Ride {
             if (speedLimit == 0 || totalDistance >= nextSpeedLimitCall) {
                 Log.i("TEST_IPC", "updating speed limit");
                 updateSpeedLimit(location.getLatitude(), location.getLongitude());
+            } else {
+                sContinueEvaluation = true;
             }
 
             float distDiff = computeDistance();
@@ -239,7 +242,9 @@ public class Ride {
 				GPXGenerator gpx = new GPXGenerator(ctx, pending);
 				Vector<Location> locations = gpx.getLocations();
 				for (Location loc : locations) {
+                    sContinueEvaluation = false;
 					roadActivity.addRecord(loc);
+                    while (!sContinueEvaluation);
 				}
 				//save as lazy evaluated activity
 				long id = roadActivity.lazySave();
@@ -276,6 +281,8 @@ public class Ride {
 				nextSpeedLimitCall += roadType.equals("Motorway") ||
 						roadType.equals("MajorRoad") ||
 						roadType.equals("InternationalRoad") ? HIGHWAY_INTERVAL : ROAD_INTERVAL;
+
+                sContinueEvaluation = true;
 			}
 		}
 	}
