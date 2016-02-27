@@ -180,6 +180,7 @@ public class GPSTrackerService extends Service implements LocationListener {
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             Log.i("TEST_IPC", "check if network provider enabled");
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            Log.i("TEST_CONNECTION", "Network enabled: " + Boolean.toString(isNetworkEnabled));
 
             if (!isGPSEnabled) {
                 showSettingsAlert();
@@ -227,6 +228,8 @@ public class GPSTrackerService extends Service implements LocationListener {
         Log.i("TEST_LOC", "onLocationChanged");
         if (location != null) {
             Log.i("TEST_LOC", "location not null");
+            Log.i("TEST_LOC_LAT", Double.toString(location.getLatitude()));
+            Log.i("TEST_LOC_LONG", Double.toString(location.getLongitude()));
             updateActivity(DEBUG, getCurrentStateMessage(location));
         } else {
             Log.d("TEST_IPC", "location is null");
