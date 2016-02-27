@@ -69,6 +69,8 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         (new LoadStatsDataTask()).execute((Void) null);
@@ -118,10 +120,8 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         return view;
     }
 
-    public void loadUnits(){
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
-        if (isMph) {
+    public void loadUnits() {
+        if (preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false)) {
             infoDistanceUnit.setText(getString(R.string.profile_total_distance_mile));
         }
     }
