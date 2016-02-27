@@ -110,11 +110,11 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                             break;
                         case GPSTrackerService.DEBUG:
                             Log.d("TEST_IPC", "Response: " + b.getCharSequence("data"));
-                            fRecorder.setSpeed(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.SPEED)));
+                            fRecorder.setSpeed((int) Float.parseFloat(params.get(GLOBALS.IPC_MESSAGE_KEY.SPEED)));
                             fRecorder.setPercent(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.PROGRESS)));
                             fRecorder.setSpeedLimit(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.LIMIT)));
                             fRecorder.setDrivingPoints(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.POINTS)));
-                            fRecorder.setTotalDistance(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.DIST)));
+                            fRecorder.setTotalDistance(Float.parseFloat(params.get(GLOBALS.IPC_MESSAGE_KEY.DIST)));
                             break;
                         default:
                             super.handleMessage(msg);

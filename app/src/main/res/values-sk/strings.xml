@@ -88,5 +88,9 @@
     <string name="set_about">O aplikácie</string>
 
     <string name="set_automatic">Automatická</string>
+    <string name="unit_feet">ft</string>
+    <string name="unit_kilometer">km</string>
+    <string name="unit_meter">m</string>
+    <string name="unit_mile">mi</string>
 
 </resources>

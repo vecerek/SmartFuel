@@ -3,8 +3,6 @@ package sk.codekitchen.smartfuel.service;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.content.Context;
@@ -17,24 +15,18 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import org.json.JSONException;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import sk.codekitchen.smartfuel.exception.PermissionDeniedException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.model.Ride;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
+import sk.codekitchen.smartfuel.util.Units;
 
 public class GPSTrackerService extends Service implements LocationListener {
 
@@ -273,36 +265,20 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 	}
 
-    /**
-     * Returns the speed in the preferred unit.
-     * @param speedInMps
-     * @return
-     */
-    private float getPreferredSpeed(float speedInMps) {
-        if (ride.isMph()) {
-            return speedInMps * GLOBALS.CONST.MPS2KPH * GLOBALS.CONST.KM2MI;
-        } else {
-            return speedInMps * GLOBALS.CONST.MPS2KPH;
-        }
-    }
-
 	private String getCurrentStateMessage(Location location) {
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
-
 		return String.format(
                 "%s=%s&%s=%s&%s=%s&%s=%s&%s=%s",
                 GLOBALS.IPC_MESSAGE_KEY.SPEED,
-                df.format(getPreferredSpeed(location.getSpeed())),
+                Float.toString(Units.getPreferredSpeed(location.getSpeed(), ride.isMph())),
                 GLOBALS.IPC_MESSAGE_KEY.PROGRESS,
                 Integer.toString(ride.getPercentage()),
                 GLOBALS.IPC_MESSAGE_KEY.LIMIT,
-                Integer.toString(ride.getSpeedLimit()),
+                Integer.toString(Units.getPreferredSpeedLimit(ride.getSpeedLimit(), ride.isMph())),
                 GLOBALS.IPC_MESSAGE_KEY.POINTS,
                 Integer.toString(ride.getPoints()),
                 GLOBALS.IPC_MESSAGE_KEY.DIST,
-                Integer.toString(ride.getTotalDistance())
-                );
+                Float.toString(Units.getPreferredDistance(ride.getTotalDistance(), ride.isMph()))
+        );
 	}
 
 	@Override

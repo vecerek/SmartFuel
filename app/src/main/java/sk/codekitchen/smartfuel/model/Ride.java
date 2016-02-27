@@ -151,11 +151,7 @@ public class Ride {
      * mph limit. It is not a 100% correct way but hey, what else can we do about it?
      * @return the speed limit
      */
-	public int getSpeedLimit() {
-        return isMph
-				? 5 * Math.round(Units.Speed.toImperial(speedLimit) / 5f)
-				: speedLimit;
-    }
+	public int getSpeedLimit() { return speedLimit; }
 
 	public int getPercentage() {
 		return Math.round(100*(progressCounter/DISTANCE_TO_GET_POINTS));
@@ -163,11 +159,7 @@ public class Ride {
 
 	public int getPoints() { return points; }
 
-	public int getTotalDistance() {
-        return (int) (isMph
-                ? Units.Speed.toImperial(totalDistance )
-                : totalDistance);
-    }
+	public float getTotalDistance() { return totalDistance; }
 
 	public void addTotalDistance(float dist) { totalDistance += dist; }
 

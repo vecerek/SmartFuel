@@ -207,7 +207,7 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
         StatsTab(LightTextView ltv, Statistics.TabData data) {
             this.ltv = ltv;
 
-            distance = isMph ? Units.Speed.toImperial(data.distance) : data.distance;
+            distance = (int) Units.getPreferredDistance(data.distance, isMph);
             points = data.points;
             successRate = data.successRate;
             processStatisticData(data.cols);
@@ -228,12 +228,8 @@ public class FragmentStatistics extends Fragment implements View.OnClickListener
             int i = 1;
             for (Statistics.TabData.ColumnData col : cols) {
                 chartLabels[i] = col.key;
-                valuesPos[i] = isMph
-                        ? Units.Speed.toImperial((float) col.correctDistance)
-                        : (float) col.correctDistance;
-                valuesNeg[i] = isMph
-                        ? Units.Speed.toImperial((float) col.speedingDistance)
-                        : (float) col.speedingDistance;
+                valuesPos[i] = Units.getPreferredDistance(col.correctDistance, isMph);
+                valuesNeg[i] = Units.getPreferredDistance(col.speedingDistance, isMph);
                 i++;
                 if (col.correctDistance > maxPos) maxPos = col.correctDistance;
                 if (col.speedingDistance > maxNeg) maxNeg = col.speedingDistance;
