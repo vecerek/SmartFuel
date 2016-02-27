@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">SmartFuel</string>
 
-    <string name="title_rec">MERANIE</string>
+    <string name="title_rec">JAZDA</string>
     <string name="title_stat">ŠTATISTIKA</string>
     <string name="title_shop">OBCHOD</string>
     <string name="title_acc">PROFIL</string>
     <string name="title_set">NASTAVENIE</string>
 
-    <string name="rec_point_acutal">AKTUÁLNE BODY</string>
-    <string name="rec_point_overall">CELKOVÉ BODY</string>
+    <string name="rec_points">BODY ZA JAZDU</string>
+    <string name="rec_total_dist">VZDIALENOSŤ</string>
     <string name="rec_percent"> Percentá</string>
     <string name="rec_speed">Rýchlosť</string>
     <string name="rec_percent_symbol">%</string>

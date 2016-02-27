@@ -1,14 +1,14 @@
 <resources>
     <string name="app_name">SmartFuel</string>
 
-    <string name="title_rec">METERING</string>
+    <string name="title_rec">DRIVING</string>
     <string name="title_stat">STATISTICS</string>
     <string name="title_shop">SHOP</string>
     <string name="title_acc">PROFILE</string>
     <string name="title_set">SETTINGS</string>
 
-    <string name="rec_point_acutal">CURRENT POINTS</string>
-    <string name="rec_point_overall">TOTAL POINTS</string>
+    <string name="rec_points">DRIVING POINTS</string>
+    <string name="rec_total_dist">TOTAL DISTANCE</string>
     <string name="rec_percent"> Percent</string>
     <string name="rec_speed">Speed</string>
     <string name="rec_percent_symbol">%</string>
@@ -27,7 +27,7 @@
     <string name="stat_pos_mile">Affirmative mi</string>
     <string name="stat_neg_mile">Negative mi</string>
     <string name="profile_total_distance_km">KM</string>
-    <string name="profile_total_distance_mile">MILES</string>
+    <string name="profile_total_distance_mile">MI</string>
     <string name="profile_current_points_text">POINTS</string>
     <string name="profile_success_rate_text">SUCCESS RATE</string>
 
