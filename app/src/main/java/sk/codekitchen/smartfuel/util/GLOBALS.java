@@ -16,6 +16,12 @@ public final class GLOBALS {
 	public static final String SETTINGS_IS_MPH = "is_mph";
 	public static final String SETTINGS_IS_AUDIO = "is_audio";
 
+	public static final class CONST {
+		public static final float KM2MI = 0.621371192f;
+        public static final float MI2KM = 1.609344f;
+        public static final float MPS2KPH = 3.6f;
+	}
+
 	public static final class PARAM_KEY {
 		public static final String TOTAL_SUCCESS_RATE = "total_success_rate";
 		public static final String TOTAL_DISTANCE = "total_distance";
