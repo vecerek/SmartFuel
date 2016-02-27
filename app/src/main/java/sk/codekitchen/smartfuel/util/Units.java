@@ -23,7 +23,7 @@ public final class Units {
 
         public static final class Km {
             public static float toMi(float val) { return val * GLOBALS.CONST.KM2MI; }
-            public static float toMe(float val) { return val * GLOBALS.CONST.M2KM; }
+            public static float toMe(float val) { return val * GLOBALS.CONST.KM2M; }
         }
 
         public static final class Mi {
