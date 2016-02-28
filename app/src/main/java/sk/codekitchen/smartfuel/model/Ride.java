@@ -68,6 +68,7 @@ public class Ride {
 	protected boolean isMph;
 
 	protected boolean connectionAborted = false;
+	private static boolean sContinueEvaluation = false;
 
 	public Ride(Context ctx)
 			throws ParseException, UnknownUserException {
@@ -111,6 +112,8 @@ public class Ride {
             if (speedLimit == 0 || totalDistance >= nextSpeedLimitCall) {
                 Log.i("TEST_IPC", "updating speed limit");
                 updateSpeedLimit(location.getLatitude(), location.getLongitude());
+            } else {
+                sContinueEvaluation = true;
             }
 
             float distDiff = computeDistance();
@@ -148,11 +151,7 @@ public class Ride {
      * mph limit. It is not a 100% correct way but hey, what else can we do about it?
      * @return the speed limit
      */
-	public int getSpeedLimit() {
-        return isMph
-				? 5 * Math.round(Units.Speed.toImperial(speedLimit) / 5f)
-				: speedLimit;
-    }
+	public int getSpeedLimit() { return speedLimit; }
 
 	public int getPercentage() {
 		return Math.round(100*(progressCounter/DISTANCE_TO_GET_POINTS));
@@ -160,11 +159,7 @@ public class Ride {
 
 	public int getPoints() { return points; }
 
-	public int getTotalDistance() {
-        return (int) (isMph
-                ? Units.Speed.toImperial(totalDistance )
-                : totalDistance);
-    }
+	public float getTotalDistance() { return totalDistance; }
 
 	public void addTotalDistance(float dist) { totalDistance += dist; }
 
@@ -239,7 +234,9 @@ public class Ride {
 				GPXGenerator gpx = new GPXGenerator(ctx, pending);
 				Vector<Location> locations = gpx.getLocations();
 				for (Location loc : locations) {
+                    sContinueEvaluation = false;
 					roadActivity.addRecord(loc);
+                    while (!sContinueEvaluation);
 				}
 				//save as lazy evaluated activity
 				long id = roadActivity.lazySave();
@@ -276,6 +273,8 @@ public class Ride {
 				nextSpeedLimitCall += roadType.equals("Motorway") ||
 						roadType.equals("MajorRoad") ||
 						roadType.equals("InternationalRoad") ? HIGHWAY_INTERVAL : ROAD_INTERVAL;
+
+                sContinueEvaluation = true;
 			}
 		}
 	}

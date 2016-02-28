@@ -54,6 +54,12 @@ public class ConnectionManager {
 		return false;
 	}
 
+    public boolean isNetworkOnline() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null;
+    }
+
 	/**
 	 * Check if there is any connectivity to a Wifi network
 	 * @return

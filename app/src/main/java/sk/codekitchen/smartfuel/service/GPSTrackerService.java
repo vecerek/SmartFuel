@@ -3,7 +3,6 @@ package sk.codekitchen.smartfuel.service;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
@@ -17,22 +16,18 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
-import org.json.JSONException;
-
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.ParseException;
-
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import sk.codekitchen.smartfuel.exception.PermissionDeniedException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.model.Ride;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
+import sk.codekitchen.smartfuel.util.Units;
 
 public class GPSTrackerService extends Service implements LocationListener {
 
@@ -47,12 +42,17 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 25; // meters
     private static final long MIN_TIME_BW_UPDATES = 1000; // millisec
+    private static final long NETWORK_CHECK_INTERVAL = 30 * 1000; //30 seconds
 
     protected LocationManager locationManager;
 
     final Messenger mMessenger = new Messenger(new IncomingHandler());
 
     Messenger mActivityeMessenger = null;
+
+    Handler networkHandler = new Handler();
+    Timer mTimer = null;
+    ConnectionManager cm;
 
     /**
      * Message type: register the activity's messenger for receiving responses
@@ -135,12 +135,19 @@ public class GPSTrackerService extends Service implements LocationListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("TEST_IPC", "onStartCommand triggered");
         this.mContext = getApplicationContext();
+        cm = new ConnectionManager(mContext);
 
         try {
             Log.i("TEST_IPC", "Creating Ride object");
             this.ride = new Ride(mContext);
-            Log.i("TEST_IPC", "Checking internet connection");
-            (new checkNetworkConnectionTask()).execute((Void) null);
+
+            if (mTimer != null) {
+                mTimer.cancel();
+            } else {
+                mTimer = new Timer();
+            }
+            mTimer.scheduleAtFixedRate(new checkNetworkConnectionTimerTask(), 0, NETWORK_CHECK_INTERVAL);
+
             Log.i("TEST_IPC", "Location record is being added");
             this.ride.addRecord(getLocation());
 
@@ -158,6 +165,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     @Override
     public void onDestroy() {
+        mTimer.cancel();
         Log.i("TEST_IPC", "onDestroy triggered");
         locationManager.removeUpdates(GPSTrackerService.this);
 
@@ -260,57 +268,58 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 	}
 
-    /**
-     * Returns the speed in the preferred unit.
-     * @param speedInMps
-     * @return
-     */
-    private float getPreferredSpeed(float speedInMps) {
-        if (ride.isMph()) {
-            return speedInMps * GLOBALS.CONST.MPS2KPH * GLOBALS.CONST.KM2MI;
-        } else {
-            return speedInMps * GLOBALS.CONST.MPS2KPH;
-        }
-    }
-
 	private String getCurrentStateMessage(Location location) {
-        DecimalFormat df = new DecimalFormat("#.#");
-        df.setRoundingMode(RoundingMode.CEILING);
-
 		return String.format(
                 "%s=%s&%s=%s&%s=%s&%s=%s&%s=%s",
                 GLOBALS.IPC_MESSAGE_KEY.SPEED,
-                df.format(getPreferredSpeed(location.getSpeed())),
+                Float.toString(Units.getPreferredSpeed(location.getSpeed(), ride.isMph())),
                 GLOBALS.IPC_MESSAGE_KEY.PROGRESS,
                 Integer.toString(ride.getPercentage()),
                 GLOBALS.IPC_MESSAGE_KEY.LIMIT,
-                Integer.toString(ride.getSpeedLimit()),
+                Integer.toString(Units.getPreferredSpeedLimit(ride.getSpeedLimit(), ride.isMph())),
                 GLOBALS.IPC_MESSAGE_KEY.POINTS,
                 Integer.toString(ride.getPoints()),
                 GLOBALS.IPC_MESSAGE_KEY.DIST,
-                Integer.toString(ride.getTotalDistance())
-                );
+                Float.toString(Units.getPreferredDistance(ride.getTotalDistance(), ride.isMph()))
+        );
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 	}
 
+    private class checkNetworkConnectionTimerTask extends TimerTask {
+
+        private int mCounter = 1;
+
+        @Override
+        public void run() {
+            networkHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("TEST_CONNECTION", "Checking internet connection ("+Integer.toString(mCounter)+")");
+                    (new checkNetworkConnectionTask()).execute((Void) null);
+                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.isConnection()));
+                    mCounter++;
+                }
+            });
+        }
+    }
 
     private class checkNetworkConnectionTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            ConnectionManager cm = new ConnectionManager(mContext);
-            return cm.isConnected() && cm.isOnline();
+            return cm.isNetworkOnline();
         }
 
         @Override
         protected void onPostExecute(Boolean isConnection) {
             if (!isConnection) {
+                Log.i("TEST_CONNECTION", "No connection");
                 ride.setAbortedConnection();
             }
-            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(ride.isConnection()));
+            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.isConnection()));
         }
     }
 }

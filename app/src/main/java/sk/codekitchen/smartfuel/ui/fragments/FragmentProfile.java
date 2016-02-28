@@ -17,6 +17,7 @@ import sk.codekitchen.smartfuel.model.User;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.RoundedImageView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
+import sk.codekitchen.smartfuel.util.Formatter;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.Units;
 
@@ -110,8 +111,8 @@ public class FragmentProfile extends Fragment {
                 fullName.setText(getFullNameFormatted(user.name, user.surname));
                 address.setText(getFullAddressFormatted(user.city, user.region));
                 totalDistance.setText(
-                        String.valueOf(
-                            isMph ? Units.Speed.toImperial(user.totalDistance) : user.totalDistance
+                        Formatter.Distance.format(
+                                Units.getPreferredDistance((float) user.totalDistance, isMph)
                         )
                 );
                 currentPoints.setText(String.valueOf(user.currentPoints));

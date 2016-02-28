@@ -17,9 +17,13 @@ public final class GLOBALS {
 	public static final String SETTINGS_IS_AUDIO = "is_audio";
 
 	public static final class CONST {
-		public static final float KM2MI = 0.621371192f;
-        public static final float MI2KM = 1.609344f;
+        public static final float M2FT = 3.2808399f;
         public static final float MPS2KPH = 3.6f;
+        public static final float KM2MI = 0.621371192f;
+        public static final float KM2M = 1000f;
+        public static final float MI2KM = 1.609344f;
+        public static final float MI2FT = 5280f;
+        public static final float M2KM = 0.001f;
 	}
 
 	public static final class PARAM_KEY {

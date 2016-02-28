@@ -14,17 +14,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import java.math.RoundingMode;
+
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.ui.views.Colors;
 import sk.codekitchen.smartfuel.ui.views.LightTextView;
 import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.ui.views.Utils;
+import sk.codekitchen.smartfuel.util.Formatter;
 import sk.codekitchen.smartfuel.util.GLOBALS;
+import sk.codekitchen.smartfuel.util.Units;
 
 /**
  * @author Gabriel Lehocky
  */
-public class FragmentRecorder extends Fragment implements View.OnClickListener{
+public class FragmentRecorder extends Fragment implements View.OnClickListener {
 
     /**
      * isOverLimit: set to true in case of overspeeding
@@ -50,12 +54,12 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
 
     private ProgressBar progressBar;
     private LightTextView progressValue;
-    private LightTextView progressSufix;
+    private LightTextView progressSuffix;
     private LightTextView progressComment;
     private SemiboldTextView progressCommentBold;
     private LinearLayout progressData;
 
-    private int progressMax;
+    private int progressMax = 133;
     private int progressPercent = 0;
     private int progressSpeed = 0;
 
@@ -75,14 +79,17 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
     private LinearLayout maxPermittedSign;
     private SemiboldTextView maxPermittedSpeed;
 
-    private SemiboldTextView pointCurrent;
-    private SemiboldTextView pointOverall;
+    private SemiboldTextView drivingPoints;
+    private SemiboldTextView totalDistance;
 
     private SharedPreferences preferences;
+    private boolean isMph = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recorder, container, false);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
 
         // speed/percent switch
         btnPercent = (LinearLayout) view.findViewById(R.id.btn_percent);
@@ -101,8 +108,9 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
 
         // progressbar
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setMax(progressMax);
         progressValue = (LightTextView) view.findViewById(R.id.progress_value);
-        progressSufix = (LightTextView) view.findViewById(R.id.progress_symbol);
+        progressSuffix = (LightTextView) view.findViewById(R.id.progress_symbol);
         progressComment = (LightTextView) view.findViewById(R.id.progress_comment);
         progressCommentBold = (SemiboldTextView) view.findViewById(R.id.progress_comment_bold);
         progressData = (LinearLayout) view.findViewById(R.id.progress_central_data);
@@ -114,8 +122,8 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
         maxPermittedSign =(LinearLayout) view.findViewById(R.id.max_permitted_sign);
 
         // points data
-        pointCurrent = (SemiboldTextView) view.findViewById(R.id.actual_points);
-        pointOverall = (SemiboldTextView) view.findViewById(R.id.overall_points);
+        drivingPoints = (SemiboldTextView) view.findViewById(R.id.actual_points);
+        totalDistance = (SemiboldTextView) view.findViewById(R.id.overall_points);
 
         return view;
     }
@@ -143,10 +151,8 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
         changeColorBySpeed();
 
         if (isSetToSpeed) { // speed
-            progressSufix.setText("");
+            progressSuffix.setText("");
             progressComment.setText("");
-            preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-            boolean isMph = preferences.getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
             if (isMph) {
                 progressCommentBold.setText(getString(R.string.rec_mph));
             }
@@ -158,7 +164,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
             changeProgress(progressSpeed);
         }
         else { // percent
-            progressSufix.setText(getString(R.string.rec_percent_symbol));
+            progressSuffix.setText(getString(R.string.rec_percent_symbol));
             progressComment.setText(getString(R.string.rec_comment_1));
             progressCommentBold.setText(getString(R.string.rec_comment_2));
 
@@ -197,13 +203,13 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
             if (isOverLimit) {
                 Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_bad_box_left);
                 Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_bad);
-                progressSufix.setTextColor(Colors.RED);
+                progressSuffix.setTextColor(Colors.RED);
                 progressValue.setTextColor(Colors.ORANGE);
             }
             else {
                 Utils.setBackgroundOfView(getActivity(), btnPercent, R.drawable.round_highlight_box_left);
                 Utils.setProgressBarProgress(getActivity(), progressBar, R.drawable.progressbar_arch_grad_good);
-                progressSufix.setTextColor(Colors.MAIN);
+                progressSuffix.setTextColor(Colors.MAIN);
                 progressValue.setTextColor(Colors.WHITE);
             }
         }
@@ -219,7 +225,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
         progressBar.setMax(progressMax + progressMax / 3);
 
         if (isSetToSpeed) { // speed
-            if (progressMax <= progressSpeed){
+            if (progressSpeed <= progressMax){
                 isOverLimit = false;
                 changeColorBySpeed();
             }
@@ -235,7 +241,10 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * changes the Actual value of the progressbar and changes the value text also
      * @param val
      */
-    private void changeProgress(int val){
+    private void changeProgress(int val) {
+        Log.d("TEST_GRAPHICS", "val: " + Integer.toString(val));
+        Log.d("TEST_GRAPHICS", "progressMax: " + Integer.toString(progressMax));
+        Log.d("TEST_GRAPHICS", "progressPercent: " + Integer.toString(progressPercent));
         if (val < progressMax){
             progressBar.setProgress(val);
         }
@@ -249,7 +258,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * changes the speedlimit sign and also the progressbar max in case of speed
      * @param l - limit
      */
-    public void setSpeedLimit(int l){
+    public void setSpeedLimit(int l) {
         if (l > 0) {
             maxPermittedSign.setVisibility(View.VISIBLE);
             maxPermittedSpeed.setText(String.valueOf(l));
@@ -265,7 +274,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * changes layout based on gps provider
      * @param gps
      */
-    public void isGPS(boolean gps){
+    public void isGPS(boolean gps) {
         if (gps) {
             noGps.setVisibility(View.GONE);
             progressData.setVisibility(View.VISIBLE);
@@ -280,7 +289,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * changes layout when no signal or signal is back
      * @param signal
      */
-    public void isSignal(boolean signal){
+    public void isSignal(boolean signal) {
         if (signal) {
             noSignal.setVisibility(View.GONE);
             progressData.setVisibility(View.VISIBLE);
@@ -295,7 +304,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
      * changes layout based on current speed
      * @param s
      */
-    public void setSpeed(int s){
+    public void setSpeed(int s) {
         progressSpeed = s;
         if (isSetToSpeed) changeProgress(s);
         if (progressSpeed > speedLimit) {
@@ -305,28 +314,51 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener{
     }
 
     /**
-     * changes layout based on vurrent percents
+     * changes layout based on current percents
      * @param p
      */
-    public void setPercent(int p){
+    public void setPercent(int p) {
+        Log.d("TEST_GRAPHICS", "Setting percent");
         progressPercent = p;
+        Log.d("TEST_GRAPHICS", "Changing progress: " + Boolean.toString(!isSetToSpeed));
         if (!isSetToSpeed) changeProgress(p);
     }
 
     /**
-     * sets current points text
+     * sets driving points text
      * @param val
      */
-    public void setDrivingPoints(int val){
-        pointCurrent.setText(String.valueOf(val));
+    public void setDrivingPoints(int val) {
+        drivingPoints.setText(Formatter.format(val, ' ', RoundingMode.CEILING));
     }
 
     /**
-     * sets overall points text
-     * @param val
+     * sets total distance text
+     * @param val distance in the preferred unit
      */
-    public void setTotalDistance(int val){
-        pointOverall.setText(String.valueOf(val));
+    public void setTotalDistance(float val) {
+        String dist;
+        String unit;
+
+        if (val <= 1f) {
+            if (isMph) {
+                dist = Formatter.Distance.format(Units.Distance.Mi.toFt(val));
+                unit = getString(R.string.unit_feet);
+            } else {
+                dist = Formatter.Distance.format(Units.Distance.Km.toMe(val));
+                unit = getString(R.string.unit_meter);
+            }
+        } else {
+            unit = isMph ? getString(R.string.unit_mile) : getString(R.string.unit_kilometer);
+            if (val < 10f) {
+                dist = Formatter.Distance.format(val, "#,###.##");
+            } else if (val < 100f) {
+                dist = Formatter.Distance.format(val, "#,###.#");
+            } else {
+                dist = Formatter.Distance.format(val);
+            }
+        }
+        totalDistance.setText(dist + unit);
     }
 
 }

@@ -1,7 +1,6 @@
 package sk.codekitchen.smartfuel.ui;
 
 import android.annotation.TargetApi;
-import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
@@ -15,10 +14,6 @@ import android.os.Messenger;
 import android.graphics.Typeface;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Typeface;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
@@ -33,21 +28,17 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import java.util.Locale;
 
 import sk.codekitchen.smartfuel.R;
 import sk.codekitchen.smartfuel.service.GPSTrackerService;
@@ -60,7 +51,6 @@ import sk.codekitchen.smartfuel.ui.fragments.FragmentShop;
 import sk.codekitchen.smartfuel.ui.fragments.FragmentStatistics;
 import sk.codekitchen.smartfuel.ui.views.ExtraboldTextView;
 import sk.codekitchen.smartfuel.ui.views.MenuTextItems;
-import sk.codekitchen.smartfuel.ui.views.SemiboldTextView;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 
 /**
@@ -69,7 +59,7 @@ import sk.codekitchen.smartfuel.util.GLOBALS;
 public class SmartFuelActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     public final static int NOTIFICATION_RECORDING_ID = 0;
-    private final static int FINE_LOCATION_RESULT = 100;
+    private final static int FINE_LOCATION_PERMISSION_CODE = 100;
 
     /**
      * Android Marshmallow Permission Request instance variables.
@@ -120,11 +110,11 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                             break;
                         case GPSTrackerService.DEBUG:
                             Log.d("TEST_IPC", "Response: " + b.getCharSequence("data"));
-                            fRecorder.setSpeed(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.SPEED)));
+                            fRecorder.setSpeed((int) Float.parseFloat(params.get(GLOBALS.IPC_MESSAGE_KEY.SPEED)));
                             fRecorder.setPercent(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.PROGRESS)));
                             fRecorder.setSpeedLimit(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.LIMIT)));
                             fRecorder.setDrivingPoints(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.POINTS)));
-                            fRecorder.setTotalDistance(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.DIST)));
+                            fRecorder.setTotalDistance(Float.parseFloat(params.get(GLOBALS.IPC_MESSAGE_KEY.DIST)));
                             break;
                         default:
                             super.handleMessage(msg);
@@ -350,7 +340,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
             case R.id.toolbar_rec_txt:
             case R.id.toolbar_rec:
                 permissions.add(ACCESS_FINE_LOCATION);
-                resultCode = FINE_LOCATION_RESULT;
+                resultCode = FINE_LOCATION_PERMISSION_CODE;
                 break;
             case R.id.toolbar_stop_txt:
             case R.id.toolbar_stop:
@@ -479,7 +469,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
         switch (requestCode) {
-            case FINE_LOCATION_RESULT:
+            case FINE_LOCATION_PERMISSION_CODE:
                 if (hasPermission(ACCESS_FINE_LOCATION)) {
                     startRecording();
                 } else {
