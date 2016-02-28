@@ -59,7 +59,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener {
     private SemiboldTextView progressCommentBold;
     private LinearLayout progressData;
 
-    private int progressMax;
+    private int progressMax = 133;
     private int progressPercent = 0;
     private int progressSpeed = 0;
 
@@ -108,6 +108,7 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener {
 
         // progressbar
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        progressBar.setMax(progressMax);
         progressValue = (LightTextView) view.findViewById(R.id.progress_value);
         progressSuffix = (LightTextView) view.findViewById(R.id.progress_symbol);
         progressComment = (LightTextView) view.findViewById(R.id.progress_comment);
@@ -242,6 +243,8 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener {
      */
     private void changeProgress(int val) {
         Log.d("TEST_GRAPHICS", "val: " + Integer.toString(val));
+        Log.d("TEST_GRAPHICS", "progressMax: " + Integer.toString(progressMax));
+        Log.d("TEST_GRAPHICS", "progressPercent: " + Integer.toString(progressPercent));
         if (val < progressMax){
             progressBar.setProgress(val);
         }
