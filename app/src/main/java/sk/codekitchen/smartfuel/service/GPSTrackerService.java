@@ -3,6 +3,7 @@ package sk.codekitchen.smartfuel.service;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.content.Context;
@@ -51,6 +52,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     Handler networkHandler = new Handler();
     Timer mTimer = null;
+    ConnectionManager cm;
 
     /**
      * Message type: register the activity's messenger for receiving responses
@@ -133,6 +135,7 @@ public class GPSTrackerService extends Service implements LocationListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("TEST_IPC", "onStartCommand triggered");
         this.mContext = getApplicationContext();
+        cm = new ConnectionManager(mContext);
 
         try {
             Log.i("TEST_IPC", "Creating Ride object");
@@ -143,7 +146,7 @@ public class GPSTrackerService extends Service implements LocationListener {
             } else {
                 mTimer = new Timer();
             }
-           mTimer.scheduleAtFixedRate(new checkNetworkConnectionTimerTask(), 0, NETWORK_CHECK_INTERVAL);
+            mTimer.scheduleAtFixedRate(new checkNetworkConnectionTimerTask(), 0, NETWORK_CHECK_INTERVAL);
 
             Log.i("TEST_IPC", "Location record is being added");
             this.ride.addRecord(getLocation());
@@ -295,14 +298,28 @@ public class GPSTrackerService extends Service implements LocationListener {
                 @Override
                 public void run() {
                     Log.i("TEST_CONNECTION", "Checking internet connection ("+Integer.toString(mCounter)+")");
-                    ConnectionManager cm = new ConnectionManager(mContext);
-                    if (!(cm.isConnected() && cm.isOnline())) {
-                        ride.setAbortedConnection();
-                    }
-                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(ride.isConnection()));
+                    (new checkNetworkConnectionTask()).execute((Void) null);
+                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.isConnection()));
                     mCounter++;
                 }
             });
+        }
+    }
+
+    private class checkNetworkConnectionTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return cm.isNetworkOnline();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isConnection) {
+            if (!isConnection) {
+                Log.i("TEST_CONNECTION", "No connection");
+                ride.setAbortedConnection();
+            }
+            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.isConnection()));
         }
     }
 }
