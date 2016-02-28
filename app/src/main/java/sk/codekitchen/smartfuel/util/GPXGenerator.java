@@ -3,6 +3,7 @@ package sk.codekitchen.smartfuel.util;
 import android.content.Context;
 import android.location.Location;
 import android.os.Environment;
+import android.util.Log;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -12,6 +13,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -37,10 +39,11 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class GPXGenerator {
 
-	public static final String ACTIVITIES_DIR = "road_activities";
+	public static final String APP_DIR = "sk.codekitchen.smartfuel";
+	public static final String ACTIVITIES_DIR = "driving_activities";
 	public static final String PENDING_DIR = "pending_activities";
 
-	private static final String ACTIVITY_PREFIX = "Road Activity";
+	private static final String ACTIVITY_PREFIX = "Driving Activity";
 	private static final String PENDING_FILE_PREFIX = "_";
 	private static final String FILENAME_DELIMITER = "_";
 	private static final String EXTENSION = ".gpx";
@@ -231,14 +234,14 @@ public class GPXGenerator {
 		}
 	}
 
-	public String getFileName(long id) {
+	public String getFileName() {
 		String sd = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsStartDate);
 		String ed = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsEndDate);
 		String delim = FILENAME_DELIMITER;
-		return String.valueOf(id) + delim + sd + delim + ed + EXTENSION;
+		return sd + delim + ed + EXTENSION;
 	}
 
-	public void save() {
+	public void saveAsPendingActivity() throws IOException {
 		File pendingActivitiesDir = new File(Environment.getDataDirectory()
 				+ GPXGenerator.PENDING_DIR);
 
@@ -252,29 +255,41 @@ public class GPXGenerator {
 		save(filename, PENDING_DIR);
 	}
 
-	public void save(Long id) {
-		save(getFileName(id), ACTIVITIES_DIR);
+	public void save() throws IOException {
+		save(getFileName(), ACTIVITIES_DIR);
 	}
 
-	private void save(String filename, String directory) {
-		try {
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
+    private void save(String filename, String directoryName) throws IOException {
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
 
-			DOMSource source = new DOMSource(doc);
+            DOMSource source = new DOMSource(doc);
 
-			File activitiesDir = ctx.getDir(directory, Context.MODE_PRIVATE);
-			File activity = new File(activitiesDir, filename);
-			FileOutputStream _stream = new FileOutputStream(activity);
+            File activitiesDirectory = ctx.getDir(directoryName, Context.MODE_PRIVATE);
+            if (!activitiesDirectory.mkdirs()) {
+                Log.e("FILE_SAVE", "Directory not created");
+            }
 
-			StreamResult result = new StreamResult(_stream);
-			transformer.transform(source, result);
+            File activity = new File(activitiesDirectory, filename);
+            /*
+             * The free space should be at least 2 times bigger than the needed space
+             * because just a slight difference does not make the operation sure.
+             */
+            if (activity.length() * 2 <= activity.getFreeSpace()) {
+                FileOutputStream _stream = new FileOutputStream(activity);
+                StreamResult result = new StreamResult(_stream);
+                transformer.transform(source, result);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			//TODO: Handle insufficient space on internal storage.
-		}
-	}
+            } else {
+                throw new IOException("Not enough free space.");
+            }
+
+        } catch (FileNotFoundException | TransformerException e) {
+            e.printStackTrace();
+            Log.e("FILE_SAVE", "File not found or transformer exception");
+        }
+    }
 
 	public String toString() {
 		if (doc != null) {

@@ -180,31 +180,31 @@ public class Ride {
 	}
 
 	public void saveActivity()
-			throws JSONException, ParserConfigurationException {
+			throws JSONException, ParserConfigurationException, IOException {
 
 		GPXGenerator gpx = new GPXGenerator(ctx, locations);
 		gpx.createXML();
 
 		if (connectionAborted) {
-			gpx.save();
+			gpx.saveAsPendingActivity();
 		} else {
-			gpx.save(insertDBActivity());
+			gpx.save();
 		}
 	}
 
-	protected long insertDBActivity() throws JSONException {
+	protected void insertDBActivity() throws JSONException {
 		JSONObject activity = new JSONObject();
 		activity.put(TABLE.COLUMN.CORRECT_DISTANCE, correctDistance);
 		activity.put(TABLE.COLUMN.SPEEDING_DISTANCE, speedingDistance);
 		activity.put(TABLE.COLUMN.POINTS, points);
 
 		sfdb.saveData(TABLE.NAME, activity, SFDB.ORIGIN_LOCAL);
-		return sfdb.lastInsertedId();
+		//return sfdb.lastInsertedId();
 	}
 
-	protected long lazySave() throws JSONException {
+	/*protected long lazySave() throws JSONException {
 		return insertDBActivity();
-	}
+	}*/
 
 	/**
 	 * Fires TomTom's reverseGeocoder to check the road's
@@ -223,8 +223,7 @@ public class Ride {
 			ParserConfigurationException, SAXException, IOException,
 			JSONException {
 
-		File pendingActivitiesDir = new File(Environment.getDataDirectory()
-				+ GPXGenerator.PENDING_DIR);
+		File pendingActivitiesDir = new File(Environment.getDataDirectory(), GPXGenerator.PENDING_DIR);
 
 		if (pendingActivitiesDir.exists()) {
 			File[] dirFiles = pendingActivitiesDir.listFiles();
@@ -239,10 +238,14 @@ public class Ride {
                     while (!sContinueEvaluation);
 				}
 				//save as lazy evaluated activity
-				long id = roadActivity.lazySave();
+				roadActivity.insertDBActivity();
 				//renames and moves file to gpx routes directory
-				boolean result = pending.renameTo(new File(Environment.getDataDirectory()
-						+ GPXGenerator.ACTIVITIES_DIR, gpx.getFileName(id)));
+				boolean result = pending.renameTo(
+						new File(
+								new File(Environment.getDataDirectory(), GPXGenerator.ACTIVITIES_DIR),
+								gpx.getFileName()
+						)
+				);
 				if (!result)
 					throw new IOException("File couldn't be moved");
 			}
