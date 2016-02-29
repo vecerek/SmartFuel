@@ -1,11 +1,16 @@
 package sk.codekitchen.smartfuel.util;
 
+import junit.framework.Assert;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import sk.codekitchen.smartfuel.model.SFDB;
@@ -81,5 +86,23 @@ public class TestServerAPI {
 						.sendRequest().getJSONArray("data");
 
 		assert (activities != null);
+	}
+
+	@Test
+	public void testMultipleFileUpload() throws Throwable {
+		List<File> files = new ArrayList<>();
+		files.add(Utils.getFileFromPath(this, Utils.TEST_FILE_WITH_SPEED));
+		files.add(Utils.getFileFromPath(this, Utils.TEST_FILE_WITHOUT_SPEED));
+
+        Map<String, String> params = new HashMap<>();
+        params.put("country", "SVK");
+        params.put("region", "Nitra");
+
+        try {
+            new ServerAPI("test/upload_activities")
+                    .sendMultipartRequest(params, files);
+        } catch (Exception e) {
+            Assert.fail("Request should have been sent and received a response code 200, " + e.getMessage());
+        }
 	}
 }
