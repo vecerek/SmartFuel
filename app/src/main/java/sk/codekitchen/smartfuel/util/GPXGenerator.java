@@ -39,7 +39,6 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class GPXGenerator {
 
-	public static final String APP_DIR = "sk.codekitchen.smartfuel";
 	public static final String ACTIVITIES_DIR = "driving_activities";
 	public static final String PENDING_DIR = "pending_activities";
 
@@ -237,8 +236,7 @@ public class GPXGenerator {
 	public String getFileName() {
 		String sd = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsStartDate);
 		String ed = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsEndDate);
-		String delim = FILENAME_DELIMITER;
-		return sd + delim + ed + EXTENSION;
+		return sd + FILENAME_DELIMITER + ed + EXTENSION;
 	}
 
 	public String saveAsPendingActivity(int userID) throws IOException, TransformerException {
