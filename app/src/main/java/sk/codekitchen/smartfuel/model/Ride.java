@@ -21,6 +21,8 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -227,6 +229,34 @@ public class Ride {
         System.out.println("updating speed limit");
 		ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
 	}
+
+    private static List<File> getListFiles(File parentDir) { return getListFiles(parentDir, ".gpx"); }
+    private static List<File> getListFiles(File parentDir, String ext) {
+        List<File> inFiles = new ArrayList<>();
+        File[] files = parentDir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                inFiles.addAll(getListFiles(file));
+            } else {
+                if(file.getName().endsWith(ext)){
+                    inFiles.add(file);
+                }
+            }
+        }
+        return inFiles;
+    }
+
+    public static List<File> getDrivingActivities(Context ctx, int userID) {
+
+        File drivingActivitiesDir =
+                ctx.getDir(GPXGenerator.getActivitiesDir(userID), Context.MODE_PRIVATE);
+
+        if (drivingActivitiesDir.exists()) {
+            return getListFiles(drivingActivitiesDir);
+        }
+
+        return null;
+    }
 
 	public static void evaluatePendingActivities(Context ctx, int userID)
 			throws ParseException, UnknownUserException,
