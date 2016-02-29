@@ -8,6 +8,9 @@ import java.net.URL;
  */
 public class Utils {
 
+    protected static final String TEST_FILE_WITH_SPEED = "res/gpx_with_speed.gpx";
+    protected static final String TEST_FILE_WITHOUT_SPEED = "res/gpx_without_speed.gpx";
+
     public static File getFileFromPath(Object obj, String fileName) {
         ClassLoader classLoader = obj.getClass().getClassLoader();
         URL resource = classLoader.getResource(fileName);
