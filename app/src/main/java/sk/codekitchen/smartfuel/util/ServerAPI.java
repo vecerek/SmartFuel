@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -120,7 +121,7 @@ public class ServerAPI {
      * @throws IOException if host unreachable
      *                     if response code not 200
      */
-	public void sendMultipartRequest(Map<String, String> params, File[] files) throws IOException {
+	public void sendMultipartRequest(Map<String, String> params, List<File> files) throws IOException {
 
         MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder();
         requestBodyBuilder.setType(MultipartBody.FORM);
