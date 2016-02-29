@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.GLOBALS;
@@ -75,7 +76,7 @@ public class Ride {
 
 		this.ctx = ctx;
 		this.locations = new Vector<>();
-		sfdb = new SFDB(ctx);
+		sfdb = SFDB.getInstance(ctx);
 		userID = sfdb.getUserID();
 
 		isMph = PreferenceManager.getDefaultSharedPreferences(ctx).
@@ -179,17 +180,26 @@ public class Ride {
 		progressCounter = 0f;
 	}
 
-	public void saveActivity()
-			throws JSONException, ParserConfigurationException, IOException {
+    /**
+     * Saves the activity into the database, if the connection has not been aborted and also
+     * on the internal storage as a .gpx file.
+     *
+     * @return AbsolutePath if the saved GPX file for checking purposes
+     *
+     * @throws JSONException                if a key has not been found
+     * @throws ParserConfigurationException if the gpx file is invalid
+     * @throws IOException                  if not enough disk space on internal memory
+     * @throws TransformerException         if GPX could not be written into File
+     */
+	public String saveActivity()
+			throws JSONException, ParserConfigurationException, IOException, TransformerException {
 
 		GPXGenerator gpx = new GPXGenerator(ctx, locations);
 		gpx.createXML();
 
-		if (connectionAborted) {
-			gpx.saveAsPendingActivity();
-		} else {
-			gpx.save();
-		}
+        if (!connectionAborted) insertDBActivity();
+
+		return connectionAborted ? gpx.saveAsPendingActivity() : gpx.save();
 	}
 
 	protected void insertDBActivity() throws JSONException {
@@ -267,6 +277,7 @@ public class Ride {
 		public void handleReverseGeocode(Vector<ReverseGeocodeData> data, Object payload) {
 			if(data != null && data.size() > 0) {
                 Log.i("TEST_RIDE_DATA_SIZE", Integer.toString(data.size()));
+                System.out.println("Handling reverse geocode");
 				ReverseGeocodeData result = data.elementAt(0);
 				speedLimit = result.maxSpeedKph;
                 Log.i("TEST_RIDE_SPEED", Integer.toString(speedLimit));

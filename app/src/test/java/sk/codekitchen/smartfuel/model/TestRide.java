@@ -48,7 +48,7 @@ public class TestRide extends AndroidTestCase {
     @Test
     public void RideObjectShouldBeCreated() throws Exception {
         GPXGenerator gpx = new GPXGenerator(this.context,
-                TestGPXGenerator.getFileFromPath(this, TEST_FILE_WITH_SPEED));
+                TestGPXGenerator.getFileFromPath(this, TEST_FILE_WITHOUT_SPEED));
         try {
             Ride ride = new Ride(this.context);
             try {

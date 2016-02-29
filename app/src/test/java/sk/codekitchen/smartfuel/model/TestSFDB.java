@@ -59,7 +59,7 @@ public class TestSFDB extends AndroidTestCase {
 		}
 
 		if (sfdb == null) {
-			sfdb = new SFDB(context);
+			sfdb = SFDB.getInstance(context);
 			sfdb.savepoint(SETUP_SAVEPOINT);
 		} else {
 			sfdb.savepoint();

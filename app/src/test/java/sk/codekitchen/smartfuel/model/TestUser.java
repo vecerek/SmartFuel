@@ -48,7 +48,7 @@ public class TestUser extends AndroidTestCase {
 			throws Throwable {
 
 		try {
-			(new SFDB(context)).sync();
+			SFDB.getInstance(context).sync();
 
 			User user = new User(context);
 

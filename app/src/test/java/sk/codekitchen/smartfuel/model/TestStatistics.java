@@ -40,7 +40,7 @@ public class TestStatistics extends AndroidTestCase {
 		}
 
 		try {
-			(new SFDB(context)).sync();
+			SFDB.getInstance(context).sync();
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			try {
 				ConnectionManager con = new ConnectionManager(getApplicationContext());
 				if (con.isConnectionFast()) {
-					(new SFDB(getApplicationContext())).sync();
+					SFDB.getInstance(getApplicationContext()).sync();
 				}
 
 			} catch (Exception e) {

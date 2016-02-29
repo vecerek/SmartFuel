@@ -61,7 +61,7 @@ public class User {
 			throws UnknownUserException, ParseException, JSONException {
 
 		this.ctx = ctx;
-		sfdb = new SFDB(ctx);
+		sfdb = SFDB.getInstance(ctx);
 		this.setUserInfo(ctx);
 	}
 

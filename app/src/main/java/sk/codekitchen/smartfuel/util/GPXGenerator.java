@@ -241,7 +241,7 @@ public class GPXGenerator {
 		return sd + delim + ed + EXTENSION;
 	}
 
-	public void saveAsPendingActivity() throws IOException {
+	public String saveAsPendingActivity() throws IOException, TransformerException {
 		File pendingActivitiesDir = new File(Environment.getDataDirectory()
 				+ GPXGenerator.PENDING_DIR);
 
@@ -252,14 +252,16 @@ public class GPXGenerator {
 					EXTENSION;
 		}
 
-		save(filename, PENDING_DIR);
+		return save(filename, PENDING_DIR);
 	}
 
-	public void save() throws IOException {
-		save(getFileName(), ACTIVITIES_DIR);
+	public String save() throws IOException, TransformerException {
+		return save(getFileName(), ACTIVITIES_DIR);
 	}
 
-    private void save(String filename, String directoryName) throws IOException {
+    private String save(String filename, String directoryName)
+            throws IOException, TransformerException {
+
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
@@ -285,9 +287,12 @@ public class GPXGenerator {
                 throw new IOException("Not enough free space.");
             }
 
+            return activity.getAbsolutePath();
+
         } catch (FileNotFoundException | TransformerException e) {
             e.printStackTrace();
             Log.e("FILE_SAVE", "File not found or transformer exception");
+            throw e;
         }
     }
 

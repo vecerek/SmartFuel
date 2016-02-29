@@ -59,6 +59,8 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class SFDB extends SQLiteOpenHelper {
 
+	private static SFDB instance = null;
+
 	protected SQLiteDatabase db;
 	protected Long lastInsertedId = null;
 
@@ -86,7 +88,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 * @throws UnknownUserException if the sharedPreferences does not contain the user's ID
 	 * @since 1.0
 	 */
-	public SFDB(Context context)
+	private SFDB(Context context)
 			throws SQLiteException, ParseException, UnknownUserException {
 
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -105,6 +107,12 @@ public class SFDB extends SQLiteOpenHelper {
 		lastUpdate = tmpLastUpdate == null ? null : DATE_FORMAT.parse(tmpLastUpdate);
 
 		db = this.getWritableDatabase();
+	}
+
+	public static SFDB getInstance(Context context)
+			throws SQLiteException, ParseException, UnknownUserException {
+
+		return instance == null ? new SFDB(context) : instance;
 	}
 
 	/** {@inheritDoc}
