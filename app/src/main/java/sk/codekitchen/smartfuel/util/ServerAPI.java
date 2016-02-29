@@ -113,6 +113,8 @@ public class ServerAPI {
     /**
      * Sends a multipart request to the specified URL.
      *
+     * Files can be accessed via the key FILE_X, where X is the order number, starting with 1.Comments the Adds comment regarding the
+     *
      * @param params POST request-like params
      * @param files array of files to send
      * @throws IOException if host unreachable
