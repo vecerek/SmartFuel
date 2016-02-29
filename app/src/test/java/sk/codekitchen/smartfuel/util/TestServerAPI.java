@@ -99,7 +99,7 @@ public class TestServerAPI {
         params.put("region", "Nitra");
 
         try {
-            new ServerAPI("test/upload_activities")
+            new ServerAPI("test/multipart_http_request")
                     .sendMultipartRequest(params, files);
         } catch (Exception e) {
             Assert.fail("Request should have been sent and received a response code 200, " + e.getMessage());

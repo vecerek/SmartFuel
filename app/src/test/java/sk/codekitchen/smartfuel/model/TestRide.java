@@ -30,6 +30,7 @@ import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.GPXGenerator;
 import sk.codekitchen.smartfuel.util.TestGPXGenerator;
+import sk.codekitchen.smartfuel.util.Utils;
 
 /**
  * @author Attila Večerek
@@ -71,7 +72,7 @@ public class TestRide extends AndroidTestCase {
     @Test
     public void RideObjectShouldBeCreated() throws Exception {
         GPXGenerator gpx = new GPXGenerator(this.context,
-                TestGPXGenerator.getFileFromPath(this, TEST_FILE_WITHOUT_SPEED));
+                Utils.getFileFromPath(this, TEST_FILE_WITHOUT_SPEED));
         try {
             Ride ride = new Ride(this.context);
             try {
