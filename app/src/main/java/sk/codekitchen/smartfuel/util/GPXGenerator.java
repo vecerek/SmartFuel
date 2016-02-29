@@ -124,13 +124,13 @@ public class GPXGenerator {
 					lat = Double.parseDouble(trkpt.getAttribute("lat"));
 					lon = Double.parseDouble(trkpt.getAttribute("lon"));
 					alt = Double.parseDouble(
-							trkpt.getElementsByTagName("ele")
-									.item(0).getTextContent()
-					);
-					speed = Float.parseFloat(
-							trkpt.getElementsByTagName("speed")
-									.item(0).getTextContent()
-					);
+                            trkpt.getElementsByTagName("ele")
+                                    .item(0).getTextContent()
+                    );
+                    NodeList nlSpeed = trkpt.getElementsByTagName("speed");
+                    speed = nlSpeed.getLength() > 0
+                            ? Float.parseFloat(nlSpeed.item(0).getTextContent())
+                            : 0f;
 					time = (new SimpleDateFormat(GPX_TIME_FORMAT).parse(
 							trkpt.getElementsByTagName("time")
 									.item(0).getTextContent()
