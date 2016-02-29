@@ -41,6 +41,7 @@ public class User {
 	public String surname;
 	public String city;
 	public String region;
+	public String country;
 	public String email;
 	public String chipId;
 	public int totalPoints;
@@ -73,6 +74,7 @@ public class User {
 		if (user.has(TABLE.COLUMN.SURNAME)) surname = user.getString(TABLE.COLUMN.SURNAME);
 		if (user.has(TABLE.COLUMN.CITY)) city = user.getString(TABLE.COLUMN.CITY);
 		if (user.has(TABLE.COLUMN.REGION)) region = user.getString(TABLE.COLUMN.REGION);
+        if (user.has(TABLE.COLUMN.COUNTRY)) country = user.getString(TABLE.COLUMN.COUNTRY);
 		if (user.has(TABLE.COLUMN.EMAIL)) email = user.getString(TABLE.COLUMN.EMAIL);
 		if (user.has(TABLE.COLUMN.CHIP_ID)) chipId = user.getString(TABLE.COLUMN.CHIP_ID);
 		if (user.has(TABLE.COLUMN.TOTAL_POINTS)) totalPoints = user.getInt(TABLE.COLUMN.TOTAL_POINTS);
@@ -190,6 +192,7 @@ public class User {
 						COLUMN.SURNAME + " TEXT," +
 						COLUMN.CITY + " TEXT," +
 						COLUMN.REGION + " TEXT," +
+                        COLUMN.COUNTRY + " TEXT," +
 						COLUMN.EMAIL + " TEXT," +
 						COLUMN.CHIP_ID + " TEXT," +
 						COLUMN.TOTAL_POINTS + " INTEGER," +
@@ -229,6 +232,7 @@ public class User {
 			if (data.has(COLUMN.SURNAME)) cv.put(COLUMN.SURNAME, data.getString(COLUMN.SURNAME));
 			if (data.has(COLUMN.CITY)) cv.put(COLUMN.CITY, data.getString(COLUMN.CITY));
 			if (data.has(COLUMN.REGION)) cv.put(COLUMN.REGION, data.getString(COLUMN.REGION));
+            if (data.has(COLUMN.COUNTRY)) cv.put(COLUMN.COUNTRY, data.getString(COLUMN.COUNTRY));
 			if (data.has(COLUMN.EMAIL)) cv.put(COLUMN.EMAIL, data.getString(COLUMN.EMAIL));
 			if (data.has(COLUMN.CHIP_ID)) cv.put(COLUMN.CHIP_ID, data.getString(COLUMN.CHIP_ID));
 			if (data.has(COLUMN.TOTAL_POINTS)) cv.put(COLUMN.TOTAL_POINTS, data.getInt(COLUMN.TOTAL_POINTS));
@@ -244,6 +248,7 @@ public class User {
 			public static final String SURNAME = "surname";
 			public static final String CITY = "city";
 			public static final String REGION = "region";
+            public static final String COUNTRY = "country";
 			public static final String EMAIL = "email";
 			public static final String CHIP_ID = "chip_card_id";
 			public static final String TOTAL_POINTS = "total_points";

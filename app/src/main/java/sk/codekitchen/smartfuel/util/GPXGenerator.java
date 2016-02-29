@@ -229,7 +229,7 @@ public class GPXGenerator {
 			trkpt.appendChild(velocity);
 			//time
 			time = doc.createElement("time");
-			time.appendChild(doc.createElement(new SimpleDateFormat(GPX_TIME_FORMAT).format(loc.getTime())));
+			time.appendChild(doc.createTextNode(new SimpleDateFormat(GPX_TIME_FORMAT).format(loc.getTime())));
 			trkpt.appendChild(time);
 		}
 	}
@@ -241,9 +241,10 @@ public class GPXGenerator {
 		return sd + delim + ed + EXTENSION;
 	}
 
-	public String saveAsPendingActivity() throws IOException, TransformerException {
+	public String saveAsPendingActivity(int userID) throws IOException, TransformerException {
+        String pendingActivitiesDirPath =  getPendingDir(userID);
 		File pendingActivitiesDir = new File(Environment.getDataDirectory()
-				+ GPXGenerator.PENDING_DIR);
+				+ pendingActivitiesDirPath);
 
 		String filename = PENDING_FILE_PREFIX;
 		if (pendingActivitiesDir.exists()) {
@@ -252,11 +253,11 @@ public class GPXGenerator {
 					EXTENSION;
 		}
 
-		return save(filename, PENDING_DIR);
+		return save(filename, pendingActivitiesDirPath);
 	}
 
-	public String save() throws IOException, TransformerException {
-		return save(getFileName(), ACTIVITIES_DIR);
+	public String save(int userID) throws IOException, TransformerException {
+		return save(getFileName(), getActivitiesDir(userID));
 	}
 
     private String save(String filename, String directoryName)
@@ -294,6 +295,14 @@ public class GPXGenerator {
             Log.e("FILE_SAVE", "File not found or transformer exception");
             throw e;
         }
+    }
+
+    public static String getActivitiesDir(int user) {
+        return Integer.toString(user) + File.separator + ACTIVITIES_DIR;
+    }
+
+    public static String getPendingDir(int user) {
+        return Integer.toString(user) + File.separator + PENDING_DIR;
     }
 
 	public String toString() {

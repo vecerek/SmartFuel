@@ -448,7 +448,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 		try {
 			//check, if there are any pending activities, that need to be evaluated
-			Ride.evaluatePendingActivities(ctx);
+			Ride.evaluatePendingActivities(ctx, userID);
 
 			JSONObject editedData = queryEditedData();
 			JSONObject result;

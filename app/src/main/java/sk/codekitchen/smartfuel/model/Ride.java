@@ -199,7 +199,7 @@ public class Ride {
 
         if (!connectionAborted) insertDBActivity();
 
-		return connectionAborted ? gpx.saveAsPendingActivity() : gpx.save();
+		return connectionAborted ? gpx.saveAsPendingActivity(userID) : gpx.save(userID);
 	}
 
 	protected void insertDBActivity() throws JSONException {
@@ -228,12 +228,13 @@ public class Ride {
 		ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
 	}
 
-	public static void evaluatePendingActivities(Context ctx)
+	public static void evaluatePendingActivities(Context ctx, int userID)
 			throws ParseException, UnknownUserException,
 			ParserConfigurationException, SAXException, IOException,
 			JSONException {
 
-		File pendingActivitiesDir = new File(Environment.getDataDirectory(), GPXGenerator.PENDING_DIR);
+		File pendingActivitiesDir =
+                new File(Environment.getDataDirectory(), GPXGenerator.getPendingDir(userID));
 
 		if (pendingActivitiesDir.exists()) {
 			File[] dirFiles = pendingActivitiesDir.listFiles();
@@ -252,7 +253,7 @@ public class Ride {
 				//renames and moves file to gpx routes directory
 				boolean result = pending.renameTo(
 						new File(
-								new File(Environment.getDataDirectory(), GPXGenerator.ACTIVITIES_DIR),
+								new File(Environment.getDataDirectory(), GPXGenerator.getActivitiesDir(userID)),
 								gpx.getFileName()
 						)
 				);
