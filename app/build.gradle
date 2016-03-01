@@ -43,7 +43,7 @@ dependencies {
     compile 'com.diogobernardino:williamchart:2.0.1'
     compile 'com.android.support:design:23.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
-
+    compile files('libs/commons-io-2.4.jar')
     //Unit testing dependency
     testCompile 'junit:junit:4.12'
     testCompile 'org.robolectric:robolectric:3.0'
