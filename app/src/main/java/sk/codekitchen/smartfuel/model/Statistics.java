@@ -30,7 +30,7 @@ public final class Statistics {
 
 		cal = Calendar.getInstance();
 		offset = cal.getFirstDayOfWeek() == Calendar.MONDAY ? 1:0;
-		JSONObject stats = (new SFDB(context)).queryStats();
+		JSONObject stats = (SFDB.getInstance(context)).queryStats();
 		this.week = new TabData(TabData.WEEK, stats.getJSONObject(TabData.WEEK));
 		this.month = new TabData(TabData.MONTH, stats.getJSONObject(TabData.MONTH));
 		this.year = new TabData(TabData.YEAR, stats.getJSONObject(TabData.YEAR));

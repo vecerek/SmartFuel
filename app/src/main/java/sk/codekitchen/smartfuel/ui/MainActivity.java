@@ -340,8 +340,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		protected Void doInBackground(Void... params) {
 			try {
 				ConnectionManager con = new ConnectionManager(getApplicationContext());
-				if (con.isConnectionFast()) {
-					(new SFDB(getApplicationContext())).sync();
+				if (con.isNetworkOnline()) {
+					SFDB.getInstance(getApplicationContext()).sync();
 				}
 
 			} catch (Exception e) {

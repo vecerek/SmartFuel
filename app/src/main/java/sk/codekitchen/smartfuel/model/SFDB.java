@@ -22,6 +22,7 @@ import android.preference.PreferenceManager;
 
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -32,6 +33,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -58,6 +60,8 @@ import javax.xml.parsers.ParserConfigurationException;
  * @since 1.0
  */
 public class SFDB extends SQLiteOpenHelper {
+
+	private static SFDB instance = null;
 
 	protected SQLiteDatabase db;
 	protected Long lastInsertedId = null;
@@ -86,7 +90,7 @@ public class SFDB extends SQLiteOpenHelper {
 	 * @throws UnknownUserException if the sharedPreferences does not contain the user's ID
 	 * @since 1.0
 	 */
-	public SFDB(Context context)
+	private SFDB(Context context)
 			throws SQLiteException, ParseException, UnknownUserException {
 
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -105,6 +109,12 @@ public class SFDB extends SQLiteOpenHelper {
 		lastUpdate = tmpLastUpdate == null ? null : DATE_FORMAT.parse(tmpLastUpdate);
 
 		db = this.getWritableDatabase();
+	}
+
+	public static SFDB getInstance(Context context)
+			throws SQLiteException, ParseException, UnknownUserException {
+
+		return instance == null ? new SFDB(context) : instance;
 	}
 
 	/** {@inheritDoc}
@@ -440,7 +450,7 @@ public class SFDB extends SQLiteOpenHelper {
 
 		try {
 			//check, if there are any pending activities, that need to be evaluated
-			Ride.evaluatePendingActivities(ctx);
+			Ride.evaluatePendingActivities(ctx, userID);
 
 			JSONObject editedData = queryEditedData();
 			JSONObject result;
@@ -451,13 +461,42 @@ public class SFDB extends SQLiteOpenHelper {
 				params.put("data", editedData.toString());
 				if (test) params.put("test", String.valueOf(true));
 
-				//TODO: upload the unsynchronized activities' GPX files to the server, if they exist
 				result = (new ServerAPI("update_db")).sendRequest(params);
 
-				if (result.has("success"))
-					if (!result.getBoolean("success"))
-						throw new IOException("Server database update failed");
-			}
+                if (result.has("success")) {
+                    if (!result.getBoolean("success")) {
+                        throw new IOException("Server database update failed");
+                    }
+                }
+
+                /*
+                 * Uploading driving activities, if they exist
+                 */
+                List<File> drivingActivities = Ride.getDrivingActivities(ctx, userID);
+                if (drivingActivities != null) {
+                    if (editedData.has("user")) {
+                        String country = User.TABLE.COLUMN.COUNTRY;
+                        String region = User.TABLE.COLUMN.REGION;
+                        JSONObject user = (JSONObject) editedData.get("user");
+                        params = new HashMap<>();
+                        if (test) params.put("test", String.valueOf(true));
+                        if (user.has(country)) params.put(country, user.getString(country));
+                        if (user.has(region)) params.put(region, user.getString(region));
+
+                        try {
+                            new ServerAPI("upload_routes")
+                                    .sendMultipartRequest(params, drivingActivities);
+
+                            // Cleans the Driving Activity directory after successfully uploading it
+                            Ride.cleanDrivingActivities(ctx, userID);
+
+                        } catch (IOException e) {
+                            // Unsuccessful activity upload
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
 
 			result = downloadDatabase(test);
 

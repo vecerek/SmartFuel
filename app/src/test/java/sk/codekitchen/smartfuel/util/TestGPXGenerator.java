@@ -26,8 +26,6 @@ import sk.codekitchen.smartfuel.BuildConfig;
 public class TestGPXGenerator extends AndroidTestCase {
 
 	protected Context context;
-	protected static final String TEST_FILE_WITH_SPEED = "res/gpx_with_speed.gpx";
-	protected static final String TEST_FILE_WITHOUT_SPEED = "res/gpx_without_speed.gpx";
 
 	@Before
 	public void setUp() {
@@ -38,25 +36,19 @@ public class TestGPXGenerator extends AndroidTestCase {
 
 	@Test
 	public void fileObjectShouldNotBeNull() throws Exception {
-		File file = getFileFromPath(this, "res/gpx_with_speed.gpx");
+		File file = Utils.getFileFromPath(this, "res/gpx_with_speed.gpx");
 		assertNotNull("Error: file not loaded", file);
 	}
 
 	@Test
 	public void gpxGeneratorObjectShouldBeCreated() throws Exception {
 		try {
-			File gpxFile = getFileFromPath(this, TEST_FILE_WITH_SPEED);
+			File gpxFile = Utils.getFileFromPath(this, Utils.TEST_FILE_WITH_SPEED);
 			GPXGenerator gpx = new GPXGenerator(this.context, gpxFile);
 			Assert.assertEquals(gpx.getNumLocations(), gpx.getNodesNumberOf("trkpt"));
 
 		} catch (Exception e) {
 			Assert.fail("Object construction shouldn't throw an exception: " + e.getMessage());
 		}
-	}
-
-	public static File getFileFromPath(Object obj, String fileName) {
-		ClassLoader classLoader = obj.getClass().getClassLoader();
-		URL resource = classLoader.getResource(fileName);
-		return new File(resource.getPath());
 	}
 }

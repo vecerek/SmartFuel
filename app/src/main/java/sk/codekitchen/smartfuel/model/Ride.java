@@ -17,13 +17,17 @@ import com.tomtom.lbs.sdk.util.SDKContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.GLOBALS;
@@ -75,7 +79,7 @@ public class Ride {
 
 		this.ctx = ctx;
 		this.locations = new Vector<>();
-		sfdb = new SFDB(ctx);
+		sfdb = SFDB.getInstance(ctx);
 		userID = sfdb.getUserID();
 
 		isMph = PreferenceManager.getDefaultSharedPreferences(ctx).
@@ -179,32 +183,41 @@ public class Ride {
 		progressCounter = 0f;
 	}
 
-	public void saveActivity()
-			throws JSONException, ParserConfigurationException {
+    /**
+     * Saves the activity into the database, if the connection has not been aborted and also
+     * on the internal storage as a .gpx file.
+     *
+     * @return AbsolutePath if the saved GPX file for checking purposes
+     *
+     * @throws JSONException                if a key has not been found
+     * @throws ParserConfigurationException if the gpx file is invalid
+     * @throws IOException                  if not enough disk space on internal memory
+     * @throws TransformerException         if GPX could not be written into File
+     */
+	public String saveActivity()
+			throws JSONException, ParserConfigurationException, IOException, TransformerException {
 
 		GPXGenerator gpx = new GPXGenerator(ctx, locations);
 		gpx.createXML();
 
-		if (connectionAborted) {
-			gpx.save();
-		} else {
-			gpx.save(insertDBActivity());
-		}
+        if (!connectionAborted) insertDBActivity();
+
+		return connectionAborted ? gpx.saveAsPendingActivity(userID) : gpx.save(userID);
 	}
 
-	protected long insertDBActivity() throws JSONException {
+	protected void insertDBActivity() throws JSONException {
 		JSONObject activity = new JSONObject();
 		activity.put(TABLE.COLUMN.CORRECT_DISTANCE, correctDistance);
 		activity.put(TABLE.COLUMN.SPEEDING_DISTANCE, speedingDistance);
 		activity.put(TABLE.COLUMN.POINTS, points);
 
 		sfdb.saveData(TABLE.NAME, activity, SFDB.ORIGIN_LOCAL);
-		return sfdb.lastInsertedId();
+		//return sfdb.lastInsertedId();
 	}
 
-	protected long lazySave() throws JSONException {
+	/*protected long lazySave() throws JSONException {
 		return insertDBActivity();
-	}
+	}*/
 
 	/**
 	 * Fires TomTom's reverseGeocoder to check the road's
@@ -218,13 +231,54 @@ public class Ride {
 		ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
 	}
 
-	public static void evaluatePendingActivities(Context ctx)
+    private static List<File> getListFiles(File parentDir) { return getListFiles(parentDir, ".gpx"); }
+    private static List<File> getListFiles(File parentDir, String ext) {
+        List<File> inFiles = new ArrayList<>();
+        File[] files = parentDir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                inFiles.addAll(getListFiles(file));
+            } else {
+                if(file.getName().endsWith(ext)){
+                    inFiles.add(file);
+                }
+            }
+        }
+        return inFiles;
+    }
+
+    public static List<File> getDrivingActivities(Context ctx, int userID) {
+
+        File drivingActivitiesDir =
+                ctx.getDir(GPXGenerator.getActivitiesDir(userID), Context.MODE_PRIVATE);
+
+        if (drivingActivitiesDir.exists()) {
+            return getListFiles(drivingActivitiesDir);
+        }
+
+        return null;
+    }
+
+    public static void cleanDrivingActivities(Context ctx, int userID) {
+        File drivingActivitiesDir =
+                ctx.getDir(GPXGenerator.getActivitiesDir(userID), Context.MODE_PRIVATE);
+
+        if (drivingActivitiesDir.exists() && drivingActivitiesDir.isDirectory()) {
+            try {
+                FileUtils.cleanDirectory(drivingActivitiesDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+	public static void evaluatePendingActivities(Context ctx, int userID)
 			throws ParseException, UnknownUserException,
 			ParserConfigurationException, SAXException, IOException,
 			JSONException {
 
-		File pendingActivitiesDir = new File(Environment.getDataDirectory()
-				+ GPXGenerator.PENDING_DIR);
+		File pendingActivitiesDir =
+                new File(Environment.getDataDirectory(), GPXGenerator.getPendingDir(userID));
 
 		if (pendingActivitiesDir.exists()) {
 			File[] dirFiles = pendingActivitiesDir.listFiles();
@@ -239,10 +293,14 @@ public class Ride {
                     while (!sContinueEvaluation);
 				}
 				//save as lazy evaluated activity
-				long id = roadActivity.lazySave();
+				roadActivity.insertDBActivity();
 				//renames and moves file to gpx routes directory
-				boolean result = pending.renameTo(new File(Environment.getDataDirectory()
-						+ GPXGenerator.ACTIVITIES_DIR, gpx.getFileName(id)));
+				boolean result = pending.renameTo(
+						new File(
+								new File(Environment.getDataDirectory(), GPXGenerator.getActivitiesDir(userID)),
+								gpx.getFileName()
+						)
+				);
 				if (!result)
 					throw new IOException("File couldn't be moved");
 			}
@@ -264,6 +322,7 @@ public class Ride {
 		public void handleReverseGeocode(Vector<ReverseGeocodeData> data, Object payload) {
 			if(data != null && data.size() > 0) {
                 Log.i("TEST_RIDE_DATA_SIZE", Integer.toString(data.size()));
+                System.out.println("Handling reverse geocode");
 				ReverseGeocodeData result = data.elementAt(0);
 				speedLimit = result.maxSpeedKph;
                 Log.i("TEST_RIDE_SPEED", Integer.toString(speedLimit));

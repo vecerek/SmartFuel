@@ -3,6 +3,7 @@ package sk.codekitchen.smartfuel.util;
 import android.content.Context;
 import android.location.Location;
 import android.os.Environment;
+import android.util.Log;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -12,6 +13,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -37,10 +39,10 @@ import javax.xml.transform.stream.StreamResult;
  */
 public class GPXGenerator {
 
-	public static final String ACTIVITIES_DIR = "road_activities";
+	public static final String ACTIVITIES_DIR = "driving_activities";
 	public static final String PENDING_DIR = "pending_activities";
 
-	private static final String ACTIVITY_PREFIX = "Road Activity";
+	private static final String ACTIVITY_PREFIX = "Driving Activity";
 	private static final String PENDING_FILE_PREFIX = "_";
 	private static final String FILENAME_DELIMITER = "_";
 	private static final String EXTENSION = ".gpx";
@@ -121,13 +123,13 @@ public class GPXGenerator {
 					lat = Double.parseDouble(trkpt.getAttribute("lat"));
 					lon = Double.parseDouble(trkpt.getAttribute("lon"));
 					alt = Double.parseDouble(
-							trkpt.getElementsByTagName("ele")
-									.item(0).getTextContent()
-					);
-					speed = Float.parseFloat(
-							trkpt.getElementsByTagName("speed")
-									.item(0).getTextContent()
-					);
+                            trkpt.getElementsByTagName("ele")
+                                    .item(0).getTextContent()
+                    );
+                    NodeList nlSpeed = trkpt.getElementsByTagName("speed");
+                    speed = nlSpeed.getLength() > 0
+                            ? Float.parseFloat(nlSpeed.item(0).getTextContent())
+                            : 0f;
 					time = (new SimpleDateFormat(GPX_TIME_FORMAT).parse(
 							trkpt.getElementsByTagName("time")
 									.item(0).getTextContent()
@@ -226,21 +228,21 @@ public class GPXGenerator {
 			trkpt.appendChild(velocity);
 			//time
 			time = doc.createElement("time");
-			time.appendChild(doc.createElement(new SimpleDateFormat(GPX_TIME_FORMAT).format(loc.getTime())));
+			time.appendChild(doc.createTextNode(new SimpleDateFormat(GPX_TIME_FORMAT).format(loc.getTime())));
 			trkpt.appendChild(time);
 		}
 	}
 
-	public String getFileName(long id) {
+	public String getFileName() {
 		String sd = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsStartDate);
 		String ed = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsEndDate);
-		String delim = FILENAME_DELIMITER;
-		return String.valueOf(id) + delim + sd + delim + ed + EXTENSION;
+		return sd + FILENAME_DELIMITER + ed + EXTENSION;
 	}
 
-	public void save() {
+	public String saveAsPendingActivity(int userID) throws IOException, TransformerException {
+        String pendingActivitiesDirPath =  getPendingDir(userID);
 		File pendingActivitiesDir = new File(Environment.getDataDirectory()
-				+ GPXGenerator.PENDING_DIR);
+				+ pendingActivitiesDirPath);
 
 		String filename = PENDING_FILE_PREFIX;
 		if (pendingActivitiesDir.exists()) {
@@ -249,32 +251,57 @@ public class GPXGenerator {
 					EXTENSION;
 		}
 
-		save(filename, PENDING_DIR);
+		return save(filename, pendingActivitiesDirPath);
 	}
 
-	public void save(Long id) {
-		save(getFileName(id), ACTIVITIES_DIR);
+	public String save(int userID) throws IOException, TransformerException {
+		return save(getFileName(), getActivitiesDir(userID));
 	}
 
-	private void save(String filename, String directory) {
-		try {
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
+    private String save(String filename, String directoryName)
+            throws IOException, TransformerException {
 
-			DOMSource source = new DOMSource(doc);
+        try {
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
 
-			File activitiesDir = ctx.getDir(directory, Context.MODE_PRIVATE);
-			File activity = new File(activitiesDir, filename);
-			FileOutputStream _stream = new FileOutputStream(activity);
+            DOMSource source = new DOMSource(doc);
 
-			StreamResult result = new StreamResult(_stream);
-			transformer.transform(source, result);
+            File activitiesDirectory = ctx.getDir(directoryName, Context.MODE_PRIVATE);
+            if (!activitiesDirectory.mkdirs()) {
+                Log.e("FILE_SAVE", "Directory not created");
+            }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-			//TODO: Handle insufficient space on internal storage.
-		}
-	}
+            File activity = new File(activitiesDirectory, filename);
+            /*
+             * The free space should be at least 2 times bigger than the needed space
+             * because just a slight difference does not make the operation sure.
+             */
+            if (activity.length() * 2 <= activity.getFreeSpace()) {
+                FileOutputStream _stream = new FileOutputStream(activity);
+                StreamResult result = new StreamResult(_stream);
+                transformer.transform(source, result);
+
+            } else {
+                throw new IOException("Not enough free space.");
+            }
+
+            return activity.getAbsolutePath();
+
+        } catch (FileNotFoundException | TransformerException e) {
+            e.printStackTrace();
+            Log.e("FILE_SAVE", "File not found or transformer exception");
+            throw e;
+        }
+    }
+
+    public static String getActivitiesDir(int user) {
+        return Integer.toString(user) + File.separator + ACTIVITIES_DIR;
+    }
+
+    public static String getPendingDir(int user) {
+        return Integer.toString(user) + File.separator + PENDING_DIR;
+    }
 
 	public String toString() {
 		if (doc != null) {
