@@ -483,7 +483,17 @@ public class SFDB extends SQLiteOpenHelper {
                         if (user.has(country)) params.put(country, user.getString(country));
                         if (user.has(region)) params.put(region, user.getString(region));
 
-                        new ServerAPI("upload_routes").sendMultipartRequest(params, drivingActivities);
+                        try {
+                            new ServerAPI("upload_routes")
+                                    .sendMultipartRequest(params, drivingActivities);
+
+                            // Cleans the Driving Activity directory after successfully uploading it
+                            Ride.cleanDrivingActivities(ctx, userID);
+
+                        } catch (IOException e) {
+                            // Unsuccessful activity upload
+                            e.printStackTrace();
+                        }
                     }
                 }
             }

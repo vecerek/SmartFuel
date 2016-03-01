@@ -17,6 +17,7 @@ import com.tomtom.lbs.sdk.util.SDKContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -256,6 +257,19 @@ public class Ride {
         }
 
         return null;
+    }
+
+    public static void cleanDrivingActivities(Context ctx, int userID) {
+        File drivingActivitiesDir =
+                ctx.getDir(GPXGenerator.getActivitiesDir(userID), Context.MODE_PRIVATE);
+
+        if (drivingActivitiesDir.exists() && drivingActivitiesDir.isDirectory()) {
+            try {
+                FileUtils.cleanDirectory(drivingActivitiesDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 	public static void evaluatePendingActivities(Context ctx, int userID)
