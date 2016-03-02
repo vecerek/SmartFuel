@@ -6,12 +6,16 @@ package sk.codekitchen.smartfuel.util;
 public final class Units {
     public static final class Speed {
         public static final class Mps {
-            public static float toKph(float val) { return val * GLOBALS.CONST.MPS2KPH; }
-            public static float toMph(float val) { return Kph.toMph(toKph(val)); }
+            public static float toKmph(float val) { return val * GLOBALS.CONST.MPS2KPH; }
+            public static float toMph(float val) { return Kph.toMph(toKmph(val)); }
         }
 
         public static class Kph {
             public static float toMph(float val) { return val * GLOBALS.CONST.KM2MI; }
+        }
+
+        public static class Mph {
+            public static float toKmph(float val) { return val / GLOBALS.CONST.KM2MI; }
         }
     }
 
@@ -39,7 +43,7 @@ public final class Units {
     public static float getPreferredSpeed(float speedInMps, boolean isMph) {
         return isMph
                 ? Units.Speed.Mps.toMph(speedInMps)
-                : Units.Speed.Mps.toKph(speedInMps);
+                : Units.Speed.Mps.toKmph(speedInMps);
     }
 
     public static int getPreferredSpeedLimit(int speedLimit, boolean isMph) {

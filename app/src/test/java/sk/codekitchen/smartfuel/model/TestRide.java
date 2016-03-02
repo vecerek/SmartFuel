@@ -77,7 +77,7 @@ public class TestRide extends AndroidTestCase {
             Ride ride = new Ride(this.context);
             try {
                 for (Location loc : gpx.getLocations()) {
-                    ride.addRecord(loc);
+                    ride.addRecord(loc, false);
                 }
                 try {
                     File activity = new File(ride.saveActivity());
