@@ -59,7 +59,15 @@ public class Ride {
 	protected SFDB sfdb;
 	protected boolean isMph;
 
+    /**
+     * Indicates, whether the internet connection got aborted at any time during driving.
+     */
 	protected boolean connectionAborted = false;
+
+    /**
+     * State of current connection.
+     */
+    public static boolean CONNECTION = true;
 
 	public Ride(Context ctx)
 			throws ParseException, UnknownUserException {
@@ -82,7 +90,7 @@ public class Ride {
 	}
 
     public boolean isMph() { return isMph; }
-	public boolean isConnection() { return !connectionAborted; }
+	public boolean connectionNotAborted() { return !connectionAborted; }
 	public void setAbortedConnection() { connectionAborted = true; }
 
 	public void addRecord(Location location, boolean async) {

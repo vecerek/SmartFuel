@@ -112,6 +112,10 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
                             fRecorder.setDrivingPoints(Integer.parseInt(params.get(GLOBALS.IPC_MESSAGE_KEY.POINTS)));
                             fRecorder.setTotalDistance(Float.parseFloat(params.get(GLOBALS.IPC_MESSAGE_KEY.DIST)));
                             break;
+                        case GPSTrackerService.DATA:
+                            break;
+                        case GPSTrackerService.SIGNAL:
+                            break;
                         case GPSTrackerService.ERROR:
                             break;
                         case GPSTrackerService.DEBUG:
@@ -507,10 +511,7 @@ public class SmartFuelActivity extends AppCompatActivity implements NavigationVi
      */
     @TargetApi(23)
     private boolean hasPermission(String permission) {
-        if (canMakeSmores()) {
-            return(checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
-        }
-        return true;
+        return !canMakeSmores() || (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
     }
 
     /**
