@@ -2,7 +2,6 @@ package sk.codekitchen.smartfuel.util;
 
 import android.content.Context;
 import android.location.Location;
-import android.os.Environment;
 import android.util.Log;
 
 import org.w3c.dom.Attr;
@@ -20,7 +19,6 @@ import java.io.StringWriter;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +26,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -233,6 +230,14 @@ public class GPXGenerator {
 		}
 	}
 
+    public static String getActivitiesDir(int user) {
+        return Integer.toString(user) + File.separator + ACTIVITIES_DIR;
+    }
+
+    public static String getPendingDir(int user) {
+        return Integer.toString(user) + File.separator + PENDING_DIR;
+    }
+
 	public String getFileName() {
 		String sd = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsStartDate);
 		String ed = new SimpleDateFormat(NAME_TIME_FORMAT).format(tsEndDate);
@@ -241,8 +246,7 @@ public class GPXGenerator {
 
 	public String saveAsPendingActivity(int userID) throws IOException, TransformerException {
         String pendingActivitiesDirPath =  getPendingDir(userID);
-		File pendingActivitiesDir = new File(Environment.getDataDirectory()
-				+ pendingActivitiesDirPath);
+		File pendingActivitiesDir = new File(ctx.getFilesDir(), pendingActivitiesDirPath);
 
 		String filename = PENDING_FILE_PREFIX;
 		if (pendingActivitiesDir.exists()) {
@@ -267,12 +271,13 @@ public class GPXGenerator {
 
             DOMSource source = new DOMSource(doc);
 
-            File activitiesDirectory = ctx.getDir(directoryName, Context.MODE_PRIVATE);
+            File activitiesDirectory = new File(ctx.getFilesDir(), directoryName);
             if (!activitiesDirectory.mkdirs()) {
                 Log.e("FILE_SAVE", "Directory not created");
             }
 
             File activity = new File(activitiesDirectory, filename);
+            activity.createNewFile();
             /*
              * The free space should be at least 2 times bigger than the needed space
              * because just a slight difference does not make the operation sure.
@@ -293,14 +298,6 @@ public class GPXGenerator {
             Log.e("FILE_SAVE", "File not found or transformer exception");
             throw e;
         }
-    }
-
-    public static String getActivitiesDir(int user) {
-        return Integer.toString(user) + File.separator + ACTIVITIES_DIR;
-    }
-
-    public static String getPendingDir(int user) {
-        return Integer.toString(user) + File.separator + PENDING_DIR;
     }
 
 	public String toString() {

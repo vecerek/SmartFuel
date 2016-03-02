@@ -72,7 +72,7 @@ public class TestRide extends AndroidTestCase {
     @Test
     public void RideObjectShouldBeCreated() throws Exception {
         GPXGenerator gpx = new GPXGenerator(this.context,
-                Utils.getFileFromPath(this, TEST_FILE_WITHOUT_SPEED));
+                Utils.getFileFromPath(this, TEST_FILE_WITH_SPEED));
         try {
             Ride ride = new Ride(this.context);
             try {
@@ -93,11 +93,9 @@ public class TestRide extends AndroidTestCase {
                 }
 
             } catch (Exception e) {
-                System.out.println("Exception class: " + e.getClass());
                 e.printStackTrace();
                 Assert.fail("Adding records should not fail: " + e.getMessage());
             }
-            System.out.println(ride.toString());
         } catch (Exception e) {
             Assert.fail("Object construction shouldn't throw an exception: " + e.getMessage());
         }

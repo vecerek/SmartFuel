@@ -247,6 +247,7 @@ public class TestSFDB extends AndroidTestCase {
 			assertTrue(nameAfterServerUpdate.substring(nameAfterServerUpdate.length() - 2).equals("fy"));
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			Assert.fail("Error: Update has not been successful");
 		}
 	}
