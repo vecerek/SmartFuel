@@ -149,7 +149,7 @@ public class GPSTrackerService extends Service implements LocationListener {
             mTimer.scheduleAtFixedRate(new checkNetworkConnectionTimerTask(), 0, NETWORK_CHECK_INTERVAL);
 
             Log.i("TEST_IPC", "Location record is being added");
-            this.ride.addRecord(getLocation());
+            this.ride.addRecord(getLocation(), true);
 
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
@@ -241,7 +241,7 @@ public class GPSTrackerService extends Service implements LocationListener {
         } else {
             Log.d("TEST_IPC", "location is null");
         }
-        ride.addRecord(location);
+        ride.addRecord(location, true);
     }
 
     @Override
@@ -263,7 +263,7 @@ public class GPSTrackerService extends Service implements LocationListener {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location != null) {
-            ride.addRecord(location);
+            ride.addRecord(location, true);
         }
 
 	}

@@ -3,16 +3,17 @@ package sk.codekitchen.smartfuel.model;
 import android.content.ContentValues;
 import android.content.Context;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeData;
+/*import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeData;
 import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeListener;
 import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeOptionalParameters;
 import com.tomtom.lbs.sdk.geolocation.ReverseGeocoder;
 import com.tomtom.lbs.sdk.util.Coordinates;
-import com.tomtom.lbs.sdk.util.SDKContext;
+import com.tomtom.lbs.sdk.util.SDKContext;*/
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +33,7 @@ import javax.xml.transform.TransformerException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.GPXGenerator;
-import sk.codekitchen.smartfuel.util.Units;
+import sk.codekitchen.smartfuel.util.ReverseGeocoder;
 
 /**
  * Class, that handles the activity recording.
@@ -42,9 +43,9 @@ import sk.codekitchen.smartfuel.util.Units;
  */
 public class Ride {
 
-	protected static final String API_KEY = "xzu3bpa7jeqpkcu8ncp48593";
+	/*protected static final String API_KEY = "xzu3bpa7jeqpkcu8ncp48593";
 	protected RoadInfoListener TTlistener;
-	protected ReverseGeocodeOptionalParameters TTparams;
+	protected ReverseGeocodeOptionalParameters TTparams;*/
 
 	protected static final int POINTS_PER_KM = 1;
 	protected static final float DISTANCE_TO_GET_POINTS = 1000f; //in meters
@@ -52,7 +53,7 @@ public class Ride {
 	protected static final float HIGHWAY_INTERVAL = 200f; //in meters
 
 	protected int speedLimit = 0; //in kmph
-	protected String roadType;
+	protected String roadUse;
 	protected Location curLoc = null;
 	protected Location prevLoc = null;
 	protected float nextSpeedLimitCall = ROAD_INTERVAL; //meters
@@ -72,7 +73,6 @@ public class Ride {
 	protected boolean isMph;
 
 	protected boolean connectionAborted = false;
-	private static boolean sContinueEvaluation = false;
 
 	public Ride(Context ctx)
 			throws ParseException, UnknownUserException {
@@ -86,11 +86,11 @@ public class Ride {
 				getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
 
 		//API Key
-		SDKContext.setDeveloperKey(API_KEY);
+		//SDKContext.setDeveloperKey(API_KEY);
 		//TomTom Config
-		TTlistener = new RoadInfoListener();
+		/*TTlistener = new RoadInfoListener();
 		TTparams = new ReverseGeocodeOptionalParameters();
-		TTparams.type = ReverseGeocodeOptionalParameters.REVERSE_TYPE_NATIONAL;
+		TTparams.type = ReverseGeocodeOptionalParameters.REVERSE_TYPE_NATIONAL;*/
 	}
 
 	public String toString() {
@@ -105,7 +105,7 @@ public class Ride {
 	public boolean isConnection() { return !connectionAborted; }
 	public void setAbortedConnection() { connectionAborted = true; }
 
-	public void addRecord(Location location) {
+	public void addRecord(Location location, boolean async) {
 		Log.i("TEST_IPC", "adding location record");
         if (location != null) {
             locations.add(location);
@@ -115,9 +115,7 @@ public class Ride {
 
             if (speedLimit == 0 || totalDistance >= nextSpeedLimitCall) {
                 Log.i("TEST_IPC", "updating speed limit");
-                updateSpeedLimit(location.getLatitude(), location.getLongitude());
-            } else {
-                sContinueEvaluation = true;
+                updateSpeedLimit(location, async);
             }
 
             float distDiff = computeDistance();
@@ -219,6 +217,31 @@ public class Ride {
 		return insertDBActivity();
 	}*/
 
+    public void updateSpeedLimit(Location loc, boolean async) {
+        if (async) {
+            (new updateSpeedLimitTask()).execute(loc);
+        } else {
+            updateSpeedLimit(loc);
+        }
+    }
+
+    protected void updateSpeedLimit(Location loc) {
+        ReverseGeocoder rgc = new ReverseGeocoder().setPosition(loc);
+
+        try {
+            speedLimit = rgc.getSpeedLimit(true);
+        } catch (Exception e ) {
+            setAbortedConnection();
+            speedLimit = 0;
+        }
+
+        try {
+            roadUse = rgc.getRoadUse();
+            nextSpeedLimitCall += roadUse.equals("LimitedAccess")
+                    ? HIGHWAY_INTERVAL : ROAD_INTERVAL;
+        } catch (Exception e ) { setAbortedConnection(); }
+    }
+
 	/**
 	 * Fires TomTom's reverseGeocoder to check the road's
 	 * speed limit.
@@ -228,7 +251,7 @@ public class Ride {
 	 */
 	protected void updateSpeedLimit(double lat, double lon) {
         System.out.println("updating speed limit");
-		ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
+		//ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
 	}
 
     private static List<File> getListFiles(File parentDir) { return getListFiles(parentDir, ".gpx"); }
@@ -288,9 +311,7 @@ public class Ride {
 				GPXGenerator gpx = new GPXGenerator(ctx, pending);
 				Vector<Location> locations = gpx.getLocations();
 				for (Location loc : locations) {
-                    sContinueEvaluation = false;
-					roadActivity.addRecord(loc);
-                    while (!sContinueEvaluation);
+					roadActivity.addRecord(loc, false);
 				}
 				//save as lazy evaluated activity
 				roadActivity.insertDBActivity();
@@ -307,7 +328,16 @@ public class Ride {
 		}
 	}
 
-	/**
+    private class updateSpeedLimitTask extends AsyncTask<Location, Void, Void> {
+        @Override
+        protected Void doInBackground(Location... loc) {
+            updateSpeedLimit(loc[0]);
+            return null;
+        }
+    }
+
+	/*
+    /**
 	 * Listens to the TomTom's Reversegeocoder being called.
 	 * Sets and displays the current road's speed limit and
 	 * road type. Based on the road type it sets the next
@@ -316,6 +346,7 @@ public class Ride {
 	 *
 	 * @author Attila Večerek
 	 */
+    /*
 	class RoadInfoListener implements ReverseGeocodeListener {
 
 		@Override
@@ -327,16 +358,16 @@ public class Ride {
 				speedLimit = result.maxSpeedKph;
                 Log.i("TEST_RIDE_SPEED", Integer.toString(speedLimit));
                 //mainActivity.refreshSpeedLimit(speedLimit);
-				roadType = result.roadType;
-                Log.i("TEST_RIDE_ROAD_TYPE", roadType);
-				nextSpeedLimitCall += roadType.equals("Motorway") ||
-						roadType.equals("MajorRoad") ||
-						roadType.equals("InternationalRoad") ? HIGHWAY_INTERVAL : ROAD_INTERVAL;
+				roadUse = result.roadUse;
+                Log.i("TEST_RIDE_ROAD_TYPE", roadUse);
+				nextSpeedLimitCall += roadUse.equals("Motorway") ||
+						roadUse.equals("MajorRoad") ||
+						roadUse.equals("InternationalRoad") ? HIGHWAY_INTERVAL : ROAD_INTERVAL;
 
                 sContinueEvaluation = true;
 			}
 		}
-	}
+	}*/
 
 	public static final class TABLE {
 
