@@ -8,13 +8,6 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-/*import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeData;
-import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeListener;
-import com.tomtom.lbs.sdk.geolocation.ReverseGeocodeOptionalParameters;
-import com.tomtom.lbs.sdk.geolocation.ReverseGeocoder;
-import com.tomtom.lbs.sdk.util.Coordinates;
-import com.tomtom.lbs.sdk.util.SDKContext;*/
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
@@ -42,11 +35,6 @@ import sk.codekitchen.smartfuel.util.ReverseGeocoder;
  * @author Attila Večerek
  */
 public class Ride {
-
-	/*protected static final String API_KEY = "xzu3bpa7jeqpkcu8ncp48593";
-	protected RoadInfoListener TTlistener;
-	protected ReverseGeocodeOptionalParameters TTparams;*/
-
 	protected static final int POINTS_PER_KM = 1;
 	protected static final float DISTANCE_TO_GET_POINTS = 1000f; //in meters
 	protected static final float ROAD_INTERVAL = 50f; //in meters
@@ -84,13 +72,6 @@ public class Ride {
 
 		isMph = PreferenceManager.getDefaultSharedPreferences(ctx).
 				getBoolean(GLOBALS.SETTINGS_IS_MPH, false);
-
-		//API Key
-		//SDKContext.setDeveloperKey(API_KEY);
-		//TomTom Config
-		/*TTlistener = new RoadInfoListener();
-		TTparams = new ReverseGeocodeOptionalParameters();
-		TTparams.type = ReverseGeocodeOptionalParameters.REVERSE_TYPE_NATIONAL;*/
 	}
 
 	public String toString() {
@@ -242,18 +223,6 @@ public class Ride {
         } catch (Exception e ) { setAbortedConnection(); }
     }
 
-	/**
-	 * Fires TomTom's reverseGeocoder to check the road's
-	 * speed limit.
-	 *
-	 * @param lat latitude
-	 * @param lon longitude
-	 */
-	protected void updateSpeedLimit(double lat, double lon) {
-        System.out.println("updating speed limit");
-		//ReverseGeocoder.reverseGeocode(new Coordinates(lat, lon), TTparams, TTlistener, null);
-	}
-
     private static List<File> getListFiles(File parentDir) { return getListFiles(parentDir, ".gpx"); }
     private static List<File> getListFiles(File parentDir, String ext) {
         List<File> inFiles = new ArrayList<>();
@@ -335,39 +304,6 @@ public class Ride {
             return null;
         }
     }
-
-	/*
-    /**
-	 * Listens to the TomTom's Reversegeocoder being called.
-	 * Sets and displays the current road's speed limit and
-	 * road type. Based on the road type it sets the next
-	 * checkpoint to check the speed limit again, thus decreasing
-	 * the number of API calls - manages the network load.
-	 *
-	 * @author Attila Večerek
-	 */
-    /*
-	class RoadInfoListener implements ReverseGeocodeListener {
-
-		@Override
-		public void handleReverseGeocode(Vector<ReverseGeocodeData> data, Object payload) {
-			if(data != null && data.size() > 0) {
-                Log.i("TEST_RIDE_DATA_SIZE", Integer.toString(data.size()));
-                System.out.println("Handling reverse geocode");
-				ReverseGeocodeData result = data.elementAt(0);
-				speedLimit = result.maxSpeedKph;
-                Log.i("TEST_RIDE_SPEED", Integer.toString(speedLimit));
-                //mainActivity.refreshSpeedLimit(speedLimit);
-				roadUse = result.roadUse;
-                Log.i("TEST_RIDE_ROAD_TYPE", roadUse);
-				nextSpeedLimitCall += roadUse.equals("Motorway") ||
-						roadUse.equals("MajorRoad") ||
-						roadUse.equals("InternationalRoad") ? HIGHWAY_INTERVAL : ROAD_INTERVAL;
-
-                sContinueEvaluation = true;
-			}
-		}
-	}*/
 
 	public static final class TABLE {
 
