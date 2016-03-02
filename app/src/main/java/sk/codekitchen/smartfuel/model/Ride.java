@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -240,9 +239,8 @@ public class Ride {
     }
 
     public static List<File> getDrivingActivities(Context ctx, int userID) {
-
         File drivingActivitiesDir =
-                ctx.getDir(GPXGenerator.getActivitiesDir(userID), Context.MODE_PRIVATE);
+                new File(ctx.getFilesDir(), GPXGenerator.getActivitiesDir(userID));
 
         if (drivingActivitiesDir.exists()) {
             return getListFiles(drivingActivitiesDir);
@@ -253,7 +251,7 @@ public class Ride {
 
     public static void cleanDrivingActivities(Context ctx, int userID) {
         File drivingActivitiesDir =
-                ctx.getDir(GPXGenerator.getActivitiesDir(userID), Context.MODE_PRIVATE);
+                new File(ctx.getFilesDir(), GPXGenerator.getActivitiesDir(userID));
 
         if (drivingActivitiesDir.exists() && drivingActivitiesDir.isDirectory()) {
             try {
@@ -270,7 +268,7 @@ public class Ride {
 			JSONException {
 
 		File pendingActivitiesDir =
-                new File(Environment.getDataDirectory(), GPXGenerator.getPendingDir(userID));
+                new File(ctx.getFilesDir(), GPXGenerator.getPendingDir(userID));
 
 		if (pendingActivitiesDir.exists()) {
 			File[] dirFiles = pendingActivitiesDir.listFiles();
@@ -287,7 +285,7 @@ public class Ride {
 				//renames and moves file to gpx routes directory
 				boolean result = pending.renameTo(
 						new File(
-								new File(Environment.getDataDirectory(), GPXGenerator.getActivitiesDir(userID)),
+                                new File(ctx.getFilesDir(), GPXGenerator.getActivitiesDir(userID)),
 								gpx.getFileName()
 						)
 				);
