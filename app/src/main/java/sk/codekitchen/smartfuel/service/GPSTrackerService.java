@@ -31,29 +31,6 @@ import sk.codekitchen.smartfuel.util.Units;
 
 public class GPSTrackerService extends Service implements LocationListener {
 
-    private Context mContext;
-
-    protected boolean isGPSEnabled = false;
-    protected boolean isNetworkEnabled = false;
-    protected boolean canGetLocation = false;
-
-    //protected Location location = null;
-    protected Ride ride;
-
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 25; // meters
-    private static final long MIN_TIME_BW_UPDATES = 1000; // millisec
-    private static final long NETWORK_CHECK_INTERVAL = 30 * 1000; //30 seconds
-
-    protected LocationManager locationManager;
-
-    final Messenger mMessenger = new Messenger(new IncomingHandler());
-
-    Messenger mActivityeMessenger = null;
-
-    Handler networkHandler = new Handler();
-    Timer mTimer = null;
-    ConnectionManager cm;
-
     /**
      * Message type: register the activity's messenger for receiving responses
      * from Service. We assume only one activity can be registered at one time.
@@ -66,14 +43,51 @@ public class GPSTrackerService extends Service implements LocationListener {
     public static final int UPDATE_STATE = 2;
 
     /**
-     * Message type: error message passed to activity
+     * Message type: informs the activity about having no data about the speed limit
      */
-    public static final int ERROR = 3;
+    public static final int DATA = 3;
+
+    /**
+     * Message type: informing the Activity about no internet or GPS connection
+     */
+    public static final int SIGNAL = 4;
 
     /**
      * Message type: debug communication state
      */
-    public static final int DEBUG = 4;
+    public static final int DEBUG = 5;
+
+    /**
+     * Message type: error message passed to activity
+     */
+    public static final int ERROR = 6;
+
+    public static final String ON = "on";
+    public static final String OFF = "off";
+
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 25; // meters
+    private static final long MIN_TIME_BW_UPDATES = 1000; // millisec
+    private static final long NETWORK_CHECK_INTERVAL = 30 * 1000; //30 seconds
+
+    private Context mContext;
+
+    protected boolean isGPSEnabled = false;
+    protected boolean isNetworkEnabled = false;
+    protected boolean canGetLocation = false;
+    protected boolean noData = false;
+
+    //protected Location location = null;
+    protected Ride ride;
+
+    protected LocationManager locationManager;
+
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+    Messenger mActivityeMessenger = null;
+
+    Handler networkHandler = new Handler();
+    Timer mTimer = null;
+    ConnectionManager cm;
 
     class IncomingHandler extends Handler {
 
@@ -93,10 +107,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     void updateActivity(int msgCode, CharSequence text) {
         Log.i("TEST_IPC", "Updating activity");
-        if (mActivityeMessenger == null) {
-            Log.d("TEST_IPC", "Cannot send message to activity - no activity registered to this service.");
-        } else {
-            Log.d("TEST_IPC", "Sending message to activity: " + text);
+        if (mActivityeMessenger != null) {
             Bundle data = new Bundle();
             data.putCharSequence("data", text);
             Message msg = Message.obtain(null, msgCode);
@@ -105,9 +116,6 @@ public class GPSTrackerService extends Service implements LocationListener {
             try {
                 mActivityeMessenger.send(msg);
             } catch (RemoteException e) {
-                // We always have to trap RemoteException
-                // (DeadObjectException
-                // is thrown if the target Handler no longer exists)
                 e.printStackTrace();
             }
         }
@@ -115,30 +123,25 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     @Override
     public IBinder onBind(Intent arg0) {
-        Log.i("TEST_IPC", "onBind triggered");
         return mMessenger.getBinder();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        Log.i("TEST_IPC", "onUnbind triggered");
         return true;
     }
 
     @Override
     public void onRebind(Intent intent) {
-        Log.i("TEST_IPC", "onRebind triggered");
         super.onRebind(intent);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("TEST_IPC", "onStartCommand triggered");
         this.mContext = getApplicationContext();
         cm = new ConnectionManager(mContext);
 
         try {
-            Log.i("TEST_IPC", "Creating Ride object");
             this.ride = new Ride(mContext);
 
             if (mTimer != null) {
@@ -148,7 +151,6 @@ public class GPSTrackerService extends Service implements LocationListener {
             }
             mTimer.scheduleAtFixedRate(new checkNetworkConnectionTimerTask(), 0, NETWORK_CHECK_INTERVAL);
 
-            Log.i("TEST_IPC", "Location record is being added");
             this.ride.addRecord(getLocation(), true);
 
         } catch (PermissionDeniedException e) {
@@ -159,14 +161,13 @@ public class GPSTrackerService extends Service implements LocationListener {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Log.i("TEST_IPC", "returning from onStartCommand");
+
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
         mTimer.cancel();
-        Log.i("TEST_IPC", "onDestroy triggered");
         locationManager.removeUpdates(GPSTrackerService.this);
 
 		/*try {
@@ -181,22 +182,16 @@ public class GPSTrackerService extends Service implements LocationListener {
     public Location getLocation() throws PermissionDeniedException {
         Location location = null;
         try {
-            Log.i("TEST_IPC", "locationManager being created");
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-            Log.i("TEST_IPC", "check if gps provider enabled");
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            Log.i("TEST_IPC", "check if network provider enabled");
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            Log.i("TEST_CONNECTION", "Network enabled: " + Boolean.toString(isNetworkEnabled));
 
             if (!isGPSEnabled) {
                 showSettingsAlert();
             } else {
                 this.canGetLocation = true;
-                Log.i("TEST_IPC", "requesting location updates");
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                 if (locationManager != null) {
-                    Log.i("TEST_IPC", "getting location");
                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (location != null) {
                         updateActivity(UPDATE_STATE, getCurrentStateMessage(location));
@@ -232,16 +227,20 @@ public class GPSTrackerService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i("TEST_LOC", "onLocationChanged");
         if (location != null) {
-            Log.i("TEST_LOC", "location not null");
-            Log.i("TEST_LOC_LAT", Double.toString(location.getLatitude()));
-            Log.i("TEST_LOC_LONG", Double.toString(location.getLongitude()));
+            if (ride.getSpeedLimit() == 0 && !noData) {
+                //The system just received no data about speed limit
+                noData = true;
+                updateActivity(DATA, OFF);
+            } else if (noData) {
+                //The system received speed limit data again
+                noData = false;
+                updateActivity(DATA, ON);
+            }
+
             updateActivity(UPDATE_STATE, getCurrentStateMessage(location));
-        } else {
-            Log.d("TEST_IPC", "location is null");
+            ride.addRecord(location, true);
         }
-        ride.addRecord(location, true);
     }
 
     @Override
@@ -252,6 +251,7 @@ public class GPSTrackerService extends Service implements LocationListener {
 
         locationManager.removeUpdates(GPSTrackerService.this);
         ride.resetLocations();
+        updateActivity(SIGNAL, OFF);
     }
 
     @Override
@@ -265,7 +265,7 @@ public class GPSTrackerService extends Service implements LocationListener {
         if (location != null) {
             ride.addRecord(location, true);
         }
-
+        updateActivity(SIGNAL, ON);
 	}
 
 	private String getCurrentStateMessage(Location location) {
@@ -299,7 +299,7 @@ public class GPSTrackerService extends Service implements LocationListener {
                 public void run() {
                     Log.i("TEST_CONNECTION", "Checking internet connection ("+Integer.toString(mCounter)+")");
                     (new checkNetworkConnectionTask()).execute((Void) null);
-                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.isConnection()));
+                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.connectionNotAborted()));
                     mCounter++;
                 }
             });
@@ -316,10 +316,14 @@ public class GPSTrackerService extends Service implements LocationListener {
         @Override
         protected void onPostExecute(Boolean isConnection) {
             if (!isConnection) {
-                Log.i("TEST_CONNECTION", "No connection");
-                ride.setAbortedConnection();
+                // if connection just gets aborted, update activity
+                if (Ride.CONNECTION) updateActivity(SIGNAL, OFF);
+                // if connection gets aborted for the first time, set flag
+                if (ride.connectionNotAborted()) ride.setAbortedConnection();
+            } else {
+                if (!Ride.CONNECTION) updateActivity(SIGNAL, ON);
             }
-            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.isConnection()));
+            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.connectionNotAborted()));
         }
     }
 }
