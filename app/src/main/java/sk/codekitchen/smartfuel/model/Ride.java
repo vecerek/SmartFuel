@@ -229,7 +229,7 @@ public class Ride {
         ReverseGeocoder rgc = new ReverseGeocoder().setPosition(loc);
 
         try {
-            speedLimit = rgc.getSpeedLimit(true);
+            speedLimit = rgc.getSpeedLimit(isMph);
         } catch (Exception e ) {
             setAbortedConnection();
             speedLimit = 0;

@@ -199,7 +199,7 @@ public class GPSTrackerService extends Service implements LocationListener {
                     Log.i("TEST_IPC", "getting location");
                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (location != null) {
-                        updateActivity(DEBUG, getCurrentStateMessage(location));
+                        updateActivity(UPDATE_STATE, getCurrentStateMessage(location));
                     }
                 }
             }
@@ -237,7 +237,7 @@ public class GPSTrackerService extends Service implements LocationListener {
             Log.i("TEST_LOC", "location not null");
             Log.i("TEST_LOC_LAT", Double.toString(location.getLatitude()));
             Log.i("TEST_LOC_LONG", Double.toString(location.getLongitude()));
-            updateActivity(DEBUG, getCurrentStateMessage(location));
+            updateActivity(UPDATE_STATE, getCurrentStateMessage(location));
         } else {
             Log.d("TEST_IPC", "location is null");
         }
@@ -276,7 +276,7 @@ public class GPSTrackerService extends Service implements LocationListener {
                 GLOBALS.IPC_MESSAGE_KEY.PROGRESS,
                 Integer.toString(ride.getPercentage()),
                 GLOBALS.IPC_MESSAGE_KEY.LIMIT,
-                Integer.toString(Units.getPreferredSpeedLimit(ride.getSpeedLimit(), ride.isMph())),
+                Integer.toString(ride.getSpeedLimit()),
                 GLOBALS.IPC_MESSAGE_KEY.POINTS,
                 Integer.toString(ride.getPoints()),
                 GLOBALS.IPC_MESSAGE_KEY.DIST,
