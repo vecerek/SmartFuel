@@ -18,6 +18,8 @@
     <string name="rec_comment_2">1 point</string>
     <string name="rec_turn_gps_on">Turn on GPS</string>
     <string name="rec_no_gps_signal">Waiting for signal</string>
+    <string name="rec_no_gps">No GPS</string>
+    <string name="rec_no_data">No Data</string>
 
     <string name="stat_week">WEEK</string>
     <string name="stat_month">MONTH</string>

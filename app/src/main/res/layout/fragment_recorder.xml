@@ -102,10 +102,71 @@
         android:layout_weight="0.03"/>
 
     <RelativeLayout
-        android:id="@+id/progressArea"
+        android:id="@+id/progress_no_gps"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.55">
+        android:layout_weight="0.55"
+        android:visibility="gone"
+        android:clickable="true">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/no_data"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"
+            />
+
+        <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/rec_no_data"
+            android:textColor="@color/LIGHT_GRAY"
+            android:textSize="@dimen/recorder_no_data"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/no_data_bottom_margin"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/progress_no_data"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.55"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/no_signal"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="fitCenter"
+            />
+
+        <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/rec_no_gps"
+            android:textColor="@color/LIGHT_GRAY"
+            android:textSize="@dimen/recorder_no_data"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/no_data_bottom_margin"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/progress_area"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.55"
+        android:visibility="visible">
 
         <ProgressBar
             android:id="@+id/progressBarBck"
@@ -126,29 +187,6 @@
             android:indeterminate="false"
             android:progressDrawable="@drawable/progressbar_arch_grad_good"
             />
-
-        <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/rec_turn_gps_on"
-            android:textColor="@color/WHITE"
-            android:focusableInTouchMode="false"
-            android:id="@+id/progress_no_gps"
-            android:clickable="true"
-            android:gravity="center"
-            android:visibility="gone"/>
-
-        <sk.codekitchen.smartfuel.ui.views.SemiboldTextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/rec_no_gps_signal"
-            android:textColor="@color/WHITE"
-            android:focusableInTouchMode="false"
-            android:id="@+id/progress_no_signal"
-            android:gravity="center"
-            android:visibility="gone"/>
 
         <LinearLayout
             android:orientation="vertical"

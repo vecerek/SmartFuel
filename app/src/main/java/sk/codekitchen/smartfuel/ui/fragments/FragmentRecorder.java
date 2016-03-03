@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import java.math.RoundingMode;
 
@@ -49,8 +50,9 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener {
      */
     private int speedLimit = 0;
 
-    private SemiboldTextView noGps;
-    private SemiboldTextView noSignal;
+    private RelativeLayout progressLayout;
+    private RelativeLayout noGpsLayout;
+    private RelativeLayout noDataLayout;
 
     private ProgressBar progressBar;
     private LightTextView progressValue;
@@ -115,9 +117,11 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener {
         progressCommentBold = (SemiboldTextView) view.findViewById(R.id.progress_comment_bold);
         progressData = (LinearLayout) view.findViewById(R.id.progress_central_data);
 
-        noGps = (SemiboldTextView) view.findViewById(R.id.progress_no_gps);
-        noSignal = (SemiboldTextView) view.findViewById(R.id.progress_no_signal);
-        noGps.setOnClickListener(this);
+        progressLayout = (RelativeLayout) view.findViewById(R.id.progress_area);
+        noGpsLayout = (RelativeLayout) view.findViewById(R.id.progress_no_gps);
+        noDataLayout = (RelativeLayout) view.findViewById(R.id.progress_no_data);
+        noGpsLayout.setOnClickListener(this);
+
         maxPermittedSpeed = (SemiboldTextView) view.findViewById(R.id.max_permitted_speed);
         maxPermittedSign =(LinearLayout) view.findViewById(R.id.max_permitted_sign);
 
@@ -271,32 +275,36 @@ public class FragmentRecorder extends Fragment implements View.OnClickListener {
     }
 
     /**
-     * changes layout based on gps provider
+     * can change layout to no gps
      * @param gps
      */
     public void isGPS(boolean gps) {
-        if (gps) {
-            noGps.setVisibility(View.GONE);
-            progressData.setVisibility(View.VISIBLE);
-        }
-        else {
-            noGps.setVisibility(View.VISIBLE);
-            progressData.setVisibility(View.GONE);
+        if (isSetToSpeed){
+            if (gps) {
+                noGpsLayout.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.VISIBLE);
+            }
+            else {
+                noGpsLayout.setVisibility(View.VISIBLE);
+                progressLayout.setVisibility(View.GONE);
+            }
         }
     }
 
     /**
-     * changes layout when no signal or signal is back
-     * @param signal
+     * can change layout to no data notification
+     * @param data
      */
-    public void isSignal(boolean signal) {
-        if (signal) {
-            noSignal.setVisibility(View.GONE);
-            progressData.setVisibility(View.VISIBLE);
-        }
-        else {
-            noSignal.setVisibility(View.VISIBLE);
-            progressData.setVisibility(View.GONE);
+    public void isData(boolean data) {
+        if (!isSetToSpeed){
+            if (data) {
+                noDataLayout.setVisibility(View.GONE);
+                progressLayout.setVisibility(View.VISIBLE);
+            }
+            else {
+                noDataLayout.setVisibility(View.VISIBLE);
+                progressLayout.setVisibility(View.GONE);
+            }
         }
     }
 

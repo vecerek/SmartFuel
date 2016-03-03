@@ -18,6 +18,8 @@
     <string name="rec_comment_2">1 bodu</string>
     <string name="rec_turn_gps_on">Zapnúť GPS</string>
     <string name="rec_no_gps_signal">Čakám na signál</string>
+    <string name="rec_no_gps">Čakám na signál</string>
+    <string name="rec_no_data">Data nedostupné</string>
 
     <string name="stat_week">TÝŽDEŇ</string>
     <string name="stat_month">MESIAC</string>

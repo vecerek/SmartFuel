@@ -22,11 +22,14 @@
 
     <dimen name="progress_value">75dp</dimen>
     <dimen name="progress_sign">55dp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="toolbar_icon_padding">15dp</dimen>
     <dimen name="settings_text">20sp</dimen>
     <dimen name="dialog_button_text">24sp</dimen>
+
+    <dimen name="recorder_no_data">40dp</dimen>
+    <dimen name="no_data_bottom_margin">45dp</dimen>
 </resources>
