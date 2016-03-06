@@ -2,10 +2,10 @@ package sk.codekitchen.smartfuel.model;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
@@ -35,6 +35,8 @@ import sk.codekitchen.smartfuel.util.ServerAPI;
  * @author Attila Večerek
  */
 public class User {
+
+	private static final int DEFAULT_PROFILE_WIDTH = 512;
 
 	public int id;
 	public String name;
@@ -127,15 +129,13 @@ public class User {
 	}
 
 	public static void saveProfilePicture(Context ctx, Bitmap picture) {
-		ContextWrapper cw = new ContextWrapper(ctx);
-		// path to /data/data/yourapp/app_data/imageDir
-		File directory = cw.getDir(GLOBALS.DIR.PROFILE_PIC, Context.MODE_PRIVATE);
-		// Create imageDir
+        File directory = new File(ctx.getCacheDir(), GLOBALS.DIR.PROFILE_PIC);
 		File profilePicPath = new File(directory, GLOBALS.FILE.PROFILE_PIC);
 
-		FileOutputStream fos = null;
+		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream(profilePicPath);
+            picture = resizeProfilePicture(picture);
 			picture.compress(Bitmap.CompressFormat.PNG, 100, fos);
 			fos.close();
 		} catch (IOException e) {
@@ -143,12 +143,29 @@ public class User {
 		}
 	}
 
+    private static Bitmap resizeProfilePicture(Bitmap picture) {
+        return resizeProfilePicture(picture, DEFAULT_PROFILE_WIDTH);
+    }
+
+    private static Bitmap resizeProfilePicture(Bitmap picture, int dimension) {
+        int width = picture.getWidth();
+        int height = picture.getHeight();
+        float scale = ((float) dimension) / width < height ? width : height;
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(width * scale, height * scale);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                picture, 0, 0, width, height, matrix, false);
+        picture.recycle();
+        return resizedBitmap;
+    }
+
 	private Bitmap getProfilePic() {
 		try {
-			ContextWrapper cw = new ContextWrapper(ctx);
-			File directory = cw.getDir(GLOBALS.DIR.PROFILE_PIC, Context.MODE_PRIVATE);
+            File directory = new File(ctx.getCacheDir(), GLOBALS.DIR.PROFILE_PIC);
 
-			File f = new File(directory.getAbsolutePath(), GLOBALS.FILE.PROFILE_PIC);
+			File f = new File(directory, GLOBALS.FILE.PROFILE_PIC);
 			return BitmapFactory.decodeStream(new FileInputStream(f));
 		}
 		catch (FileNotFoundException e) {

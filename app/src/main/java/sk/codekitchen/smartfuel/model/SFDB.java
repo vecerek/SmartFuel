@@ -518,10 +518,12 @@ public class SFDB extends SQLiteOpenHelper {
 					commit();
 
 					if (result.has(GLOBALS.PARAM_KEY.PROFILE_PIC_URL)) {
-						String url = result.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL);
-						Bitmap profilePicture = BitmapFactory.decodeStream(
-								(InputStream) new URL(url).getContent());
-						User.saveProfilePicture(ctx, profilePicture);
+						User.saveProfilePicture(ctx,
+								BitmapFactory.decodeStream(
+                                        (InputStream) new URL(result.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL))
+                                                .getContent()
+                                )
+                        );
 					}
 				} else {
 					throw new IOException("Local database update failed");

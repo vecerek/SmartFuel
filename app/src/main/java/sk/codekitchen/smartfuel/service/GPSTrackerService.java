@@ -25,6 +25,7 @@ import java.util.TimerTask;
 import sk.codekitchen.smartfuel.exception.PermissionDeniedException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.model.Ride;
+import sk.codekitchen.smartfuel.model.SFDB;
 import sk.codekitchen.smartfuel.util.ConnectionManager;
 import sk.codekitchen.smartfuel.util.GLOBALS;
 import sk.codekitchen.smartfuel.util.Units;
@@ -172,9 +173,8 @@ public class GPSTrackerService extends Service implements LocationListener {
 
 		/*try {
             ride.saveActivity();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
+            if (!ride.connectionEverAborted()) SFDB.getInstance(getApplicationContext()).sync();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}*/
     }
@@ -299,7 +299,7 @@ public class GPSTrackerService extends Service implements LocationListener {
                 public void run() {
                     Log.i("TEST_CONNECTION", "Checking internet connection ("+Integer.toString(mCounter)+")");
                     (new checkNetworkConnectionTask()).execute((Void) null);
-                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.connectionNotAborted()));
+                    Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(ride.connectionEverAborted()));
                     mCounter++;
                 }
             });
@@ -319,11 +319,11 @@ public class GPSTrackerService extends Service implements LocationListener {
                 // if connection just gets aborted, update activity
                 if (Ride.CONNECTION) updateActivity(SIGNAL, OFF);
                 // if connection gets aborted for the first time, set flag
-                if (ride.connectionNotAborted()) ride.setAbortedConnection();
+                if (!ride.connectionEverAborted()) ride.setAbortedConnection();
             } else {
                 if (!Ride.CONNECTION) updateActivity(SIGNAL, ON);
             }
-            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(!ride.connectionNotAborted()));
+            Log.i("TEST_CONNECTION", "Connection aborted is " + Boolean.toString(ride.connectionEverAborted()));
         }
     }
 }
