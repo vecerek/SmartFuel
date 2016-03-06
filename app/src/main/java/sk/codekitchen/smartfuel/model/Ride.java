@@ -90,7 +90,7 @@ public class Ride {
 	}
 
     public boolean isMph() { return isMph; }
-	public boolean connectionNotAborted() { return !connectionAborted; }
+	public boolean connectionEverAborted() { return connectionAborted; }
 	public void setAbortedConnection() { connectionAborted = true; }
 
 	public void addRecord(Location location, boolean async) {
