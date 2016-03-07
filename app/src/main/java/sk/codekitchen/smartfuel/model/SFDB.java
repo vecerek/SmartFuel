@@ -517,10 +517,10 @@ public class SFDB extends SQLiteOpenHelper {
 					}
 					commit();
 
-					if (result.has(GLOBALS.PARAM_KEY.PROFILE_PIC_URL)) {
+					if (data.has(GLOBALS.PARAM_KEY.PROFILE_PIC_URL)) {
 						User.saveProfilePicture(ctx,
 								BitmapFactory.decodeStream(
-                                        (InputStream) new URL(result.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL))
+                                        (InputStream) new URL(data.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL))
                                                 .getContent()
                                 )
                         );
