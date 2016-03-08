@@ -1,4 +1,5 @@
 package sk.codekitchen.smartfuel.model;
+
 import sk.codekitchen.smartfuel.exception.DuplicateSavepointException;
 import sk.codekitchen.smartfuel.exception.TableNotFoundException;
 import sk.codekitchen.smartfuel.exception.UnknownDataOriginException;
@@ -16,16 +17,12 @@ import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 
 import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -80,6 +77,7 @@ public class SFDB extends SQLiteOpenHelper {
 	private Date lastUpdate;
 	private SharedPreferences preferences;
 	private Vector<String> savepoints;
+
 
 	/**
 	 * Constructs a new SFDB instance with the given context.
@@ -273,18 +271,21 @@ public class SFDB extends SQLiteOpenHelper {
 	 */
 	protected JSONObject downloadDatabase(boolean test) throws IOException {
 		try {
+            Log.d("TEST_SYNC", "downloadDatabase");
 			Map<String, String> params = new HashMap<>();
 			params.put(GLOBALS.USER_ID, Integer.toString(userID));
 			if(lastUpdate != null) {
 				params.put(GLOBALS.LAST_UPDATE, DATE_FORMAT.format(this.lastUpdate));
 			}
 			if (test) params.put("test", String.valueOf(true));
-
+            Log.d("TEST_SYNC", "Downloading database");
 			return (new ServerAPI("download_db").sendRequest(params));
 
 		} catch (JSONException e) {
+            Log.d("TEST_SYNC", "DD exception: " + e.getMessage());
 			throw new IOException("Server response could not be parsed", e);
 		} catch (IOException e) {
+            Log.d("TEST_SYNC", "DD exception: " + e.getMessage());
 			throw new IOException("Database connection error.", e);
 		}
 	}
@@ -329,10 +330,19 @@ public class SFDB extends SQLiteOpenHelper {
 		switch (table) {
 			case User.TABLE.NAME:
 				//local changes edit the data, server changes update them
-				Boolean edited = origin.equals(ORIGIN_LOCAL);
-				cv = User.TABLE.getContentValues(data, edited);
-				idCol = User.TABLE.COLUMN.ID;
-				if (data.has(idCol)) id = data.getInt(idCol);
+                idCol = User.TABLE.COLUMN.ID;
+                if (!data.has(idCol)) {
+                    // Downloading the profile picture
+                    if (data.has(GLOBALS.PARAM_KEY.PROFILE_PIC_URL)) {
+                        User.saveProfilePicture(ctx,
+                                data.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL));
+                    }
+
+                    return;
+                }
+                Boolean edited = origin.equals(ORIGIN_LOCAL);
+                cv = User.TABLE.getContentValues(data, edited);
+                id = data.getInt(idCol);
 				break;
 			case Ride.TABLE.NAME:
 				//server updates synchronize the data, local changes desynchronize them
@@ -460,7 +470,6 @@ public class SFDB extends SQLiteOpenHelper {
 				params.put(GLOBALS.USER_ID, Integer.toString(userID));
 				params.put("data", editedData.toString());
 				if (test) params.put("test", String.valueOf(true));
-
 				result = (new ServerAPI("update_db")).sendRequest(params);
 
                 if (result.has("success")) {
@@ -499,7 +508,6 @@ public class SFDB extends SQLiteOpenHelper {
             }
 
 			result = downloadDatabase(test);
-
 			if (result.has("success")) {
 				if (result.getBoolean("success") && result.has("data")) {
 					JSONObject data = result.getJSONObject("data");
@@ -516,15 +524,6 @@ public class SFDB extends SQLiteOpenHelper {
 						throw e;
 					}
 					commit();
-
-					if (data.has(GLOBALS.PARAM_KEY.PROFILE_PIC_URL)) {
-						User.saveProfilePicture(ctx,
-								BitmapFactory.decodeStream(
-                                        (InputStream) new URL(data.getString(GLOBALS.PARAM_KEY.PROFILE_PIC_URL))
-                                                .getContent()
-                                )
-                        );
-					}
 				} else {
 					throw new IOException("Local database update failed");
 				}
