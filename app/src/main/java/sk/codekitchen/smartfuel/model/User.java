@@ -5,17 +5,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
@@ -23,6 +24,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 import sk.codekitchen.smartfuel.exception.IncorrectPasswordException;
 import sk.codekitchen.smartfuel.exception.UnknownUserException;
 import sk.codekitchen.smartfuel.util.GLOBALS;
@@ -59,6 +63,8 @@ public class User {
 
 	protected SFDB sfdb;
 	protected Context ctx;
+
+    private static OkHttpClient httpClient = new OkHttpClient();
 
 	public User(Context ctx)
 			throws UnknownUserException, ParseException, JSONException {
@@ -119,7 +125,7 @@ public class User {
 						throw new IncorrectPasswordException(GLOBALS.BAD_PASS);
 					break;
 				default:
-					throw new Exception("Unknown error occured.");
+					throw new Exception("Unknown error occurred.");
 			}
 		} else if (!result.has(GLOBALS.USER_ID)) {
 			throw new IOException("Server has not responded with the user's ID");
@@ -128,19 +134,31 @@ public class User {
 		return result.getInt(GLOBALS.USER_ID);
 	}
 
-	public static void saveProfilePicture(Context ctx, Bitmap picture) {
-        File directory = new File(ctx.getCacheDir(), GLOBALS.DIR.PROFILE_PIC);
-		File profilePicPath = new File(directory, GLOBALS.FILE.PROFILE_PIC);
+	public static void saveProfilePicture(Context ctx, String URI) {
+        try {
+            Request request = new Request.Builder().url(URI).build();
+            ResponseBody responseBody = httpClient.newCall(request).execute().body();
+            InputStream is = responseBody.byteStream();
+            Bitmap picture = BitmapFactory.decodeStream(new BufferedInputStream(is));
 
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(profilePicPath);
-            picture = resizeProfilePicture(picture);
-			picture.compress(Bitmap.CompressFormat.PNG, 100, fos);
-			fos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+            if (picture != null) {
+                File directory = new File(ctx.getCacheDir(), GLOBALS.DIR.PROFILE_PIC);
+                File profilePicPath = new File(directory, GLOBALS.FILE.PROFILE_PIC);
+
+                FileOutputStream fos;
+                try {
+                    directory.mkdirs();
+                    fos = new FileOutputStream(profilePicPath);
+                    picture = resizeProfilePicture(picture);
+                    picture.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
 
     private static Bitmap resizeProfilePicture(Bitmap picture) {
@@ -150,14 +168,12 @@ public class User {
     private static Bitmap resizeProfilePicture(Bitmap picture, int dimension) {
         int width = picture.getWidth();
         int height = picture.getHeight();
-        float scale = ((float) dimension) / width < height ? width : height;
+        float scale = (float) dimension / (width < height ? width : height);
 
-        Matrix matrix = new Matrix();
-        matrix.postScale(width * scale, height * scale);
-
-        Bitmap resizedBitmap = Bitmap.createBitmap(
-                picture, 0, 0, width, height, matrix, false);
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(
+                picture, (int) (width * scale), (int) (height * scale), false);
         picture.recycle();
+
         return resizedBitmap;
     }
 
@@ -166,7 +182,7 @@ public class User {
             File directory = new File(ctx.getCacheDir(), GLOBALS.DIR.PROFILE_PIC);
 
 			File f = new File(directory, GLOBALS.FILE.PROFILE_PIC);
-			return BitmapFactory.decodeStream(new FileInputStream(f));
+			return f.exists() ? BitmapFactory.decodeStream(new FileInputStream(f)) : null;
 		}
 		catch (FileNotFoundException e) {
 			e.printStackTrace();
